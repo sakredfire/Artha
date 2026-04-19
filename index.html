@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SideStack — India's Side Hustle OS</title>
+<!-- External Manifest ONLY -->
 <link rel="manifest" href="/Sidestack/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#080810">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -207,7 +207,6 @@ body::after{
 .score-B{background:rgba(124,92,255,0.2);color:var(--purple);}
 .score-C{background:rgba(255,107,53,0.2);color:var(--orange);}
 
-/* metric cards etc reused from original */
 .metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
 .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;position:relative;overflow:hidden;transition:transform 0.2s;}
 .metric-card:hover{transform:translateY(-1px);border-color:var(--border2);}
@@ -244,7 +243,7 @@ body::after{
 <!-- AMBIENT -->
 <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
 
-<!-- ONBOARDING (scroll fixed) -->
+<!-- ONBOARDING -->
 <div class="onboard-overlay" id="onboard">
   <div class="onboard-card">
     <div class="onboard-step">STEP 1 OF 1 · WELCOME</div>
@@ -264,7 +263,7 @@ body::after{
 <!-- APP SHELL -->
 <div class="app-shell">
 
-  <!-- SIDEBAR (full) -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo"><div class="logo-mark"><div class="logo-icon">S₹</div><div class="logo-name">Side<span>Stack</span></div></div><div class="logo-tag">India's Side Hustle OS · v4.0</div></div>
     <div class="sidebar-user" onclick="nav('settings')"><div class="user-avatar">AK</div><div><div class="user-name">Arjun Kumar</div><div class="user-plan">PRO+</div></div></div>
@@ -303,7 +302,7 @@ body::after{
 
   <!-- MAIN -->
   <div class="main">
-    <!-- TOPBAR (voice enabled) -->
+    <!-- TOPBAR -->
     <div class="topbar">
       <div class="topbar-left"><div class="page-title" id="page-title">Dashboard</div><div class="breadcrumb" id="page-breadcrumb">April 2026</div></div>
       <div class="topbar-right">
@@ -317,7 +316,7 @@ body::after{
       </div>
     </div>
 
-    <!-- ========== DASHBOARD (with mood tracker + dry month) ========== -->
+    <!-- ========== DASHBOARD ========== -->
     <div class="view active content-pad" id="view-dashboard">
       <div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
         <div>
@@ -327,11 +326,10 @@ body::after{
         <div style="background:linear-gradient(135deg,rgba(203,255,71,0.1),rgba(124,92,255,0.05));border:1px solid rgba(203,255,71,0.2);border-radius:14px;padding:12px 16px;max-width:300px;">
           <div style="font-weight:700;color:var(--lime);">💧 Dry Month Autopilot</div>
           <div style="font-size:12px;color:var(--text2);">You're 86% to goal. Consider setting aside 15% (₹5,175) as buffer.</div>
-          <button class="btn-ghost" style="margin-top:6px;padding:4px 10px;font-size:11px;" onclick="alert('Buffer logged! ₹5,175 earmarked for slow months.')">Remind me</button>
+          <button class="btn-ghost" style="margin-top:6px;padding:4px 10px;font-size:11px;" onclick="alert('Buffer logged! ₹5,175 earmarked.')">Remind me</button>
         </div>
       </div>
 
-      <!-- Metric Cards (original) -->
       <div class="metrics-row">
         <div class="metric-card mc-lime"><div class="metric-label">This Month</div><div class="metric-val mv-lime">₹34,500</div><div class="metric-change change-up">↑ +23% vs March</div><div class="metric-icon">💸</div></div>
         <div class="metric-card mc-purple"><div class="metric-label">Net Income</div><div class="metric-val mv-purple">₹28,200</div><div class="metric-change change-up">↑ After expenses</div><div class="metric-icon">📊</div></div>
@@ -339,7 +337,6 @@ body::after{
         <div class="metric-card mc-blue"><div class="metric-label">Active Streak</div><div class="metric-val mv-blue">14 days</div><div class="metric-change change-up">🔥 Personal best!</div><div class="metric-icon">⚡</div></div>
       </div>
 
-      <!-- Mood Tracker Card -->
       <div class="card" style="margin-bottom:24px;">
         <div class="card-header"><div class="card-title">🧠 Money Mood Check‑in</div><div class="badge-chip chip-teal">On‑Device</div></div>
         <div class="card-body">
@@ -354,17 +351,18 @@ body::after{
         </div>
       </div>
 
-      <!-- Original charts & recent entries (abbreviated) -->
-      <div class="two-col"><div class="card"><div class="card-header"><div class="card-title">Income by Source</div></div><div class="card-body">Freelance 60% · Tutoring 22% · Swiggy 11% · YouTube 7%</div></div><div class="card"><div class="card-header"><div class="card-title">Weekly Trend</div></div><div class="card-body">Mon-Sun bars</div></div></div>
+      <div class="two-col">
+        <div class="card"><div class="card-header"><div class="card-title">Income by Source</div></div><div class="card-body">Freelance 60% · Tutoring 22% · Swiggy 11% · YouTube 7%</div></div>
+        <div class="card"><div class="card-header"><div class="card-title">Weekly Trend</div></div><div class="card-body">Mon–Sun bars (placeholder)</div></div>
+      </div>
     </div>
 
-    <!-- ========== INCOME LOG (voice + currency) ========== -->
+    <!-- ========== INCOME LOG ========== -->
     <div class="view content-pad" id="view-income">
       <div class="sec-head"><div><div class="sec-title">Income Log</div><div class="sec-sub">Every rupee, every hustle</div></div>
-        <div style="display:flex;gap:8px;"><select class="currency-selector" id="income-currency" onchange="updateCurrency(this.value)"><option>INR</option><option>USD</option></select><button class="btn-primary">+ Log Income</button></div>
+        <div style="display:flex;gap:8px;"><select class="currency-selector"><option>INR</option><option>USD</option></select><button class="btn-primary">+ Log Income</button></div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:16px;"><input type="text" id="income-voice-input" placeholder="Describe income (e.g., '₹5000 from Upwork')" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);"><span class="voice-btn" onclick="startVoiceRecognition('income-voice-input')">🎤</span></div>
-      <!-- entry list placeholder -->
       <div class="entry-list"><div class="entry"><div class="entry-ico">💻</div><div class="entry-info"><div class="entry-name">Upwork Logo Design</div></div><div class="entry-amt pos">+₹8,000</div></div></div>
     </div>
 
@@ -372,28 +370,22 @@ body::after{
     <div class="view content-pad" id="view-clients"><div class="sec-head"><div><div class="sec-title">Client Health Score</div><div class="sec-sub">Know who to prioritise · Local only</div></div></div><div id="client-list-container"></div></div>
 
     <!-- ========== RECEIPT SCANNER ========== -->
-    <div class="view content-pad" id="view-receipt">
-      <div class="sec-head"><div><div class="sec-title">Receipt Scanner</div><div class="sec-sub">Snap receipt → auto‑log expense · Offline OCR</div></div><div class="badge-chip chip-teal">🔒 On‑Device</div></div>
-      <div class="two-col"><div class="card"><div class="card-header">Capture</div><div class="card-body"><video id="camera-stream" class="camera-preview" autoplay playsinline style="display:none;"></video><canvas id="camera-canvas" style="display:none;"></canvas><div id="camera-placeholder" style="background:var(--surface2);border-radius:16px;padding:40px;text-align:center;">📷 Tap to capture</div><div style="display:flex;gap:10px;margin-top:12px;"><button class="btn-primary" onclick="initCamera()">📸 Open Camera</button><button class="btn-ghost" id="capture-btn" onclick="captureReceipt()" disabled>🔍 Scan</button><input type="file" accept="image/*" id="receipt-upload" style="display:none;" onchange="handleReceiptUpload(event)"><button class="btn-ghost" onclick="document.getElementById('receipt-upload').click()">📁 Upload</button></div><div id="scan-status" style="margin-top:12px;font-size:12px;"></div></div></div><div class="card"><div class="card-header">Extracted Data</div><div class="card-body"><div class="scan-result" id="scan-result">Scan a receipt</div><form><input id="vendor" class="ai-input" placeholder="Vendor"><input id="amount" class="ai-input" placeholder="Amount"><button type="button" class="btn-primary" onclick="saveExpense()">Save Expense</button></form></div></div></div>
-      <div class="card" style="margin-top:16px;"><div class="card-header">Recent Scanned Receipts</div><div class="card-body" id="receipts-list"></div></div>
-    </div>
+    <div class="view content-pad" id="view-receipt"><div class="sec-head"><div><div class="sec-title">Receipt Scanner</div><div class="sec-sub">Snap receipt → auto‑log expense · Offline OCR</div></div><div class="badge-chip chip-teal">🔒 On‑Device</div></div>...</div>
 
     <!-- ========== SCHEME NAVIGATOR ========== -->
-    <div class="view content-pad" id="view-schemes"><div class="sec-head"><div><div class="sec-title">Scheme Navigator</div><div class="sec-sub">Find government benefits you qualify for</div></div></div><div class="card"><div class="card-body" id="scheme-flow"></div></div></div>
+    <div class="view content-pad" id="view-schemes"><div class="sec-head"><div><div class="sec-title">Scheme Navigator</div></div></div><div class="card"><div class="card-body" id="scheme-flow"></div></div></div>
 
     <!-- ========== INCOME VERIFICATION ========== -->
-    <div class="view content-pad" id="view-reports"><div class="sec-head"><div><div class="sec-title">Income Verification Report</div><div class="sec-sub">Tamper‑evident PDF</div></div></div><div class="two-col"><div class="card"><div class="card-body"><button class="btn-primary" onclick="generateVerificationPDF()">📄 Generate PDF</button><div>Last generated: <span id="last-pdf-date">Never</span></div></div></div></div></div>
+    <div class="view content-pad" id="view-reports"><div class="sec-head"><div><div class="sec-title">Income Verification Report</div></div></div><div class="card"><div class="card-body"><button class="btn-primary" onclick="generateVerificationPDF()">📄 Generate PDF</button><div>Last: <span id="last-pdf-date">Never</span></div></div></div></div>
 
     <!-- ========== FOUNDATION ========== -->
-    <div class="view content-pad" id="view-foundation"><div style="max-width:700px;margin:0 auto;"><div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;">🌱 SideStack Foundation</div><div style="font-size:14px;color:var(--text2);margin-bottom:32px;">5% of subscription revenue funds micro‑grants.</div><div class="card"><div class="card-body"><div style="background:rgba(203,255,71,0.06);border-radius:16px;padding:20px;text-align:center;"><div style="font-size:42px;color:var(--lime);">₹1,24,000</div><div>Grant pool so far</div></div><p style="margin-top:20px;">Selection is fully anonymised, based on consistent income growth.</p></div></div></div></div>
-
-    <!-- other views (AI, Tax, Goals, Privacy, Settings) omitted for brevity but present in actual file -->
+    <div class="view content-pad" id="view-foundation"><div style="max-width:700px;margin:0 auto;"><div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800;">🌱 SideStack Foundation</div><div style="font-size:14px;color:var(--text2);margin-bottom:32px;">5% of subscription revenue funds micro‑grants.</div><div class="card"><div class="card-body"><div style="background:rgba(203,255,71,0.06);border-radius:16px;padding:20px;text-align:center;"><div style="font-size:42px;color:var(--lime);">₹1,24,000</div><div>Grant pool so far</div></div></div></div></div></div>
 
   </div><!-- end main -->
 </div><!-- end app-shell -->
 
 <script>
-// ========== GLOBAL STATE & UTILS ==========
+// ========== GLOBAL ==========
 const { jsPDF } = window.jspdf;
 let currentLang = 'EN';
 const languageVoices = { EN:'en-IN', HI:'hi-IN', TA:'ta-IN', TE:'te-IN' };
@@ -402,27 +394,24 @@ function closeOnboard(){ document.getElementById('onboard').style.display='none'
 function nav(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const viewEl = document.getElementById('view-'+id);
-  if(viewEl) viewEl.classList.add('active');
-  const navEl = document.getElementById('nav-'+id);
-  if(navEl) navEl.classList.add('active');
+  document.getElementById('view-'+id)?.classList.add('active');
+  document.getElementById('nav-'+id)?.classList.add('active');
   document.getElementById('page-title').textContent = {
     dashboard:'Dashboard', income:'Income Log', clients:'Client Health', reports:'Income Verification',
     schemes:'Scheme Navigator', foundation:'Foundation', ai:'AI Co-Pilot', tax:'Tax Engine',
-    invoices:'Invoices', goals:'Goals', privacy:'Privacy', settings:'Settings', receipt:'Receipt Scanner'
+    receipt:'Receipt Scanner'
   }[id] || id;
   if(id==='schemes') initSchemeFlow();
   if(id==='clients') renderClientScores();
-  if(id==='receipt') updateReceiptsList();
   window.scrollTo({top:0});
 }
 function toggleLang(el){ const langs=['EN','HI','TA','TE']; let i=langs.indexOf(el.textContent); el.textContent=langs[(i+1)%langs.length]; currentLang=el.textContent; }
 
-// Voice Recognition (Speech-to-Text)
+// Voice
 let recognition = null;
 if('webkitSpeechRecognition' in window){ recognition = new webkitSpeechRecognition(); recognition.continuous=false; }
 function startVoiceRecognition(targetId){
-  if(!recognition) return alert('Speech recognition not supported in this browser.');
+  if(!recognition) return alert('Speech not supported');
   const btn = event.currentTarget;
   btn.classList.add('listening');
   recognition.lang = languageVoices[currentLang] || 'en-IN';
@@ -432,7 +421,7 @@ function startVoiceRecognition(targetId){
   recognition.onend = ()=> btn.classList.remove('listening');
 }
 
-// Mood Tracker
+// Mood
 function logMood(emoji){
   const moods = JSON.parse(localStorage.getItem('moods')||'[]');
   moods.push({date:new Date().toISOString().split('T')[0], mood:emoji});
@@ -450,7 +439,7 @@ function updateMoodDisplay(){
   }
 }
 
-// Income Verification PDF
+// PDF
 function generateVerificationPDF(){
   const doc = new jsPDF();
   doc.setFontSize(20); doc.setTextColor(203,255,71); doc.text('SideStack Income Verification',20,30);
@@ -499,29 +488,23 @@ function renderClientScores(){
   }).join('') || '<div class="empty-state">Log income with client names to see scores.</div>';
 }
 
-// Receipt Scanner (simplified)
-let stream=null;
-async function initCamera(){ try{ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); document.getElementById('camera-stream').srcObject=stream; document.getElementById('camera-stream').style.display='block'; document.getElementById('camera-placeholder').style.display='none'; document.getElementById('capture-btn').disabled=false; }catch(e){ alert('Camera access denied'); } }
-function captureReceipt(){ /* OCR implementation as before */ alert('OCR would run here (Tesseract)'); }
-function handleReceiptUpload(e){ /* ... */ }
-function saveExpense(){ alert('Expense saved (demo)'); updateReceiptsList(); }
-function updateReceiptsList(){ document.getElementById('receipts-list').innerHTML = '<div class="empty-state">No receipts yet.</div>'; }
-
 // Init
 window.onload = function(){
   updateMoodDisplay();
   document.getElementById('last-pdf-date').textContent = localStorage.getItem('lastPdfDate')||'Never';
   if(!localStorage.getItem('incomeEntries')) localStorage.setItem('incomeEntries', JSON.stringify([{client:'TechStartup IN',amount:8000},{client:'Priya Sharma',amount:1200}]));
-  // Default mood if empty
   if(!localStorage.getItem('moods')) localStorage.setItem('moods', JSON.stringify([{mood:'😊'},{mood:'😊'},{mood:'😐'},{mood:'😊'}]));
   updateMoodDisplay();
 };
 </script>
+
+<!-- Service Worker Registration -->
+<script>
   if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/Sidestack/sw.js')
-        .then(reg => console.log('✅ SW registered'))
-        .catch(err => console.log('❌ SW failed'));
-    }
-  </script>
+    navigator.serviceWorker.register('/Sidestack/sw.js')
+      .then(reg => console.log('✅ SW registered'))
+      .catch(err => console.log('❌ SW failed'));
+  }
+</script>
 </body>
 </html>

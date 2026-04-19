@@ -4,11 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SideStack — India's Side Hustle OS</title>
-<!-- PWA Meta -->
+<link rel="manifest" href="/Sidestack/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#080810">
-<link rel="manifest" href="data:application/manifest+json,{name:'SideStack',short_name:'SideStack',icons:[{src:'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' rx=\'20\' fill=\'%23CBFF47\'/%3E%3Ctext x=\'50\' y=\'68\' font-family=\'Arial\' font-size=\'50\' font-weight=\'bold\' fill=\'%23000\' text-anchor=\'middle\'%3ES₹%3C/text%3E%3C/svg%3E',sizes:'512x512',type:'image/svg+xml'}],display:'standalone',background_color:'#080810',theme_color:'#CBFF47'}">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -518,5 +517,11 @@ window.onload = function(){
   updateMoodDisplay();
 };
 </script>
+  if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/Sidestack/sw.js')
+        .then(reg => console.log('✅ SW registered'))
+        .catch(err => console.log('❌ SW failed'));
+    }
+  </script>
 </body>
 </html>

@@ -10,7 +10,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/Sidestack/icon-512.png",
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIAAQMAAADOtka5AAAABlBMVEUAAAD/AAD8E3BwAAAAAnRSTlMA/1uRIWUAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAAI0lEQVR4Ae3BMQEAAADCIPunNsVeYAAAAAAAAAAAAAAAAAAA8G08QAABgUJk1QAAAABJRU5ErkJggg==",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

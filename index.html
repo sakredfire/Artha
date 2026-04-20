@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080810">
+<title>SideStack</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #080810; }
+body {
+  color: #ECEEF8;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── CSS VARIABLES ── */
+:root {
+  --bg: #080810;
+  --surf: #0F0F1A;
+  --surf2: #161624;
+  --surf3: #1E1E2E;
+  --border: rgba(255,255,255,0.07);
+  --lime: #C9FF47;
+  --lime-d: rgba(201,255,71,0.12);
+  --purple: #7B5CFF;
+  --purple-d: rgba(123,92,255,0.12);
+  --orange: #FF6B35;
+  --orange-d: rgba(255,107,53,0.11);
+  --blue: #3B9EFF;
+  --blue-d: rgba(59,158,255,0.11);
+  --teal: #00D4AA;
+  --teal-d: rgba(0,212,170,0.1);
+  --pink: #FF4D8B;
+  --gold: #FFB830;
+  --text: #ECEEF8;
+  --text2: #9494B0;
+  --text3: #50506A;
+  /* safe area for notch/home indicator */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --nav-h: 64px;
+  --header-h: 56px;
+}
+
+/* ── APP SHELL ── */
+.app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0; left: 0;
+  overflow: hidden;
+}
+
+/* ── TOP HEADER ── */
+.header {
+  flex-shrink: 0;
+  height: calc(var(--header-h) + var(--safe-top));
+  padding-top: var(--safe-top);
+  background: rgba(8,8,16,0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 18px;
+  padding-right: 18px;
+  position: relative;
+  z-index: 50;
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.logo-icon {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  background: var(--lime);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px; font-weight: 800;
+  color: #000;
+  box-shadow: 0 3px 10px rgba(201,255,71,0.4);
+  flex-shrink: 0;
+}
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px; font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.logo-text span { color: var(--lime); }
+.header-right {
+  display: flex; align-items: center; gap: 10px;
+}
+.page-label {
+  font-size: 12px; color: var(--text3);
+  font-weight: 500;
+}
+.header-btn {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+}
+.notif-dot {
+  position: absolute; top: 6px; right: 6px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--orange);
+  border: 1.5px solid var(--surf);
+}
+
+/* ── SCROLL AREA ── */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  padding-bottom: 12px;
+}
+.scroll-area::-webkit-scrollbar { display: none; }
+
+/* ── SCREENS ── */
+.screen { display: none; padding: 16px; }
+.screen.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  flex-shrink: 0;
+  height: calc(var(--nav-h) + var(--safe-bot));
+  padding-bottom: var(--safe-bot);
+  background: rgba(8,8,16,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 50;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 8px 4px;
+  border: none; background: none;
+  transition: all 0.15s;
+  position: relative;
+}
+.nav-icon {
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.15s;
+}
+.nav-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: 0.02em;
+  transition: color 0.15s;
+}
+.nav-item.active .nav-label { color: var(--lime); }
+.nav-item.active .nav-icon { transform: scale(1.1); }
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 28px; height: 2.5px;
+  border-radius: 0 0 3px 3px;
+  background: var(--lime);
+}
+
+/* ── MORE MENU OVERLAY ── */
+.more-overlay {
+  display: none;
+  position: fixed;
+  bottom: calc(var(--nav-h) + var(--safe-bot));
+  left: 0; right: 0;
+  background: var(--surf);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 20px 16px;
+  z-index: 200;
+  animation: slideUp 0.25s ease;
+}
+.more-overlay.open { display: block; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.more-overlay-handle {
+  width: 36px; height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  margin: 0 auto 18px;
+}
+.more-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.more-item {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px;
+  padding: 14px 8px;
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.more-item:active { background: var(--surf3); transform: scale(0.97); }
+.more-item-ico { font-size: 24px; }
+.more-item-label { font-size: 10.5px; font-weight: 600; color: var(--text2); text-align: center; line-height: 1.3; }
+.more-item.highlight { background: var(--lime-d); border-color: rgba(201,255,71,0.2); }
+.more-item.highlight .more-item-label { color: var(--lime); }
+.dim-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 190;
+}
+.dim-overlay.open { display: block; }
+
+/* ── GREETING ── */
+.greeting {
+  margin-bottom: 16px;
+}
+.greeting-small { font-size: 12px; color: var(--text3); margin-bottom: 2px; }
+.greeting-big {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
+}
+.greeting-big span { color: var(--lime); }
+
+/* ── METRIC CARD ── */
+.mc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.mc {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.mc::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+}
+.mc.lime::before { background: linear-gradient(90deg, transparent, rgba(201,255,71,0.55), transparent); }
+.mc.purple::before { background: linear-gradient(90deg, transparent, rgba(123,92,255,0.55), transparent); }
+.mc.orange::before { background: linear-gradient(90deg, transparent, rgba(255,107,53,0.55), transparent); }
+.mc.blue::before { background: linear-gradient(90deg, transparent, rgba(59,158,255,0.55), transparent); }
+.mc.teal::before { background: linear-gradient(90deg, transparent, rgba(0,212,170,0.55), transparent); }
+.mc-label { font-size: 9.5px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.mc-val { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.mc-val.lime { color: var(--lime); }
+.mc-val.purple { color: var(--purple); }
+.mc-val.orange { color: var(--orange); }
+.mc-val.blue { color: var(--blue); }
+.mc-val.teal { color: var(--teal); }
+.mc-change { font-size: 10px; font-weight: 600; color: var(--teal); }
+.mc-ico { position: absolute; bottom: 10px; right: 12px; font-size: 22px; opacity: 0.2; }
+
+/* ── CARD ── */
+.card {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.card-head {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; }
+.card-action { font-size: 11px; color: var(--lime); cursor: pointer; font-weight: 500; }
+.card-body { padding: 14px 16px; }
+
+/* ── CHIP ── */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  border-radius: 100px; padding: 2px 9px;
+  font-size: 9.5px; font-weight: 700;
+}
+.chip.lime { background: var(--lime-d); color: var(--lime); border: 1px solid rgba(201,255,71,0.2); }
+.chip.purple { background: var(--purple-d); color: var(--purple); border: 1px solid rgba(123,92,255,0.2); }
+.chip.orange { background: var(--orange-d); color: var(--orange); border: 1px solid rgba(255,107,53,0.2); }
+.chip.blue { background: var(--blue-d); color: var(--blue); border: 1px solid rgba(59,158,255,0.2); }
+.chip.teal { background: var(--teal-d); color: var(--teal); border: 1px solid rgba(0,212,170,0.2); }
+.chip.muted { background: rgba(255,255,255,0.05); color: var(--text3); border: 1px solid transparent; }
+
+/* ── ENTRY LIST ── */
+.entry-list { display: flex; flex-direction: column; gap: 8px; }
+.entry {
+  display: flex; align-items: center; gap: 11px;
+  padding: 12px 14px;
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+}
+.entry:active { background: var(--surf3); }
+.entry-ico {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.entry-info { flex: 1; min-width: 0; }
+.entry-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-meta { font-size: 10.5px; color: var(--text3); margin-top: 1px; }
+.entry-amt { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.entry-amt.pos { color: var(--lime); }
+.entry-amt.neg { color: var(--pink); }
+
+/* ── BAR CHART ── */
+.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+.bbar { flex: 1; border-radius: 5px 5px 0 0; }
+.bar-labels { display: flex; justify-content: space-around; font-size: 8.5px; color: var(--text3); margin-top: 5px; font-family: 'Space Mono', monospace; }
+
+/* ── PROGRESS BAR ── */
+.prog { margin-bottom: 9px; }
+.prog-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
+.prog-key { color: var(--text2); }
+.prog-val { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 11px; }
+.prog-bar { height: 5px; background: var(--surf3); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; }
+
+/* ── SECTION HEAD ── */
+.sec-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.sec-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; }
+.sec-sub { font-size: 10.5px; color: var(--text3); margin-top: 2px; }
+
+/* ── AI CHAT ── */
+.ai-msgs { display: flex; flex-direction: column; gap: 8px; padding: 12px; max-height: 220px; overflow-y: auto; }
+.ai-msgs::-webkit-scrollbar { display: none; }
+.msg { max-width: 86%; padding: 9px 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; }
+.msg.ai { background: var(--surf2); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 3px; }
+.msg.u { background: var(--lime-d); border: 1px solid rgba(201,255,71,0.2); color: var(--lime); align-self: flex-end; border-bottom-right-radius: 3px; }
+.msg-time { font-size: 9px; color: var(--text3); margin-top: 3px; }
+.ai-input-row { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); }
+.ai-input {
+  flex: 1; background: var(--surf2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 9px 12px;
+  color: var(--text); font-size: 12.5px; font-family: 'DM Sans', sans-serif;
+  outline: none;
+}
+.ai-input::placeholder { color: var(--text3); }
+.ai-send {
+  background: var(--purple); border: none; border-radius: 10px;
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  font-size: 15px; cursor: pointer; flex-shrink: 0;
+}
+
+/* ── GOAL CARD ── */
+.goal-card {
+  background: var(--surf2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px; margin-bottom: 10px;
+}
+.goal-emoji { font-size: 20px; }
+.goal-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; }
+.goal-deadline { font-size: 10px; color: var(--text3); }
+.goal-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
+.goal-amounts { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text3); margin-bottom: 5px; }
+
+/* ── STREAK ── */
+.streak-grid { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0; }
+.sd {
+  width: 30px; height: 30px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; color: var(--text3);
+  background: var(--surf3);
+  font-family: 'Space Mono', monospace;
+}
+.sd.done { background: var(--lime); color: #000; }
+.sd.today { background: var(--lime-d); color: var(--lime); border: 1px solid var(--lime); }
+
+/* ── TOGGLE ── */
+.tog { width: 42px; height: 24px; border-radius: 12px; background: var(--surf3); position: relative; cursor: pointer; flex-shrink: 0; }
+.tog.on { background: var(--lime); }
+.tog::after { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.tog.on::after { transform: translateX(18px); }
+
+/* ── LEADERBOARD ── */
+.lb-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 13px;
+  background: var(--surf2); border: 1px solid var(--border);
+  border-radius: 12px; margin-bottom: 7px;
+}
+.lb-rank { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.r1 { background: rgba(255,215,0,0.15); color: #FFD700; }
+.r2 { background: rgba(192,192,192,0.12); color: #C0C0C0; }
+.r3 { background: rgba(205,127,50,0.12); color: #CD7F32; }
+.rn { background: var(--surf3); color: var(--text3); }
+.lb-handle { font-size: 12.5px; font-weight: 600; }
+.lb-city { font-size: 10px; color: var(--text3); }
+.lb-amt { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; color: var(--lime); margin-left: auto; }
+
+/* ── TIP POST ── */
+.tip-post { background: var(--surf2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 9px; }
+.tp-av { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg,var(--purple),var(--blue)); display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; font-weight: 700; flex-shrink: 0; }
+.tp-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.tp-handle { font-size: 11.5px; font-weight: 600; }
+.tp-time { font-size: 9.5px; color: var(--text3); }
+.tp-text { font-size: 12px; color: var(--text2); line-height: 1.55; margin-bottom: 8px; }
+.tp-foot { display: flex; gap: 14px; padding-top: 8px; border-top: 1px solid var(--border); }
+.tp-action { font-size: 10.5px; color: var(--text3); cursor: pointer; }
+
+/* ── SETTING ROW ── */
+.setting-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px;
+  background: var(--surf); border: 1px solid var(--border);
+  border-radius: 12px; margin-bottom: 6px; cursor: pointer;
+}
+.setting-row:active { background: var(--surf2); }
+.s-ico { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
+.s-info { flex: 1; }
+.s-name { font-size: 13px; font-weight: 600; }
+.s-desc { font-size: 10.5px; color: var(--text3); margin-top: 1px; }
+.s-sect-title { font-family: 'Syne', sans-serif; font-size: 12.5px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin: 16px 0 8px; }
+
+/* ── MOOD SELECTOR ── */
+.mood-row { display: flex; justify-content: space-around; padding: 10px 0; }
+.mood-opt { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px; border-radius: 12px; cursor: pointer; }
+.mood-opt.sel { background: var(--surf3); }
+.mood-emoji { font-size: 30px; }
+.mood-label { font-size: 9px; color: var(--text3); text-align: center; font-weight: 600; }
+
+/* ── SCHEME CARD ── */
+.scheme-card { background: var(--surf2); border: 1px solid rgba(59,158,255,0.18); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+.sc-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.sc-ministry { font-size: 9.5px; color: var(--text3); margin-bottom: 7px; }
+.sc-desc { font-size: 11.5px; color: var(--text2); line-height: 1.5; margin-bottom: 9px; }
+.sc-benefit { background: var(--teal-d); border: 1px solid rgba(0,212,170,0.2); border-radius: 8px; padding: 8px 10px; font-size: 11px; color: var(--teal); }
+
+/* ── CLIENT HEALTH ── */
+.cls-card { display: flex; align-items: center; gap: 11px; padding: 12px 14px; background: var(--surf2); border: 1px solid var(--border); border-radius: 13px; margin-bottom: 8px; }
+.cls-score { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; flex-shrink: 0; }
+.sA { background: rgba(0,212,170,0.15); color: var(--teal); }
+.sB { background: rgba(201,255,71,0.12); color: var(--lime); }
+.sC { background: rgba(255,184,48,0.12); color: var(--gold); }
+.sD { background: rgba(255,107,53,0.1); color: var(--orange); }
+.cls-name { font-size: 12.5px; font-weight: 600; margin-bottom: 1px; }
+.cls-meta { font-size: 10px; color: var(--text3); }
+.cls-rev { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; color: var(--lime); text-align: right; }
+.cls-days { font-size: 9.5px; color: var(--text3); text-align: right; }
+
+/* ── GRANT CARD ── */
+.grant-card { background: var(--surf2); border: 1px solid rgba(255,184,48,0.15); border-radius: 13px; padding: 14px; margin-bottom: 9px; }
+.gc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.gc-name { font-family: 'Syne', sans-serif; font-size: 12.5px; font-weight: 700; }
+.gc-city { font-size: 10px; color: var(--text3); }
+.gc-story { font-size: 11.5px; color: var(--text2); line-height: 1.5; margin-bottom: 8px; }
+.gc-impact { background: rgba(255,184,48,0.1); border: 1px solid rgba(255,184,48,0.2); border-radius: 8px; padding: 8px 10px; font-size: 11px; color: var(--gold); }
+
+/* ── INCOME VERIFY ── */
+.ivr { background: #fff; color: #1a1a2e; border-radius: 14px; padding: 18px; }
+.ivr-logo { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; margin-bottom: 12px; }
+.ivr-logo span { color: #7B5CFF; }
+.ivr-section { margin-bottom: 10px; }
+.ivr-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #666; margin-bottom: 3px; }
+.ivr-val { font-size: 12.5px; font-weight: 600; }
+.ivr-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 10px 0; }
+.ivr-table th { text-align: left; padding: 6px 8px; background: #f5f5fc; font-size: 9px; text-transform: uppercase; color: #666; letter-spacing: 0.05em; }
+.ivr-table td { padding: 7px 8px; border-bottom: 1px solid #f0f0f8; }
+.ivr-sig { background: #f8f8ff; border: 1px solid #e0e0f0; border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 10px; color: #555; line-height: 1.5; }
+
+/* ── EF (Emergency Fund) ── */
+.ef-rule { background: var(--surf2); border: 1px solid var(--border); border-radius: 12px; padding: 13px; margin-bottom: 8px; }
+.efr-name { font-size: 12.5px; font-weight: 600; }
+.efr-pct { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--teal); }
+.efr-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.efr-desc { font-size: 11px; color: var(--text3); }
+
+/* ── VOICE LOG ── */
+.voice-btn {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--lime); border: none; cursor: pointer;
+  font-size: 32px; display: flex; align-items: center; justify-content: center;
+  margin: 20px auto 10px; box-shadow: 0 0 0 0 rgba(201,255,71,0.4);
+  transition: all 0.2s;
+}
+.voice-btn.listening { background: var(--orange); animation: vring 1.2s infinite; }
+@keyframes vring { 0% { box-shadow: 0 0 0 0 rgba(255,107,53,0.5); } 70% { box-shadow: 0 0 0 20px rgba(255,107,53,0); } 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0); } }
+.voice-hint { text-align: center; font-size: 12px; color: var(--text3); }
+.voice-result { background: var(--surf2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 14px; font-size: 13px; color: var(--lime); }
+
+/* ── BUTTON ── */
+.btn { background: var(--lime); color: #000; border: none; border-radius: 12px; padding: 12px 20px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.btn:active { opacity: 0.85; transform: scale(0.98); }
+.btn-full { width: 100%; justify-content: center; }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); border-radius: 12px; padding: 11px 18px; font-size: 12.5px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+
+/* ── SOURCE LEGEND ── */
+.sleg { display: flex; flex-direction: column; gap: 9px; margin-top: 12px; }
+.sli { display: flex; align-items: center; gap: 9px; }
+.sld { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.sln { font-size: 11.5px; color: var(--text2); flex: 1; }
+.slbw { flex: 1; height: 4px; background: var(--surf3); border-radius: 2px; overflow: hidden; }
+.slbf { height: 100%; border-radius: 2px; }
+.slp { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; }
+
+/* ── FOUND CARD ── */
+.found-hero { text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(255,184,48,0.08), rgba(0,212,170,0.06)); border: 1px solid rgba(255,184,48,0.2); border-radius: 16px; margin-bottom: 14px; }
+
+/* ── PRIVACY SCORE ── */
+.priv-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surf2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 7px; }
+.pi-ico { font-size: 18px; flex-shrink: 0; }
+.pi-info { flex: 1; }
+.pi-name { font-size: 12.5px; font-weight: 600; }
+.pi-desc { font-size: 10px; color: var(--text3); margin-top: 1px; }
+.pi-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; }
+.ok { background: rgba(0,212,170,0.15); color: var(--teal); }
+.warn { background: rgba(255,107,53,0.12); color: var(--orange); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+/* ── INLINE INFO BOX ── */
+.info-box { background: var(--blue-d); border: 1px solid rgba(59,158,255,0.2); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; font-size: 12px; color: var(--text2); line-height: 1.6; }
+.info-box strong { color: var(--blue); }
+.tip-box { background: var(--lime-d); border: 1px solid rgba(201,255,71,0.2); border-radius: 12px; padding: 11px 14px; margin: 10px 0; font-size: 11.5px; color: var(--text2); }
+.tip-box strong { color: var(--lime); }
+.warn-box { background: var(--orange-d); border: 1px solid rgba(255,107,53,0.18); border-radius: 12px; padding: 11px 14px; margin: 10px 0; font-size: 11.5px; color: var(--text2); }
+.warn-box strong { color: var(--orange); }
+
+/* ── DONUT ── */
+.donut-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 12px; }
+.donut-val { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.d-num { font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700; color: var(--lime); }
+.d-sub { font-size: 8.5px; color: var(--text3); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── TOP HEADER ── -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-icon">S₹</div>
+      <div class="logo-text">Side<span>Stack</span></div>
+    </div>
+    <div class="header-right">
+      <span class="page-label" id="page-label">Home</span>
+      <div class="header-btn">
+        🔔<div class="notif-dot"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── SCROLL AREA ── -->
+  <div class="scroll-area" id="scroll-area">
+
+    <!-- ════ SCREEN: HOME ════ -->
+    <div class="screen active" id="s-home">
+      <div class="greeting">
+        <div class="greeting-small">Namaste 👋 Arjun</div>
+        <div class="greeting-big">₹5,500 away from<br><span>your April goal</span></div>
+      </div>
+
+      <div class="mc-row">
+        <div class="mc lime">
+          <div class="mc-label">This Month</div>
+          <div class="mc-val lime">₹34,500</div>
+          <div class="mc-change">↑ +23% vs Mar</div>
+          <div class="mc-ico">💸</div>
+        </div>
+        <div class="mc purple">
+          <div class="mc-label">Net Income</div>
+          <div class="mc-val purple">₹28,200</div>
+          <div class="mc-change">↑ After expenses</div>
+          <div class="mc-ico">📊</div>
+        </div>
+        <div class="mc orange">
+          <div class="mc-label">Tax Reserved</div>
+          <div class="mc-val orange">₹4,200</div>
+          <div class="mc-change" style="color:var(--text3)">12% auto</div>
+          <div class="mc-ico">🧾</div>
+        </div>
+        <div class="mc teal">
+          <div class="mc-label">Emergency Fund</div>
+          <div class="mc-val teal">₹8,400</div>
+          <div class="mc-change">↑ Growing</div>
+          <div class="mc-ico">🛡️</div>
+        </div>
+      </div>
+
+      <!-- Weekly trend -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Weekly Trend</div>
+          <div class="card-action">April 2026</div>
+        </div>
+        <div class="card-body">
+          <div class="bar-chart">
+            <div class="bbar" style="height:35%;background:rgba(201,255,71,0.3)"></div>
+            <div class="bbar" style="height:50%;background:rgba(201,255,71,0.4)"></div>
+            <div class="bbar" style="height:62%;background:rgba(201,255,71,0.5)"></div>
+            <div class="bbar" style="height:47%;background:rgba(201,255,71,0.4)"></div>
+            <div class="bbar" style="height:76%;background:rgba(201,255,71,0.6)"></div>
+            <div class="bbar" style="height:60%;background:rgba(201,255,71,0.5)"></div>
+            <div class="bbar" style="height:95%;background:var(--lime);box-shadow:0 0 10px rgba(201,255,71,0.4)"></div>
+          </div>
+          <div class="bar-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+          <div style="margin-top:12px;">
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:4px;">April Goal</div>
+            <div class="prog-bar"><div class="prog-fill" style="width:86%;background:linear-gradient(90deg,var(--lime),var(--teal))"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:3px;"><span>₹34,500</span><span style="color:var(--lime)">86% of ₹40,000</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent entries -->
+      <div class="sec-head">
+        <div><div class="sec-title">Recent Income</div></div>
+        <div class="chip lime" onclick="showScreen('income')" style="cursor:pointer;">View All →</div>
+      </div>
+      <div class="entry-list">
+        <div class="entry">
+          <div class="entry-ico" style="background:rgba(201,255,71,0.1)">💻</div>
+          <div class="entry-info"><div class="entry-name">Upwork — Logo Design</div><div class="entry-meta">Freelance · Today</div></div>
+          <div class="entry-amt pos">+₹8,000</div>
+        </div>
+        <div class="entry">
+          <div class="entry-ico" style="background:rgba(123,92,255,0.1)">📚</div>
+          <div class="entry-info"><div class="entry-name">Physics Tutoring</div><div class="entry-meta">Teaching · Yesterday</div></div>
+          <div class="entry-amt pos">+₹1,200</div>
+        </div>
+        <div class="entry">
+          <div class="entry-ico" style="background:rgba(255,107,53,0.1)">🛵</div>
+          <div class="entry-info"><div class="entry-name">Swiggy Weekend</div><div class="entry-meta">Delivery · Apr 17</div></div>
+          <div class="entry-amt pos">+₹850</div>
+        </div>
+        <div class="entry">
+          <div class="entry-ico" style="background:rgba(255,77,139,0.1)">🛒</div>
+          <div class="entry-info"><div class="entry-name">Canva Pro</div><div class="entry-meta">Expense · Apr 14</div></div>
+          <div class="entry-amt neg">−₹999</div>
+        </div>
+      </div>
+
+      <!-- AI snippet -->
+      <div class="card" style="margin-top:14px;">
+        <div class="card-head">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;">🤖</span>
+            <div><div class="card-title">Stacks AI</div><div style="font-size:9.5px;color:var(--teal)">● On-device · Private</div></div>
+          </div>
+          <div class="card-action" onclick="showScreen('ai')">Open →</div>
+        </div>
+        <div class="card-body">
+          <div style="font-size:12.5px;color:var(--text2);line-height:1.55;">Your freelance income is up 34% this week 📈. <strong style="color:var(--text)">Group tutoring earns 2× per hour</strong> vs solo — consider converting 2 solo slots next month.</div>
+          <div class="tip-box" style="margin-top:10px;margin-bottom:0;"><strong>Goal check:</strong> Need ₹5,500 in 8 days = ₹688/day. Highly achievable at your pace. 🎯</div>
+        </div>
+      </div>
+
+      <!-- Mood today -->
+      <div class="card" style="margin-top:12px;cursor:pointer;" onclick="showScreen('mood')">
+        <div class="card-body" style="display:flex;align-items:center;gap:12px;">
+          <div style="font-size:32px;">😊</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;">Mood logged · Good</div>
+            <div style="font-size:10.5px;color:var(--text3);">14-day streak · Keep it up!</div>
+          </div>
+          <div class="chip lime">NEW</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: INCOME ════ -->
+    <div class="screen" id="s-income">
+      <div class="sec-head"><div><div class="sec-title">Income Log</div><div class="sec-sub">Every rupee tracked</div></div><button class="btn">+ Log</button></div>
+
+      <div class="mc-row">
+        <div class="mc lime"><div class="mc-label">April Total</div><div class="mc-val lime" style="font-size:18px;">₹34,500</div></div>
+        <div class="mc orange"><div class="mc-label">Best Day</div><div class="mc-val orange" style="font-size:18px;">₹11,400</div></div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <div class="chip lime" style="cursor:pointer;">📷 Snap</div>
+        <div class="chip blue" style="cursor:pointer;">📁 UPI</div>
+        <div class="chip purple" style="cursor:pointer;" onclick="showScreen('voice')">🎙️ Voice</div>
+      </div>
+
+      <div class="entry-list">
+        <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">💻</div><div class="entry-info"><div class="entry-name">Upwork — Logo Design</div><div class="entry-meta">Freelance · Apr 19 · A+ client</div></div><div class="entry-amt pos">+₹8,000</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(123,92,255,0.1)">📚</div><div class="entry-info"><div class="entry-name">Physics Tutoring</div><div class="entry-meta">Teaching · Apr 18</div></div><div class="entry-amt pos">+₹1,200</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(59,158,255,0.1)">🎥</div><div class="entry-info"><div class="entry-name">YouTube AdSense</div><div class="entry-meta">Content · Apr 15 · 42K views</div></div><div class="entry-amt pos">+₹2,400</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">🛵</div><div class="entry-info"><div class="entry-name">Swiggy Weekend</div><div class="entry-meta">Gig · Apr 13–14 · 18 orders</div></div><div class="entry-amt pos">+₹850</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">💻</div><div class="entry-info"><div class="entry-name">Fiverr — Branding Kit</div><div class="entry-meta">Freelance · Apr 10</div></div><div class="entry-amt pos">+₹14,500</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(0,212,170,0.1)">🎵</div><div class="entry-info"><div class="entry-name">Spotify Royalties</div><div class="entry-meta">Content · Apr 5</div></div><div class="entry-amt pos">+₹550</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(255,77,139,0.1)">🛒</div><div class="entry-info"><div class="entry-name">Canva Pro</div><div class="entry-meta">Expense · Apr 14</div></div><div class="entry-amt neg">−₹999</div></div>
+      </div>
+
+      <!-- Source breakdown -->
+      <div class="card" style="margin-top:14px;">
+        <div class="card-head"><div class="card-title">Income Sources</div></div>
+        <div class="card-body">
+          <div class="donut-wrap">
+            <svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--surf3)" stroke-width="11"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--lime)" stroke-width="11" stroke-dasharray="95 144" stroke-linecap="round"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--purple)" stroke-width="11" stroke-dasharray="52 187" stroke-dashoffset="-95" stroke-linecap="round"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--orange)" stroke-width="11" stroke-dasharray="28 211" stroke-dashoffset="-147" stroke-linecap="round"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--blue)" stroke-width="11" stroke-dasharray="16 223" stroke-dashoffset="-175" stroke-linecap="round"/>
+            </svg>
+            <div class="donut-val"><div class="d-num">₹34.5K</div><div class="d-sub">total</div></div>
+          </div>
+          <div class="sleg">
+            <div class="sli"><div class="sld" style="background:var(--lime)"></div><div class="sln">Freelance</div><div class="slbw"><div class="slbf" style="width:60%;background:var(--lime)"></div></div><div class="slp" style="color:var(--lime)">60%</div></div>
+            <div class="sli"><div class="sld" style="background:var(--purple)"></div><div class="sln">Teaching</div><div class="slbw"><div class="slbf" style="width:22%;background:var(--purple)"></div></div><div class="slp" style="color:var(--purple)">22%</div></div>
+            <div class="sli"><div class="sld" style="background:var(--orange)"></div><div class="sln">Delivery</div><div class="slbw"><div class="slbf" style="width:11%;background:var(--orange)"></div></div><div class="slp" style="color:var(--orange)">11%</div></div>
+            <div class="sli"><div class="sld" style="background:var(--blue)"></div><div class="sln">YouTube</div><div class="slbw"><div class="slbf" style="width:7%;background:var(--blue)"></div></div><div class="slp" style="color:var(--blue)">7%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: AI CO-PILOT ════ -->
+    <div class="screen" id="s-ai">
+      <div class="sec-head"><div><div class="sec-title">AI Co-Pilot</div><div class="sec-sub">Stacks · On-device · Private</div></div><div class="chip blue">🔒 On-Device</div></div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-head">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:22px;">🤖</span>
+            <div><div class="card-title">Stacks</div><div style="font-size:9.5px;color:var(--teal)">● Analysing on-device</div></div>
+          </div>
+        </div>
+        <div class="ai-msgs" id="ai-msgs">
+          <div class="msg ai">Namaste! I'm Stacks. I analyse your income and mood privately — on your device only. Ask me anything! <div class="msg-time">Stacks</div></div>
+          <div class="msg u">Which hustle earns me most per hour?<div class="msg-time">You</div></div>
+          <div class="msg ai">📊 <strong>Hourly breakdown:</strong><br>• Group Tutoring: <strong>₹1,200/hr</strong> ← best!<br>• Freelance Design: ₹820/hr<br>• Solo Tutoring: ₹600/hr<br>• Delivery: ₹180/hr<br><br>💡 Add 2 group tutoring slots = +₹3,600/month for same hours.<div class="msg-time">Stacks</div></div>
+        </div>
+        <div class="ai-input-row">
+          <input class="ai-input" id="ai-inp" placeholder="Ask about income, taxes, goals..." onkeydown="if(event.key==='Enter')sendAI()">
+          <button class="ai-send" onclick="sendAI()">➤</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">This Week's Insights</div></div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="tip-box"><strong>📈 INCOME PATTERN</strong> — Thursdays–Sundays are your peak. Batch client deliveries to Wednesday → payments hit by weekend.</div>
+          <div style="background:var(--purple-d);border:1px solid rgba(123,92,255,0.18);border-radius:12px;padding:11px;font-size:11.5px;color:var(--text2);">
+            <strong style="color:var(--purple)">🧠 MOOD-MONEY LINK</strong> — Your mood improves on income days. Emergency fund growth = measurable anxiety reduction in your logs.
+          </div>
+          <div class="warn-box"><strong>⚠️ TAX ALERT</strong> — Q2 advance tax due Sept 15. Estimated: ₹8,208. Reserve ₹700/week now to be ready.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Income Forecast</div><div class="chip purple">On-device ML</div></div>
+        <div class="card-body">
+          <div class="prog"><div class="prog-row"><span class="prog-key">May 2026</span><span class="prog-val" style="color:var(--lime)">₹41,200</span></div><div class="prog-bar"><div class="prog-fill" style="width:82%;background:var(--lime)"></div></div></div>
+          <div class="prog"><div class="prog-row"><span class="prog-key">June 2026</span><span class="prog-val" style="color:var(--purple)">₹47,800</span></div><div class="prog-bar"><div class="prog-fill" style="width:96%;background:var(--purple)"></div></div></div>
+          <div class="prog"><div class="prog-row"><span class="prog-key">Q2 Total</span><span class="prog-val" style="color:var(--teal)">₹1,23,500</span></div><div class="prog-bar"><div class="prog-fill" style="width:70%;background:var(--teal)"></div></div></div>
+        </div>
+      </div>
+
+      <!-- Quick prompts -->
+      <div class="sec-title" style="margin-bottom:10px;">Quick Questions</div>
+      <div class="entry-list">
+        <div class="entry" onclick="askAI('Will I hit my ₹40K April goal?')"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">🎯</div><div class="entry-info"><div class="entry-name">Will I hit my April goal?</div></div><span style="color:var(--text3)">›</span></div>
+        <div class="entry" onclick="askAI('What tax do I owe this quarter?')"><div class="entry-ico" style="background:rgba(123,92,255,0.1)">🧾</div><div class="entry-info"><div class="entry-name">What tax do I owe?</div></div><span style="color:var(--text3)">›</span></div>
+        <div class="entry" onclick="askAI('How much should I save this month?')"><div class="entry-ico" style="background:rgba(0,212,170,0.1)">💰</div><div class="entry-info"><div class="entry-name">How much to save?</div></div><span style="color:var(--text3)">›</span></div>
+        <div class="entry" onclick="askAI('Which client should I focus on?')"><div class="entry-ico" style="background:rgba(59,158,255,0.1)">👤</div><div class="entry-info"><div class="entry-name">Which client to focus on?</div></div><span style="color:var(--text3)">›</span></div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: TAX ════ -->
+    <div class="screen" id="s-tax">
+      <div class="sec-head"><div><div class="sec-title">Tax Engine</div><div class="sec-sub">FY 2025–26 estimate</div></div><div class="chip purple">Old Regime</div></div>
+
+      <div class="mc-row">
+        <div class="mc purple"><div class="mc-label">Tax Owed</div><div class="mc-val purple" style="font-size:18px;">₹18,240</div><div class="mc-change" style="color:var(--text3)">FY 2025–26</div></div>
+        <div class="mc orange"><div class="mc-label">Reserved</div><div class="mc-val orange" style="font-size:18px;">₹14,400</div><div class="mc-change">79% ready</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Breakdown</div></div>
+        <div class="card-body">
+          <div class="prog"><div class="prog-row"><span class="prog-key">Gross Income</span><span class="prog-val" style="color:var(--lime)">₹1,95,000</span></div></div>
+          <div class="prog"><div class="prog-row"><span class="prog-key">Sec 44ADA Deduction</span><span class="prog-val" style="color:var(--orange)">−₹50,000</span></div></div>
+          <div class="divider"></div>
+          <div class="prog"><div class="prog-row"><span class="prog-key">Taxable Income</span><span class="prog-val">₹1,45,000</span></div></div>
+          <div class="prog"><div class="prog-row"><span class="prog-key">Tax @ 5% slab</span><span class="prog-val" style="color:var(--purple)">₹18,240</span></div></div>
+          <div class="tip-box"><strong>💡 Stacks:</strong> New Tax Regime saves ₹6,200 this year. Switch by July 31.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Advance Tax Schedule</div></div>
+        <div class="card-body">
+          <div class="entry-list">
+            <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">✅</div><div class="entry-info"><div class="entry-name">Q1 · June 15</div><div class="entry-meta">₹2,736 · 15%</div></div><div class="chip lime">Paid</div></div>
+            <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">⏳</div><div class="entry-info"><div class="entry-name">Q2 · Sept 15</div><div class="entry-meta">₹8,208 · 45%</div></div><div class="chip orange">Reserve Now</div></div>
+            <div class="entry"><div class="entry-ico" style="background:rgba(255,255,255,0.04)">📅</div><div class="entry-info"><div class="entry-name">Q3 · Dec 15</div><div class="entry-meta">₹13,680 · 75%</div></div><div class="chip muted">Upcoming</div></div>
+            <div class="entry"><div class="entry-ico" style="background:rgba(255,255,255,0.04)">📅</div><div class="entry-info"><div class="entry-name">Q4 · Mar 15</div><div class="entry-meta">100% total</div></div><div class="chip muted">Upcoming</div></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-full" style="background:var(--purple);color:#fff;">📥 Export ITR-1 Summary</button>
+    </div>
+
+    <!-- ════ SCREEN: MORE ════ -->
+    <div class="screen" id="s-more">
+      <div class="sec-head"><div><div class="sec-title">All Features</div><div class="sec-sub">SideStack v4.0</div></div></div>
+
+      <div class="more-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+        <div class="more-item" onclick="showScreen('goals')"><div class="more-item-ico">🎯</div><div class="more-item-label">Goals & Streaks</div></div>
+        <div class="more-item" onclick="showScreen('mood')"><div class="more-item-ico">🧠</div><div class="more-item-label">Mood Tracker</div></div>
+        <div class="more-item" onclick="showScreen('emergency')"><div class="more-item-ico">🛡️</div><div class="more-item-label">Emergency Fund</div></div>
+        <div class="more-item" onclick="showScreen('verify')"><div class="more-item-ico">🔏</div><div class="more-item-label">Income Proof</div></div>
+        <div class="more-item" onclick="showScreen('invoices')"><div class="more-item-ico">📄</div><div class="more-item-label">Invoices</div></div>
+        <div class="more-item" onclick="showScreen('schemes')"><div class="more-item-ico">🏛️</div><div class="more-item-label">Scheme Navigator</div></div>
+        <div class="more-item" onclick="showScreen('community')"><div class="more-item-ico">🏆</div><div class="more-item-label">Leaderboard</div></div>
+        <div class="more-item" onclick="showScreen('tips')"><div class="more-item-ico">💬</div><div class="more-item-label">Hustle Tips</div></div>
+        <div class="more-item" onclick="showScreen('clients')"><div class="more-item-ico">👔</div><div class="more-item-label">Client Health</div></div>
+        <div class="more-item" onclick="showScreen('voice')"><div class="more-item-ico">🎙️</div><div class="more-item-label">Voice Log</div></div>
+        <div class="more-item highlight" onclick="showScreen('foundation')"><div class="more-item-ico">🌱</div><div class="more-item-label">Foundation</div></div>
+        <div class="more-item" onclick="showScreen('privacy')"><div class="more-item-ico">🔐</div><div class="more-item-label">Privacy</div></div>
+      </div>
+
+      <!-- Pro upgrade -->
+      <div style="background:linear-gradient(135deg,rgba(201,255,71,0.08),rgba(123,92,255,0.08));border:1px solid rgba(201,255,71,0.18);border-radius:16px;padding:18px;margin-bottom:14px;">
+        <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:5px;">Upgrade to Pro+</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:12px;">Tax engine, AI forecasting, income verification, invoice builder & Foundation access.</div>
+        <button class="btn btn-full">Get Pro+ · ₹49/month</button>
+        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Cancel anytime · UPI Autopay · 7-day trial</div>
+      </div>
+
+      <!-- Referral -->
+      <div class="card">
+        <div class="card-head"><div class="card-title">Refer & Earn</div></div>
+        <div class="card-body">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Refer 3 friends → get 1 month Pro free.</div>
+          <div style="font-family:'Space Mono',monospace;font-size:12.5px;background:var(--surf2);border-radius:9px;padding:10px;color:var(--lime);margin-bottom:10px;">HUSTLE-ARJUN-BLR</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn" style="flex:1;justify-content:center;font-size:11.5px;">📋 Copy</button>
+            <button class="btn-ghost" style="flex:1;justify-content:center;font-size:11.5px;">📱 Share</button>
+          </div>
+          <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">2/3 referred · 1 more for free month</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: GOALS ════ -->
+    <div class="screen" id="s-goals">
+      <div class="sec-head"><div><div class="sec-title">Goals & Streaks</div></div><button class="btn" style="padding:9px 14px;font-size:12px;">+ New</button></div>
+
+      <div class="goal-card" style="border-color:rgba(201,255,71,0.2);">
+        <div class="goal-head"><div class="goal-emoji">🎯</div><div><div class="goal-name">April Target</div><div class="goal-deadline">8 days left</div></div><div class="chip lime" style="margin-left:auto;">86%</div></div>
+        <div class="goal-amounts"><span style="font-family:'Space Mono',monospace;color:var(--lime);font-weight:700;">₹34,500</span><span style="font-family:'Space Mono',monospace;font-weight:700;">₹40,000</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:86%;background:linear-gradient(90deg,var(--lime),var(--teal))"></div></div>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-head"><div class="goal-emoji">🛡️</div><div><div class="goal-name">Emergency Fund</div><div class="goal-deadline">Target ₹22K by Aug</div></div><div class="chip teal" style="margin-left:auto;">38%</div></div>
+        <div class="goal-amounts"><span style="font-family:'Space Mono',monospace;color:var(--teal);font-weight:700;">₹8,400</span><span style="font-family:'Space Mono',monospace;font-weight:700;">₹22,000</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:38%;background:var(--teal)"></div></div>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-head"><div class="goal-emoji">💻</div><div><div class="goal-name">Freelance Month</div><div class="goal-deadline">₹25K from freelance only</div></div><div class="chip purple" style="margin-left:auto;">83%</div></div>
+        <div class="goal-amounts"><span style="font-family:'Space Mono',monospace;color:var(--purple);font-weight:700;">₹20,750</span><span style="font-family:'Space Mono',monospace;font-weight:700;">₹25,000</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:83%;background:var(--purple)"></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">🔥 14-Day Streak</div></div>
+        <div class="card-body">
+          <div class="streak-grid">
+            <div class="sd done">1</div><div class="sd done">2</div><div class="sd done">3</div><div class="sd done">4</div><div class="sd done">5</div><div class="sd done">6</div><div class="sd done">7</div><div class="sd done">8</div><div class="sd done">9</div><div class="sd done">10</div><div class="sd done">11</div><div class="sd done">12</div><div class="sd done">13</div><div class="sd done">14</div><div class="sd today">15</div><div class="sd">16</div><div class="sd">17</div><div class="sd">18</div><div class="sd">19</div><div class="sd">20</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+            <div style="text-align:center;padding:10px;background:rgba(201,255,71,0.08);border:1px solid rgba(201,255,71,0.18);border-radius:11px;min-width:64px;"><div style="font-size:22px;">🏆</div><div style="font-size:8.5px;color:var(--lime);font-weight:700;margin-top:3px;">₹10K Club</div></div>
+            <div style="text-align:center;padding:10px;background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.18);border-radius:11px;min-width:64px;"><div style="font-size:22px;">🔥</div><div style="font-size:8.5px;color:var(--orange);font-weight:700;margin-top:3px;">14-Day Fire</div></div>
+            <div style="text-align:center;padding:10px;background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.18);border-radius:11px;min-width:64px;"><div style="font-size:22px;">🛡️</div><div style="font-size:8.5px;color:var(--teal);font-weight:700;margin-top:3px;">Buffer Boss</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: MOOD ════ -->
+    <div class="screen" id="s-mood">
+      <div class="sec-head"><div><div class="sec-title">Mood Tracker</div><div class="sec-sub">Money · Wellbeing link</div></div><div class="chip lime">NEW</div></div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-head"><div class="card-title">How are you feeling today?</div></div>
+        <div class="card-body">
+          <div class="mood-row">
+            <div class="mood-opt" onclick="selectMood(this)"><div class="mood-emoji">😞</div><div class="mood-label">Stressed</div></div>
+            <div class="mood-opt" onclick="selectMood(this)"><div class="mood-emoji">😐</div><div class="mood-label">Neutral</div></div>
+            <div class="mood-opt sel" onclick="selectMood(this)"><div class="mood-emoji">😊</div><div class="mood-label">Good</div></div>
+            <div class="mood-opt" onclick="selectMood(this)"><div class="mood-emoji">😄</div><div class="mood-label">Great</div></div>
+            <div class="mood-opt" onclick="selectMood(this)"><div class="mood-emoji">🔥</div><div class="mood-label">Crushing</div></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin:10px 0;">
+            <div class="chip orange" style="cursor:pointer;">Slow income</div>
+            <div class="chip blue" style="cursor:pointer;">Client stress</div>
+            <div class="chip lime" style="cursor:pointer;">Big win</div>
+            <div class="chip purple" style="cursor:pointer;">Overworked</div>
+            <div class="chip teal" style="cursor:pointer;">Flow state</div>
+          </div>
+          <button class="btn btn-full">✓ Log Today's Mood</button>
+          <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Stored on-device only · Never shared</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Stacks Mood Insight</div><div class="chip purple">On-device AI</div></div>
+        <div class="card-body">
+          <div style="background:var(--purple-d);border:1px solid rgba(123,92,255,0.18);border-radius:12px;padding:13px;margin-bottom:10px;">
+            <div style="font-size:10px;font-weight:700;color:var(--purple);margin-bottom:4px;">🔍 PATTERN DETECTED</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.55;">Mood dips on days with no logged income — even when you worked. <strong style="color:var(--text)">Log within 2 hours of earning</strong> to reduce financial anxiety measurably.</div>
+          </div>
+          <div class="tip-box" style="margin-bottom:0;"><strong>💚 Correlation:</strong> Your emergency fund growing directly correlates with better mood scores. Every ₹1,000 added = measurable wellbeing improvement.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">April Mood Stats</div></div>
+        <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">🔥</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--teal)">4</div><div style="font-size:9px;color:var(--text3)">Crushing</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😊</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--lime)">11</div><div style="font-size:9px;color:var(--text3)">Good days</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😞</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--orange)">3</div><div style="font-size:9px;color:var(--text3)">Stress</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: EMERGENCY FUND ════ -->
+    <div class="screen" id="s-emergency">
+      <div class="sec-head"><div><div class="sec-title">Emergency Fund</div><div class="sec-sub">Autopilot rules active</div></div><div class="chip lime">NEW</div></div>
+
+      <div class="card" style="border-color:rgba(0,212,170,0.2);margin-bottom:12px;">
+        <div class="card-body" style="text-align:center;padding:20px;">
+          <div style="font-family:'Space Mono',monospace;font-size:42px;font-weight:700;color:var(--teal);">₹8,400</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px;">Emergency Fund · 3 months growing</div>
+          <div style="margin-top:14px;">
+            <div style="font-size:10.5px;color:var(--text3);margin-bottom:4px;">Target: 1 month expenses (₹22,000)</div>
+            <div class="prog-bar" style="height:8px;"><div class="prog-fill" style="width:38%;background:var(--teal)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ef-rule">
+        <div class="efr-head"><span class="efr-name">Surplus Reserve Rule</span><span class="efr-pct">15%</span></div>
+        <div class="efr-desc">When income exceeds ₹30K, tag 15% as emergency buffer. <span style="color:var(--lime)">Active · 3× this month</span></div>
+      </div>
+      <div class="ef-rule">
+        <div class="efr-head"><span class="efr-name">Slow Month Guard</span><span class="efr-pct">Alert</span></div>
+        <div class="efr-desc">If income drops below ₹15K in any week, notify immediately. <span style="color:var(--teal)">Active</span></div>
+      </div>
+      <div class="ef-rule">
+        <div class="efr-head"><span class="efr-name">Tax Lock</span><span class="efr-pct">12%</span></div>
+        <div class="efr-desc">Reserve 12% of every income entry as tax buffer. <span style="color:var(--lime)">Active</span></div>
+      </div>
+
+      <div class="tip-box"><strong>🧠 Stacks:</strong> At current rate, you'll hit 1-month buffer by August 2026. This correlates directly with improving mood scores.</div>
+    </div>
+
+    <!-- ════ SCREEN: INCOME VERIFY ════ -->
+    <div class="screen" id="s-verify">
+      <div class="sec-head"><div><div class="sec-title">Income Proof</div><div class="sec-sub">Your data · Your terms</div></div><div class="chip lime">NEW</div></div>
+
+      <div class="info-box"><strong>60% of gig workers can't get loans</strong> — banks want salary slips. This report is tamper-evident proof of your income. Share with landlords or banks on your terms.</div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-head"><div class="card-title">Generate Report</div></div>
+        <div class="card-body">
+          <div style="font-size:11.5px;color:var(--text2);margin-bottom:12px;">Select period:</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+            <div class="entry" style="background:var(--lime-d);border-color:rgba(201,255,71,0.2);">📅 Last 3 months (Jan–Mar 2026) ✓</div>
+            <div class="entry">📅 Last 6 months (Oct 2025–Mar 2026)</div>
+            <div class="entry">📅 Full FY 2025–26</div>
+          </div>
+          <button class="btn btn-full" style="background:var(--purple);color:#fff;">🔏 Generate Signed PDF</button>
+          <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">SHA-256 signed · QR verification · Free for Pro+</div>
+        </div>
+      </div>
+
+      <div class="ivr">
+        <div class="ivr-logo">Side<span>Stack</span> Income Report</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div class="ivr-section"><div class="ivr-label">Name</div><div class="ivr-val">Arjun Kumar</div></div>
+          <div class="ivr-section"><div class="ivr-label">Period</div><div class="ivr-val">Jan–Mar 2026</div></div>
+          <div class="ivr-section"><div class="ivr-label">City</div><div class="ivr-val">Bangalore</div></div>
+          <div class="ivr-section"><div class="ivr-label">Date</div><div class="ivr-val">Apr 19, 2026</div></div>
+        </div>
+        <table class="ivr-table">
+          <tr><th>Month</th><th>Income</th><th>Net</th></tr>
+          <tr><td>Jan 2026</td><td>₹28,400</td><td>₹23,200</td></tr>
+          <tr><td>Feb 2026</td><td>₹31,200</td><td>₹25,800</td></tr>
+          <tr><td>Mar 2026</td><td>₹34,100</td><td>₹28,000</td></tr>
+          <tr style="font-weight:700;background:#f5f5fc;"><td>Total</td><td>₹93,700</td><td>₹77,000</td></tr>
+        </table>
+        <div class="ivr-sig">🔏 Code: SS-2026-0419-AK-7F4D<br>verify.sidestack.in to confirm authenticity</div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: SCHEMES ════ -->
+    <div class="screen" id="s-schemes">
+      <div class="sec-head"><div><div class="sec-title">Scheme Navigator</div><div class="sec-sub">Benefits you may be missing</div></div><div class="chip lime">NEW</div></div>
+
+      <div style="background:var(--gold-d,rgba(255,184,48,0.1));border:1px solid rgba(255,184,48,0.2);border-radius:14px;padding:16px;text-align:center;margin-bottom:14px;">
+        <div style="font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--gold);">₹6.25L</div>
+        <div style="font-size:11.5px;color:var(--text2);margin-top:4px;">in schemes you may qualify for</div>
+      </div>
+
+      <div class="scheme-card">
+        <div class="sc-title">PM-YASASVI Scholarship</div>
+        <div class="sc-ministry">Ministry of Social Justice · Central</div>
+        <div class="sc-desc">For youth up to 29 years with family income below ₹2.5L. Annual scholarship for higher education.</div>
+        <div class="sc-benefit">💰 Up to ₹1.25L/year · Apply by Oct 31</div>
+      </div>
+      <div class="scheme-card">
+        <div class="sc-title">Gig Worker ID + PM-JAY</div>
+        <div class="sc-ministry">Ministry of Labour · Budget 2025</div>
+        <div class="sc-desc">Government gig worker card enabling PM-JAY health insurance (₹5L coverage) and social security.</div>
+        <div class="sc-benefit">💊 ₹5L health cover · 25,000+ hospitals</div>
+      </div>
+      <div class="scheme-card">
+        <div class="sc-title">Startup India Seed Fund</div>
+        <div class="sc-ministry">DPIIT · Ministry of Commerce</div>
+        <div class="sc-desc">Up to ₹20L grant for registered startups. Your freelance business may qualify if registered.</div>
+        <div class="sc-benefit">🚀 ₹20L grant · Zero equity</div>
+      </div>
+      <div class="scheme-card">
+        <div class="sc-title">PM Vishwakarma Scheme</div>
+        <div class="sc-ministry">Ministry of MSME</div>
+        <div class="sc-desc">Credit at 5% interest, skill training stipend, and digital payment incentives for professionals.</div>
+        <div class="sc-benefit">🏦 ₹3L credit · ₹500/day training stipend</div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: CLIENT HEALTH ════ -->
+    <div class="screen" id="s-clients">
+      <div class="sec-head"><div><div class="sec-title">Client Health</div><div class="sec-sub">Know who's worth your time</div></div><div class="chip lime">NEW</div></div>
+
+      <div class="info-box"><strong>From your logs only.</strong> Scores based on payment speed, repeat projects, invoice fulfilment, and hourly rate.</div>
+
+      <div class="cls-card">
+        <div class="cls-score sA">A+</div>
+        <div style="flex:1;"><div class="cls-name">GlobalTech Solutions</div><div class="cls-meta">Pays in 3 days · 4 repeat projects</div></div>
+        <div><div class="cls-rev">₹16,500</div><div class="cls-days">₹825/hr</div></div>
+      </div>
+      <div class="cls-card">
+        <div class="cls-score sB">B+</div>
+        <div style="flex:1;"><div class="cls-name">TechStartup_IN</div><div class="cls-meta">Pays in 8 days · 2 projects</div></div>
+        <div><div class="cls-rev">₹14,500</div><div class="cls-days">₹604/hr</div></div>
+      </div>
+      <div class="cls-card">
+        <div class="cls-score sA">A</div>
+        <div style="flex:1;"><div class="cls-name">Priya Sharma</div><div class="cls-meta">Pays same day · Regular booking</div></div>
+        <div><div class="cls-rev">₹7,200</div><div class="cls-days">₹600/hr</div></div>
+      </div>
+      <div class="cls-card">
+        <div class="cls-score sC">C</div>
+        <div style="flex:1;"><div class="cls-name">Meera Foods</div><div class="cls-meta">⚠️ 1 overdue invoice</div></div>
+        <div><div class="cls-rev">₹4,200</div><div class="cls-days">₹350/hr</div></div>
+      </div>
+      <div class="cls-card">
+        <div class="cls-score sD">D</div>
+        <div style="flex:1;"><div class="cls-name">Client X</div><div class="cls-meta">🚨 2 unpaid invoices</div></div>
+        <div><div class="cls-rev">₹2,800</div><div class="cls-days">Pending</div></div>
+      </div>
+
+      <div class="tip-box" style="margin-top:4px;"><strong>🎯 Stacks:</strong> Replace Meera + Client X with one GlobalTech-style client → +₹8,400/month for same hours.</div>
+    </div>
+
+    <!-- ════ SCREEN: VOICE LOG ════ -->
+    <div class="screen" id="s-voice">
+      <div class="sec-head"><div><div class="sec-title">Voice Log</div><div class="sec-sub">Speak to log income</div></div><div class="chip blue">On-Device</div></div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-body" style="text-align:center;padding:20px;">
+          <div style="font-size:12px;color:var(--text3);margin-bottom:16px;line-height:1.7;">Try saying:<br><span style="color:var(--lime)">"Upwork se aath hazaar aaye aaj"</span><br><span style="color:var(--purple)">"Swiggy delivery ₹650"</span></div>
+          <button class="voice-btn" id="voice-btn" onclick="toggleVoice(this)">🎙️</button>
+          <div class="voice-hint" id="voice-hint">Tap to start speaking</div>
+          <div id="voice-result" style="display:none;" class="voice-result">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:5px;">PARSED ENTRY:</div>
+            <div>💻 <strong>Upwork</strong> — ₹8,000 · Freelance · Today</div>
+            <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;">
+              <button class="btn" style="font-size:12px;">✓ Confirm</button>
+              <button class="btn-ghost" style="font-size:12px;" onclick="document.getElementById('voice-result').style.display='none'">Retry</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Languages</div></div>
+        <div class="card-body" style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="chip lime">🇮🇳 Hindi</span>
+          <span class="chip purple">Tamil</span>
+          <span class="chip blue">Telugu</span>
+          <span class="chip orange">Marathi</span>
+          <span class="chip teal">Bengali</span>
+          <span class="chip muted">Kannada (soon)</span>
+          <span class="chip muted">Gujarati (soon)</span>
+        </div>
+        <div style="padding:12px 16px 0;font-size:11px;color:var(--text3);">🔒 Speech processed on-device. No audio transmitted.</div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: INVOICES ════ -->
+    <div class="screen" id="s-invoices">
+      <div class="sec-head"><div><div class="sec-title">Invoices</div><div class="sec-sub">60-second professional invoices</div></div><button class="btn" style="padding:9px 14px;font-size:12px;">+ New</button></div>
+
+      <div class="mc-row">
+        <div class="mc teal"><div class="mc-label">Total Sent</div><div class="mc-val teal" style="font-size:18px;">₹89,400</div></div>
+        <div class="mc orange"><div class="mc-label">Outstanding</div><div class="mc-val orange" style="font-size:18px;">₹4,800</div></div>
+      </div>
+
+      <div class="entry-list">
+        <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-043 · GlobalTech</div><div class="entry-meta">₹16,500 · Apr 19</div></div><div class="chip teal">Paid</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-042 · Priya Sharma</div><div class="entry-meta">₹4,800 · Apr 10</div></div><div class="chip orange">Overdue</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(255,77,139,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-041 · Client X</div><div class="entry-meta">₹2,800 · 3 weeks unpaid</div></div><div class="chip" style="background:rgba(255,77,139,0.1);color:var(--pink);border-color:rgba(255,77,139,0.2);">Chase</div></div>
+        <div class="entry"><div class="entry-ico" style="background:rgba(123,92,255,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-040 · Meera Foods</div><div class="entry-meta">₹4,200 · Apr 5</div></div><div class="chip blue">Sent</div></div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: COMMUNITY ════ -->
+    <div class="screen" id="s-community">
+      <div class="sec-head"><div><div class="sec-title">Leaderboard</div><div class="sec-sub">Bangalore · Anonymous · April</div></div><div class="chip blue">🔒 Anonymous</div></div>
+
+      <div class="lb-item"><div class="lb-rank r1">1</div><div style="flex:1;"><div class="lb-handle">Hustler_BLR_047</div><div class="lb-city">Freelance Design</div></div><div class="lb-amt">₹1,24,000</div></div>
+      <div class="lb-item"><div class="lb-rank r2">2</div><div style="flex:1;"><div class="lb-handle">Creator_BLR_112</div><div class="lb-city">Content + Freelance</div></div><div class="lb-amt">₹98,500</div></div>
+      <div class="lb-item"><div class="lb-rank r3">3</div><div style="flex:1;"><div class="lb-handle">DevStack_BLR_008</div><div class="lb-city">Dev + Teaching</div></div><div class="lb-amt">₹87,200</div></div>
+      <div class="lb-item" style="border-color:rgba(201,255,71,0.2);background:rgba(201,255,71,0.04);"><div class="lb-rank" style="background:rgba(201,255,71,0.15);color:var(--lime);font-size:9.5px;width:28px;">YOU</div><div style="flex:1;"><div class="lb-handle">Hustler_BLR_214</div><div class="lb-city">Design + Teaching</div></div><div class="lb-amt">₹34,500</div></div>
+
+      <div class="card" style="margin-top:14px;">
+        <div class="card-head"><div class="card-title">City Benchmarks</div><div class="chip purple">k-Anon</div></div>
+        <div class="card-body">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Min 10 users per category before showing</div>
+          <div class="sleg">
+            <div class="sli"><div class="sld" style="background:var(--lime)"></div><div class="sln">Freelance Design</div><div class="slbw"><div class="slbf" style="width:62%;background:var(--lime)"></div></div><div class="slp" style="color:var(--lime)">₹42K</div></div>
+            <div class="sli"><div class="sld" style="background:var(--purple)"></div><div class="sln">Dev / Coding</div><div class="slbw"><div class="slbf" style="width:100%;background:var(--purple)"></div></div><div class="slp" style="color:var(--purple)">₹68K</div></div>
+            <div class="sli"><div class="sld" style="background:var(--orange)"></div><div class="sln">Teaching</div><div class="slbw"><div class="slbf" style="width:26%;background:var(--orange)"></div></div><div class="slp" style="color:var(--orange)">₹18K</div></div>
+            <div class="sli"><div class="sld" style="background:var(--teal)"></div><div class="sln">Gig/Delivery</div><div class="slbw"><div class="slbf" style="width:16%;background:var(--teal)"></div></div><div class="slp" style="color:var(--teal)">₹11K</div></div>
+          </div>
+          <div class="tip-box" style="margin-top:12px;margin-bottom:0;"><strong>You're in the top 22%</strong> of freelance designers in Bangalore. Top 10% earn ₹75K+ — achievable in 6 months at your rate.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: TIPS ════ -->
+    <div class="screen" id="s-tips">
+      <div class="sec-head"><div><div class="sec-title">Hustle Tips</div><div class="sec-sub">Real stories · Anonymous</div></div><button class="btn" style="padding:9px 14px;font-size:12px;">+ Share</button></div>
+
+      <div class="tip-post">
+        <div class="tp-head"><div class="tp-av">H</div><div><div class="tp-handle">Hustler_PUN_034</div><div class="tp-time">Pune · 2 hrs ago</div></div></div>
+        <div class="tp-text">Went from ₹8K to ₹31K/month on Upwork in 4 months. Only target "Payment Verified" clients who've hired 5+ times. Response rate: 8% → 34%.</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;"><span class="chip lime">Freelance</span><span class="chip purple">Upwork</span></div>
+        <div class="tp-foot"><div class="tp-action">❤️ 142</div><div class="tp-action">💬 28</div><div class="tp-action">🔖 Save</div></div>
+      </div>
+      <div class="tip-post">
+        <div class="tp-head"><div class="tp-av" style="background:linear-gradient(135deg,var(--orange),var(--pink))">G</div><div><div class="tp-handle">GigPro_MUM_091</div><div class="tp-time">Mumbai · Yesterday</div></div></div>
+        <div class="tp-text">Skip lunch rush (12–2pm). My sweet spot: 7–10pm, Thu–Sat. 40% more per hour, less competition in residential areas.</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;"><span class="chip orange">Delivery</span></div>
+        <div class="tp-foot"><div class="tp-action">❤️ 89</div><div class="tp-action">💬 14</div><div class="tp-action">🔖 Save</div></div>
+      </div>
+      <div class="tip-post">
+        <div class="tp-head"><div class="tp-av" style="background:linear-gradient(135deg,var(--purple),var(--blue))">T</div><div><div class="tp-handle">Teach_DEL_006</div><div class="tp-time">Delhi · 3 days ago</div></div></div>
+        <div class="tp-text">GROUP tutoring changed everything. 6 students, same 2hr slot. ₹800 × 6 = ₹4,800 for 2 hours. That's ₹1,200/hour.</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;"><span class="chip purple">Teaching</span></div>
+        <div class="tp-foot"><div class="tp-action">❤️ 234</div><div class="tp-action">💬 51</div><div class="tp-action">🔖 Save</div></div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: FOUNDATION ════ -->
+    <div class="screen" id="s-foundation">
+      <div class="sec-head"><div><div class="sec-title">Foundation</div><div class="sec-sub">Revenue → Impact</div></div><div class="chip" style="background:rgba(255,184,48,0.1);color:var(--gold);border-color:rgba(255,184,48,0.2);">LIVE</div></div>
+
+      <div class="found-hero">
+        <div style="font-size:42px;margin-bottom:8px;">🌱</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:5px;">We grow because you grow</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:14px;">5% of every subscription funds micro-grants to users with consistent income growth. No applications. Algorithm decides — based only on income data.</div>
+        <div style="display:flex;justify-content:center;gap:28px;">
+          <div style="text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);">₹1.2L</div><div style="font-size:9px;color:var(--text3);">Granted</div></div>
+          <div style="text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);">47</div><div style="font-size:9px;color:var(--text3);">Hustlers</div></div>
+          <div style="text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);">5%</div><div style="font-size:9px;color:var(--text3);">Of MRR</div></div>
+        </div>
+      </div>
+
+      <div class="grant-card">
+        <div class="gc-head"><div style="font-size:20px;width:36px;height:36px;background:rgba(201,255,71,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;">💻</div><div><div class="gc-name">Hustler_PUN_034</div><div class="gc-city">Pune · Freelance Designer</div></div><div class="chip" style="background:rgba(255,184,48,0.1);color:var(--gold);border-color:rgba(255,184,48,0.2);margin-left:auto;">₹15,000</div></div>
+        <div class="gc-story">"Used the grant to buy a drawing tablet. My Upwork income jumped 60% the next month."</div>
+        <div class="gc-impact">📈 Income growth: 48% over 6 months → qualified</div>
+      </div>
+      <div class="grant-card">
+        <div class="gc-head"><div style="font-size:20px;width:36px;height:36px;background:rgba(59,158,255,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;">📚</div><div><div class="gc-name">Teacher_DEL_006</div><div class="gc-city">Delhi · Online Tutor</div></div><div class="chip" style="background:rgba(255,184,48,0.1);color:var(--gold);border-color:rgba(255,184,48,0.2);margin-left:auto;">₹8,000</div></div>
+        <div class="gc-story">"Bought a mic and ring light. Now earning ₹6K/month passive from YouTube on top of tutoring."</div>
+        <div class="gc-impact">📈 Income growth: 52% over 6 months → qualified</div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Your Status</div></div>
+        <div class="card-body">
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:6px;">Grant Eligibility: <span style="color:var(--lime)">Tracking</span></div>
+          <div class="prog"><div class="prog-row"><span class="prog-key">Growth Progress (need 40%)</span><span class="prog-val" style="color:var(--gold)">23% / 40%</span></div><div class="prog-bar"><div class="prog-fill" style="width:57%;background:var(--gold)"></div></div></div>
+          <div style="font-size:10.5px;color:var(--text3);">Checked automatically · No application · Fully anonymous</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: PRIVACY ════ -->
+    <div class="screen" id="s-privacy">
+      <div class="sec-head"><div><div class="sec-title">Privacy</div><div class="sec-sub">DPDP 2023 Compliant</div></div><div class="chip teal">Score: 98%</div></div>
+
+      <div style="background:linear-gradient(135deg,rgba(59,158,255,0.08),rgba(0,212,170,0.06));border:1px solid rgba(59,158,255,0.2);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;">
+        <div style="font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:var(--teal);">98%</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">Maximum privacy controls active</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;">
+        <div style="background:var(--surf2);border:1px solid rgba(59,158,255,0.14);border-radius:11px;padding:12px;text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--blue);">0</div><div style="font-size:10px;color:var(--text3);">3rd Parties</div></div>
+        <div style="background:var(--surf2);border:1px solid rgba(59,158,255,0.14);border-radius:11px;padding:12px;text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--teal);">On-Device</div><div style="font-size:10px;color:var(--text3);">AI Processing</div></div>
+        <div style="background:var(--surf2);border:1px solid rgba(59,158,255,0.14);border-radius:11px;padding:12px;text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--blue);">Never</div><div style="font-size:10px;color:var(--text3);">Data Sold</div></div>
+        <div style="background:var(--surf2);border:1px solid rgba(59,158,255,0.14);border-radius:11px;padding:12px;text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--teal);">72hrs</div><div style="font-size:10px;color:var(--text3);">Breach Notice</div></div>
+      </div>
+
+      <div class="priv-item"><span class="pi-ico">🤖</span><div class="pi-info"><div class="pi-name">On-Device AI</div><div class="pi-desc">No financial data sent to external APIs</div></div><span class="pi-status ok">✓ Done</span></div>
+      <div class="priv-item"><span class="pi-ico">🎙️</span><div class="pi-info"><div class="pi-name">Voice Processing</div><div class="pi-desc">Device-native · No audio stored</div></div><span class="pi-status ok">✓ Done</span></div>
+      <div class="priv-item"><span class="pi-ico">😊</span><div class="pi-info"><div class="pi-name">Mood Data</div><div class="pi-desc">On-device only · Never transmitted</div></div><span class="pi-status ok">✓ Done</span></div>
+      <div class="priv-item"><span class="pi-ico">🗑️</span><div class="pi-info"><div class="pi-name">Delete Account</div><div class="pi-desc">Permanent · 2 taps · Immediate</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;border-color:rgba(255,77,139,0.3);color:var(--pink);">Delete</button></div>
+      <div class="priv-item"><span class="pi-ico">📋</span><div class="pi-info"><div class="pi-name">Download My Data</div><div class="pi-desc">CSV / JSON export · DPDP right</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;">Export</button></div>
+
+      <div class="setting-row" style="margin-top:6px;">
+        <span class="s-ico">☁️</span><div class="s-info"><div class="s-name">Cloud Backup</div><div class="s-desc">Encrypted · Off by default</div></div>
+        <div class="tog" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <span class="s-ico">🔐</span><div class="s-info"><div class="s-name">Biometric Lock</div><div class="s-desc">FaceID / Fingerprint on open</div></div>
+        <div class="tog on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <span class="s-ico">🏆</span><div class="s-info"><div class="s-name">Leaderboard Opt-in</div><div class="s-desc">Anonymised handle only</div></div>
+        <div class="tog on" onclick="this.classList.toggle('on')"></div>
+      </div>
+
+      <div style="background:rgba(59,158,255,0.07);border:1px solid rgba(59,158,255,0.15);border-radius:13px;padding:14px;margin-top:6px;font-size:11.5px;color:var(--text2);line-height:1.6;">
+        <strong style="color:var(--blue);">📜 DPDP Act 2023</strong><br>SideStack is built ahead of the May 2027 full compliance deadline.<br><br>
+        Grievance Officer: <strong style="color:var(--text)">privacy@sidestack.in</strong>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: SETTINGS ════ -->
+    <div class="screen" id="s-settings">
+      <div class="sec-title" style="margin-bottom:14px;">Settings</div>
+
+      <div class="s-sect-title">👤 Profile</div>
+      <div class="setting-row"><span class="s-ico">✏️</span><div class="s-info"><div class="s-name">Arjun Kumar</div><div class="s-desc">arjun.kumar@gmail.com</div></div><span style="color:var(--text3)">›</span></div>
+      <div class="setting-row"><span class="s-ico">🌐</span><div class="s-info"><div class="s-name">Language</div><div class="s-desc">English (EN)</div></div><span style="color:var(--text3)">›</span></div>
+      <div class="setting-row"><span class="s-ico">🏙️</span><div class="s-info"><div class="s-name">City</div><div class="s-desc">Bangalore, Karnataka</div></div><span style="color:var(--text3)">›</span></div>
+
+      <div class="s-sect-title">💸 Subscription</div>
+      <div class="setting-row" style="border-color:rgba(201,255,71,0.2);background:rgba(201,255,71,0.04);">
+        <span class="s-ico">⭐</span><div class="s-info"><div class="s-name" style="color:var(--lime)">Pro+ Active</div><div class="s-desc">₹49/month · Renews May 19</div></div>
+        <div class="chip lime">Active</div>
+      </div>
+      <div class="setting-row"><span class="s-ico">📄</span><div class="s-info"><div class="s-name">Billing History</div></div><span style="color:var(--text3)">›</span></div>
+
+      <div class="s-sect-title">🔔 Notifications</div>
+      <div class="setting-row"><span class="s-ico">📅</span><div class="s-info"><div class="s-name">Tax Deadlines</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setting-row"><span class="s-ico">🧠</span><div class="s-info"><div class="s-name">Mood Reminder</div><div class="s-desc">Daily 8pm</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="setting-row"><span class="s-ico">🤖</span><div class="s-info"><div class="s-name">AI Daily Insights</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+
+      <div class="s-sect-title">⚠️ Danger Zone</div>
+      <div class="setting-row" style="border-color:rgba(255,77,139,0.2);">
+        <span class="s-ico">🗑️</span><div class="s-info"><div class="s-name" style="color:var(--pink)">Delete Account</div><div class="s-desc">Permanent · Immediate · 2 taps</div></div>
+        <span style="color:var(--pink)">›</span>
+      </div>
+    </div>
+
+  </div><!-- end scroll-area -->
+
+  <!-- ── BOTTOM NAVIGATION ── -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </button>
+    <button class="nav-item" id="nav-income" onclick="showScreen('income')">
+      <div class="nav-icon">💸</div>
+      <div class="nav-label">Income</div>
+    </button>
+    <button class="nav-item" id="nav-ai" onclick="showScreen('ai')">
+      <div class="nav-icon">🤖</div>
+      <div class="nav-label">Stacks AI</div>
+    </button>
+    <button class="nav-item" id="nav-tax" onclick="showScreen('tax')">
+      <div class="nav-icon">📊</div>
+      <div class="nav-label">Tax</div>
+    </button>
+    <button class="nav-item" id="nav-more" onclick="showScreen('more')">
+      <div class="nav-icon">⋯</div>
+      <div class="nav-label">More</div>
+    </button>
+  </nav>
+
+</div><!-- end app -->
+
+<script>
+// ── SCREEN MAP ──
+const screenMap = {
+  home: { nav: 'nav-home', label: 'Home' },
+  income: { nav: 'nav-income', label: 'Income Log' },
+  ai: { nav: 'nav-ai', label: 'AI Co-Pilot' },
+  tax: { nav: 'nav-tax', label: 'Tax Engine' },
+  more: { nav: 'nav-more', label: 'More' },
+  goals: { nav: null, label: 'Goals & Streaks' },
+  mood: { nav: null, label: 'Mood Tracker' },
+  emergency: { nav: null, label: 'Emergency Fund' },
+  verify: { nav: null, label: 'Income Proof' },
+  invoices: { nav: null, label: 'Invoices' },
+  schemes: { nav: null, label: 'Scheme Navigator' },
+  community: { nav: null, label: 'Leaderboard' },
+  tips: { nav: null, label: 'Hustle Tips' },
+  clients: { nav: null, label: 'Client Health' },
+  voice: { nav: null, label: 'Voice Log' },
+  foundation: { nav: null, label: 'Foundation' },
+  privacy: { nav: null, label: 'Privacy' },
+  settings: { nav: null, label: 'Settings' },
+};
+
+let currentScreen = 'home';
+
+function showScreen(id) {
+  // Hide current
+  const cur = document.getElementById('s-' + currentScreen);
+  if (cur) cur.classList.remove('active');
+
+  // Remove all nav active states
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  // Show new
+  const next = document.getElementById('s-' + id);
+  if (next) next.classList.add('active');
+
+  // Set nav active
+  const info = screenMap[id] || { nav: null, label: id };
+  if (info.nav) {
+    const navEl = document.getElementById(info.nav);
+    if (navEl) navEl.classList.add('active');
+  } else {
+    // For sub-screens reached from "More", keep More active
+    const moreNav = document.getElementById('nav-more');
+    if (['goals','mood','emergency','verify','invoices','schemes','community','tips','clients','voice','foundation','privacy','settings'].includes(id)) {
+      if (moreNav) moreNav.classList.add('active');
+    }
+  }
+
+  // Update page label
+  document.getElementById('page-label').textContent = info.label || id;
+
+  // Scroll to top
+  document.getElementById('scroll-area').scrollTop = 0;
+
+  currentScreen = id;
+}
+
+// ── AI CHAT ──
+const aiResponses = [
+  'Your freelance income is up 23% month-over-month — on track for ₹50K by June! 📈',
+  'Group tutoring earns ₹1,200/hr vs solo ₹600/hr. Add 2 group slots = +₹3,600/month.',
+  'Canva Pro (₹999/mo) generates ₹20K+ in freelance revenue. Best ROI tool you have! 💡',
+  'Emergency fund growth directly correlates with better mood scores in your logs. Keep the autopilot on! 🛡️',
+  'Thursdays–Sundays are your peak earning days. Batch client deliveries by Wednesday. ⏰',
+  'You need ₹5,500 more in 8 days — that is ₹688/day. Highly achievable at your pace! 🎯',
+  'GlobalTech Solutions is your best client: A+ score, pays in 3 days, ₹825/hr avg. Prioritise them.',
+];
+let aiIdx = 0;
+
+function sendAI() {
+  const inp = document.getElementById('ai-inp');
+  if (!inp.value.trim()) return;
+  const msgs = document.getElementById('ai-msgs');
+  msgs.innerHTML += `<div class="msg u">${inp.value}<div class="msg-time">You</div></div>`;
+  inp.value = '';
+  setTimeout(() => {
+    msgs.innerHTML += `<div class="msg ai">${aiResponses[aiIdx++ % aiResponses.length]}<div class="msg-time">Stacks · On-device</div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 650);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function askAI(q) {
+  document.getElementById('ai-inp').value = q;
+  showScreen('ai');
+  setTimeout(sendAI, 300);
+}
+
+// ── MOOD SELECT ──
+function selectMood(el) {
+  document.querySelectorAll('.mood-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── VOICE LOG ──
+let vListening = false;
+function toggleVoice(btn) {
+  vListening = !vListening;
+  btn.textContent = vListening ? '⏹' : '🎙️';
+  btn.classList.toggle('listening', vListening);
+  document.getElementById('voice-hint').textContent = vListening ? 'Listening... speak now' : 'Tap to start speaking';
+  if (vListening) {
+    setTimeout(() => {
+      vListening = false;
+      btn.textContent = '🎙️';
+      btn.classList.remove('listening');
+      document.getElementById('voice-hint').textContent = 'Entry parsed! ✓';
+      document.getElementById('voice-result').style.display = 'block';
+    }, 2800);
+  }
+}
+
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

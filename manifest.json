@@ -10,7 +10,13 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIAAQMAAADOtka5AAAABlBMVEUAAAD/AAD8E3BwAAAAAnRSTlMA/1uRIWUAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAAI0lEQVR4Ae3BMQEAAADCIPunNsVeYAAAAAAAAAAAAAAAAAAA8G08QAABgUJk1QAAAABJRU5ErkJggg==",
+      "src": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4b0.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://www.w3.org/Icons/w3c_main.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

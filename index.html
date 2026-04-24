@@ -514,6 +514,119 @@ body{
 /* ── TRANSITION HELPER ── */
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 .slide-up{animation:slideUp 0.4s cubic-bezier(0.4,0,0.2,1) both;}
+
+/* ══════════════════════════════════════════
+   SETTINGS SCREEN CSS
+══════════════════════════════════════════ */
+.s-sect-title{
+  font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text3);padding:0 4px;margin:20px 0 8px;
+}
+.setting-row{
+  display:flex;align-items:center;gap:12px;
+  background:var(--surf2);border:1px solid var(--border);
+  border-radius:13px;padding:13px 14px;margin-bottom:8px;
+  cursor:pointer;transition:border-color 0.15s;
+}
+.setting-row:hover{border-color:var(--border2);}
+.s-ico{font-size:18px;flex-shrink:0;width:28px;text-align:center;}
+.s-info{flex:1;min-width:0;}
+.s-name{font-size:13px;font-weight:600;margin-bottom:1px;}
+.s-desc{font-size:11px;color:var(--text3);margin-top:1px;}
+
+/* Toggle switch */
+.tog{
+  width:42px;height:24px;border-radius:12px;background:var(--surf3);
+  border:1px solid var(--border2);position:relative;cursor:pointer;
+  transition:background 0.2s,border-color 0.2s;flex-shrink:0;
+}
+.tog::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:16px;height:16px;border-radius:50%;background:var(--text3);
+  transition:transform 0.2s,background 0.2s;
+}
+.tog.on{background:var(--lime);border-color:var(--lime);}
+.tog.on::after{transform:translateX(18px);background:#000;}
+
+/* Goal cards CSS (also missing) */
+.goal-card{background:var(--surf2);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;}
+.goal-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.goal-emoji{font-size:20px;width:36px;height:36px;background:var(--surf3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.goal-name{font-size:13px;font-weight:600;}
+.goal-deadline{font-size:10px;color:var(--text3);margin-top:1px;}
+.goal-amounts{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px;}
+.streak-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.sd{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;background:var(--surf3);color:var(--text3);}
+.sd.done{background:var(--lime-d);color:var(--lime);}
+.sd.today{background:var(--lime);color:#000;}
+
+/* Invoice rows */
+.inv-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.inv-row:last-child{border-bottom:none;}
+.inv-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;}
+.inv-status.paid{background:rgba(0,212,170,0.15);color:var(--teal);}
+.inv-status.pending{background:rgba(255,107,53,0.12);color:var(--orange);}
+
+/* Community rows */
+.com-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.com-row:last-child{border-bottom:none;}
+.com-rank{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;width:24px;color:var(--text3);}
+.com-avatar{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:var(--surf3);}
+.com-name{flex:1;font-size:12.5px;font-weight:600;}
+.com-amt{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--lime);}
+
+/* Gold color var fix */
+.gc-story{font-size:11px;color:var(--text2);font-style:italic;margin-top:6px;line-height:1.5;}
+
+/* ══════════════════════════════════════════
+   MISSING SCREEN CSS — Emergency Fund, Foundation,
+   Income Verify, Leaderboard, Schemes, Tips, More
+══════════════════════════════════════════ */
+
+/* Emergency Fund rules */
+.efr-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.efr-name{font-size:13px;font-weight:600;}
+.efr-pct{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--lime);}
+.efr-desc{font-size:11px;color:var(--text3);line-height:1.5;}
+
+/* Income Verify Report */
+.ivr-table{width:100%;border-collapse:collapse;margin:12px 0;}
+.ivr-section{padding:8px 0;border-bottom:1px solid var(--border);}
+.ivr-section:last-child{border-bottom:none;}
+.ivr-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;}
+.ivr-val{font-size:13px;font-weight:600;}
+.ivr-logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--lime);margin-bottom:4px;}
+.ivr-sig{font-size:10px;color:var(--text3);font-family:'Space Mono',monospace;margin-top:12px;line-height:1.6;}
+
+/* Foundation / Grants */
+.found-hero{text-align:center;padding:24px 0;margin-bottom:16px;}
+.grant-card{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+.gc-impact{font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* Leaderboard */
+.lb-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surf2);border:1px solid var(--border);border-radius:13px;margin-bottom:8px;}
+.lb-rank{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;width:28px;color:var(--text3);flex-shrink:0;}
+.lb-handle{font-size:13px;font-weight:600;}
+.lb-city{font-size:10px;color:var(--text3);margin-top:1px;}
+.lb-amt{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--lime);white-space:nowrap;}
+
+/* Scheme cards */
+.scheme-card{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+.sc-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.sc-ministry{font-size:10px;color:var(--text3);margin-bottom:8px;}
+.sc-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px;}
+.sc-benefit{display:inline-flex;align-items:center;gap:4px;background:var(--lime-d);color:var(--lime);border:1px solid rgba(203,255,71,0.2);border-radius:100px;padding:3px 10px;font-size:10px;font-weight:700;}
+
+/* Tips */
+.tp-action{display:flex;gap:8px;margin-top:10px;}
+
+/* Bar chart labels */
+.slbf{height:100%;border-radius:3px;}
+.slbw{display:flex;align-items:flex-end;gap:4px;height:60px;}
+.sleg{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+
+/* More grid (was missing) */
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
 </style>
 </head>
 <body>
@@ -599,7 +712,7 @@ body{
 
     <div class="consent-block">
       <strong>🔒 Your data stays on your phone.</strong> SideStack stores all information locally using device storage. No account needed. No data is uploaded unless you opt into cloud backup.<br><br>
-      By continuing you agree to our <a href="https://sidestack.in/privacy" target="_blank">Privacy Policy</a> and <a href="https://sidestack.in/terms" target="_blank">Terms of Use</a>.
+      By continuing you agree to our <a href="https://app.sakredfire.ca/privacy.html" target="_blank">Privacy Policy</a> and <a href="https://app.sakredfire.ca/privacy.html" target="_blank">Terms of Use</a>.
     </div>
 
     <button class="btn-lime" onclick="saveProfile()">Continue → Set PIN</button>
@@ -1457,7 +1570,7 @@ body{
       </div>
 
       <div style="text-align:center;padding:20px 0;font-size:11px;color:var(--text3);">
-        SideStack v5.0 · <a href="https://sidestack.in/privacy" style="color:var(--text3);">Privacy Policy</a> · <a href="https://sidestack.in/terms" style="color:var(--text3);">Terms</a>
+        SideStack v5.0 · <a href="https://app.sakredfire.ca/privacy.html" style="color:var(--text3);">Privacy Policy</a> · <a href="https://app.sakredfire.ca/privacy.html" style="color:var(--text3);">Terms</a>
       </div>
     </div>
 

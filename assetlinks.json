@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.sakredfire.twa",
+    "sha256_cert_fingerprints": [
+      "16:80:3D:71:40:3B:62:27:A3:67:1E:9D:4F:BB:20:25:71:5A:1D:81:FC:F3:54:A4:52:CD:8B:7A:FE:7B:D6:AE"
+    ]
+  }
+}]

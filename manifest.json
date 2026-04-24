@@ -2,8 +2,8 @@
   "name": "SideStack - India's Side Hustle OS",
   "short_name": "SideStack",
   "description": "Track side income, taxes, invoices, and get AI insights — 100% private, on-device.",
-  "start_url": "/Sidestack/",
-  "scope": "/Sidestack/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#080810",
   "theme_color": "#080810",
@@ -11,24 +11,9 @@
   "lang": "en",
   "categories": ["finance", "productivity"],
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "screenshots": [],
   "shortcuts": [
@@ -36,14 +21,14 @@
       "name": "Log Income",
       "short_name": "Log",
       "description": "Quickly log new income",
-      "url": "/Sidestack/?action=log",
+      "url": "/?action=log",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Tax Engine",
       "short_name": "Tax",
       "description": "View tax estimates",
-      "url": "/Sidestack/?action=tax",
+      "url": "/?action=tax",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     }
   ]

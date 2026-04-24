@@ -1,13 +1,13 @@
 // SideStack Service Worker v5.0 — India Launch
 const CACHE_NAME = 'sidestack-v5';
-const OFFLINE_URL = '/Sidestack/';
+const OFFLINE_URL = '/';
 
 const PRECACHE_URLS = [
-  '/Sidestack/',
-  '/Sidestack/index.html',
-  '/Sidestack/manifest.json',
-  '/Sidestack/icon-192.png',
-  '/Sidestack/icon-512.png',
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png',
 ];
 
 self.addEventListener('install', event => {
@@ -34,7 +34,6 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
 
-  // Network-first: fonts, CDN scripts (Tesseract, jsPDF need fresh)
   if (
     url.hostname === 'fonts.googleapis.com' ||
     url.hostname === 'fonts.gstatic.com' ||
@@ -47,7 +46,6 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Cache-first for app shell
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
@@ -69,7 +67,6 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Background sync placeholder
 self.addEventListener('sync', event => {
   if (event.tag === 'sync-income') {
     console.log('[SideStack SW] Background sync triggered');

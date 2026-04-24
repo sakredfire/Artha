@@ -353,6 +353,7 @@ body{
   align-items:center;justify-content:center;
   padding:28px 28px max(28px,env(safe-area-inset-bottom));
   overflow-y:auto;
+  height:100%;min-height:100dvh;
 }
 .auth-layer.hidden{display:none;}
 
@@ -362,7 +363,7 @@ body{
   opacity:1;
   gap:16px;
 }
-@keyframes splashFade{to{opacity:0;pointer-events:none;}}
+@keyframes splashFade{to{opacity:0;pointer-events:none;visibility:hidden;}}
 .splash-logo{
   width:88px;height:88px;border-radius:24px;background:var(--lime);
   display:flex;align-items:center;justify-content:center;
@@ -389,16 +390,27 @@ body{
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── ONBOARDING SLIDES ── */
-#onboard-screen { gap:0; padding:0; justify-content:flex-start; }
-.onboard-slides { width:100%; flex:1; overflow:hidden; position:relative; }
+#onboard-screen { gap:0; padding:0; justify-content:flex-start; height:100%; min-height:100dvh; }
+.onboard-slides {
+  width:100%;flex:1;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;min-height:0;
+}
 .onboard-slide {
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:40px 28px;
-  opacity:0;transform:translateX(40px);transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
+  display:none;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 28px;width:100%;
+  opacity:0;transform:translateX(40px);
+  transition:opacity 0.5s ease, transform 0.5s cubic-bezier(0.4,0,0.2,1);
   pointer-events:none;
 }
-.onboard-slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
-.onboard-slide.exit{opacity:0;transform:translateX(-40px);}
+.onboard-slide.active{
+  display:flex;opacity:1;transform:translateX(0);pointer-events:all;
+}
+.onboard-slide.exit{
+  display:flex;opacity:0;transform:translateX(-40px);
+  transition:opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.6,1);
+  pointer-events:none;
+}
 .onboard-art{font-size:72px;margin-bottom:24px;line-height:1;}
 .onboard-title{
   font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
@@ -2202,8 +2214,7 @@ function initApp() {
   const pin = localStorage.getItem('ss_pin');
   const hasOnboarded = localStorage.getItem('ss_onboarded');
 
-  // After splash animation ends (2.4s), route user
-  setTimeout(() => {
+  function afterSplash() {
     hide('splash-screen');
     if (!hasOnboarded) {
       show('onboard-screen');
@@ -2212,7 +2223,17 @@ function initApp() {
     } else {
       unlockApp();
     }
-  }, 2400);
+  }
+
+  // Use animationend for precision, fallback setTimeout
+  const splash = document.getElementById('splash-screen');
+  let splashDone = false;
+  splash.addEventListener('animationend', () => {
+    if (!splashDone) { splashDone = true; afterSplash(); }
+  });
+  setTimeout(() => {
+    if (!splashDone) { splashDone = true; afterSplash(); }
+  }, 2600); // slightly longer than CSS 2.4s as safety net
 }
 
 // ── HELPERS ──
@@ -2273,17 +2294,32 @@ const obLabels = ['Get Started','Next →','Create Profile →'];
 
 function obNext() {
   if (obSlide < 2) {
-    document.getElementById(obSlides[obSlide]).classList.add('exit');
-    setTimeout(() => document.getElementById(obSlides[obSlide]).classList.remove('active','exit'), 350);
+    const btn = document.getElementById('ob-next-btn');
+    btn.disabled = true;
+    const current = document.getElementById(obSlides[obSlide]);
+    current.classList.add('exit');
     obSlide++;
     const next = document.getElementById(obSlides[obSlide]);
-    setTimeout(() => next.classList.add('active'), 50);
-    // Update dots
-    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === obSlide));
-    document.getElementById('ob-next-btn').textContent = obLabels[obSlide];
-    if (obSlide > 0) document.getElementById('ob-skip-btn').style.display = 'none';
+    // Step 1: after exit animation (400ms), hide current
+    setTimeout(() => {
+      current.classList.remove('active', 'exit');
+      // Step 2: prepare next slide — set initial state before display:flex kicks in
+      next.style.opacity = '0';
+      next.style.transform = 'translateX(40px)';
+      next.style.transition = 'none';
+      next.classList.add('active');
+      // Step 3: force reflow then animate in
+      next.getBoundingClientRect();
+      next.style.transition = '';
+      next.style.opacity = '';
+      next.style.transform = '';
+      // Update UI
+      document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === obSlide));
+      btn.textContent = obLabels[obSlide];
+      document.getElementById('ob-skip-btn').style.display = 'none';
+      setTimeout(() => { btn.disabled = false; }, 520);
+    }, 420);
   } else {
-    // Last slide → go to profile
     localStorage.setItem('ss_onboarded','1');
     hide('onboard-screen');
     show('profile-screen');

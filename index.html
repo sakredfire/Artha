@@ -3,563 +3,667 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="mobile-web-app-capable" content="yes">
+<title>SideStack — India's Side Hustle OS</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#080810">
-<title>SideStack</title>
-<link rel="manifest" href="manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="manifest" href="./manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-/* ── RESET & BASE ── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { width: 100%; height: 100%; overflow: hidden; background: #080810; }
-body {
-  color: #ECEEF8;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── CSS VARIABLES ── */
+/* ══════════════════════════════════════════
+   SIDESTACK v5.0 — INDIA LAUNCH EDITION
+   Full merge: index + merged + rental + receipt
+══════════════════════════════════════════ */
 :root {
   --bg: #080810;
-  --surf: #0F0F1A;
-  --surf2: #161624;
-  --surf3: #1E1E2E;
-  --border: rgba(255,255,255,0.07);
-  --lime: #C9FF47;
-  --lime-d: rgba(201,255,71,0.12);
-  --purple: #7B5CFF;
-  --purple-d: rgba(123,92,255,0.12);
+  --surf: #0F0F18;
+  --surf2: #13131E;
+  --surf3: #1A1A26;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.1);
+  --lime: #CBFF47;
+  --lime-d: rgba(203,255,71,0.1);
+  --purple: #7C5CFF;
+  --purple-d: rgba(124,92,255,0.1);
   --orange: #FF6B35;
-  --orange-d: rgba(255,107,53,0.11);
+  --orange-d: rgba(255,107,53,0.1);
   --blue: #3B9EFF;
-  --blue-d: rgba(59,158,255,0.11);
-  --teal: #00D4AA;
-  --teal-d: rgba(0,212,170,0.1);
+  --blue-d: rgba(59,158,255,0.1);
   --pink: #FF4D8B;
+  --teal: #00D4AA;
+  --text: #EEEEF8;
+  --text2: #A0A0B8;
   --gold: #FFB830;
-  --text: #ECEEF8;
-  --text2: #9494B0;
-  --text3: #50506A;
-  /* safe area for notch/home indicator */
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
-  --nav-h: 64px;
-  --header-h: 56px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
+  min-height:100vh;overflow:hidden;
+  background-image:radial-gradient(rgba(203,255,71,0.03) 1px, transparent 1px);
+  background-size:32px 32px;
+}
+@media(min-width:520px){
+  body{display:flex;align-items:center;justify-content:center;}
+  .app{
+    border-radius:36px;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.08),0 40px 80px rgba(0,0,0,0.6),0 0 60px rgba(203,255,71,0.04);
+    height:90vh;max-height:860px;
+  }
 }
 
 /* ── APP SHELL ── */
-.app {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0; left: 0;
-  overflow: hidden;
-}
+.app{display:flex;flex-direction:column;height:100dvh;height:100vh;max-width:480px;margin:0 auto;position:relative;overflow:hidden;}
 
-/* ── TOP HEADER ── */
-.header {
-  flex-shrink: 0;
-  height: calc(var(--header-h) + var(--safe-top));
-  padding-top: var(--safe-top);
-  background: rgba(8,8,16,0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 18px;
-  padding-right: 18px;
-  position: relative;
-  z-index: 50;
+/* ── HEADER ── */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 12px;padding-top:max(14px,env(safe-area-inset-top));
+  background:var(--surf);border-bottom:1px solid var(--border);
+  flex-shrink:0;z-index:50;
 }
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+.header-logo{display:flex;align-items:center;gap:9px;}
+.logo-icon{
+  width:32px;height:32px;border-radius:9px;background:var(--lime);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#000;
+  box-shadow:0 3px 10px rgba(203,255,71,0.3);flex-shrink:0;
 }
-.logo-icon {
-  width: 32px; height: 32px;
-  border-radius: 9px;
-  background: var(--lime);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif;
-  font-size: 12px; font-weight: 800;
-  color: #000;
-  box-shadow: 0 3px 10px rgba(201,255,71,0.4);
-  flex-shrink: 0;
-}
-.logo-text {
-  font-family: 'Syne', sans-serif;
-  font-size: 17px; font-weight: 800;
-  letter-spacing: -0.3px;
-}
-.logo-text span { color: var(--lime); }
-.header-right {
-  display: flex; align-items: center; gap: 10px;
-}
-.page-label {
-  font-size: 12px; color: var(--text3);
-  font-weight: 500;
-}
-.header-btn {
-  width: 34px; height: 34px;
-  border-radius: 10px;
-  background: var(--surf2);
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  position: relative;
-}
-.notif-dot {
-  position: absolute; top: 6px; right: 6px;
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--orange);
-  border: 1.5px solid var(--surf);
-}
+.logo-text{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;letter-spacing:-0.3px;}
+.logo-text span{color:var(--lime);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.page-label{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:0.04em;}
+.header-btn{position:relative;width:32px;height:32px;border-radius:9px;background:var(--surf2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;}
+.notif-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--orange);border:1.5px solid var(--surf);}
 
 /* ── SCROLL AREA ── */
-.scroll-area {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  padding-bottom: 12px;
-}
-.scroll-area::-webkit-scrollbar { display: none; }
+.scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.scroll-area::-webkit-scrollbar{display:none;}
 
 /* ── SCREENS ── */
-.screen { display: none; padding: 16px; }
-.screen.active { display: block; animation: fadeIn 0.25s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.screen{display:none;padding:16px;padding-bottom:90px;}
+.screen.active{display:block;animation:fadeIn 0.25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── BOTTOM NAV ── */
-.bottom-nav {
-  flex-shrink: 0;
-  height: calc(var(--nav-h) + var(--safe-bot));
-  padding-bottom: var(--safe-bot);
-  background: rgba(8,8,16,0.97);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  position: relative;
-  z-index: 50;
+.bottom-nav{
+  display:flex;align-items:stretch;
+  background:var(--surf);border-top:1px solid var(--border);
+  padding-bottom:max(8px,env(safe-area-inset-bottom));
+  flex-shrink:0;z-index:50;
 }
-.nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  cursor: pointer;
-  padding: 8px 4px;
-  border: none; background: none;
-  transition: all 0.15s;
-  position: relative;
+.nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;padding:10px 4px 8px;border:none;background:none;cursor:pointer;
+  color:var(--text3);transition:color 0.15s;position:relative;
 }
-.nav-icon {
-  font-size: 22px;
-  line-height: 1;
-  transition: transform 0.15s;
-}
-.nav-label {
-  font-size: 9.5px;
-  font-weight: 600;
-  color: var(--text3);
-  letter-spacing: 0.02em;
-  transition: color 0.15s;
-}
-.nav-item.active .nav-label { color: var(--lime); }
-.nav-item.active .nav-icon { transform: scale(1.1); }
-.nav-item.active::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 50%; transform: translateX(-50%);
-  width: 28px; height: 2.5px;
-  border-radius: 0 0 3px 3px;
-  background: var(--lime);
-}
+.nav-icon{font-size:20px;line-height:1;}
+.nav-label{font-size:9px;font-weight:600;letter-spacing:0.02em;}
+.nav-item.active{color:var(--lime);}
+.nav-item.active::after{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;border-radius:0 0 3px 3px;background:var(--lime);}
 
-/* ── MORE MENU OVERLAY ── */
-.more-overlay {
-  display: none;
-  position: fixed;
-  bottom: calc(var(--nav-h) + var(--safe-bot));
-  left: 0; right: 0;
-  background: var(--surf);
-  border-top: 1px solid var(--border);
-  border-radius: 20px 20px 0 0;
-  padding: 20px 16px;
-  z-index: 200;
-  animation: slideUp 0.25s ease;
-}
-.more-overlay.open { display: block; }
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.more-overlay-handle {
-  width: 36px; height: 4px;
-  border-radius: 2px;
-  background: var(--border);
-  margin: 0 auto 18px;
-}
-.more-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.more-item {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 6px;
-  padding: 14px 8px;
-  background: var(--surf2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.more-item:active { background: var(--surf3); transform: scale(0.97); }
-.more-item-ico { font-size: 24px; }
-.more-item-label { font-size: 10.5px; font-weight: 600; color: var(--text2); text-align: center; line-height: 1.3; }
-.more-item.highlight { background: var(--lime-d); border-color: rgba(201,255,71,0.2); }
-.more-item.highlight .more-item-label { color: var(--lime); }
-.dim-overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 190;
-}
-.dim-overlay.open { display: block; }
+/* ── CARDS ── */
+.card{background:var(--surf2);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px 0;}
+.card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;}
+.card-body{padding:13px 15px;}
+.card-action{display:flex;align-items:center;justify-content:center;padding:13px 15px;border-top:1px solid var(--border);font-size:12px;font-weight:600;color:var(--lime);cursor:pointer;gap:5px;}
 
-/* ── GREETING ── */
-.greeting {
-  margin-bottom: 16px;
-}
-.greeting-small { font-size: 12px; color: var(--text3); margin-bottom: 2px; }
-.greeting-big {
-  font-family: 'Syne', sans-serif;
-  font-size: 18px; font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: -0.3px;
-}
-.greeting-big span { color: var(--lime); }
+/* ── METRICS ── */
+.mc-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.mc{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.mc-label{font-size:9.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.mc-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;line-height:1.1;margin-bottom:3px;}
+.mc-change{font-size:10px;color:var(--text3);}
+.mc.lime{border-color:rgba(203,255,71,0.15);}
+.mc-val.lime{color:var(--lime);}
+.mc.purple{border-color:rgba(124,92,255,0.15);}
+.mc-val.purple{color:var(--purple);}
+.mc.teal{border-color:rgba(0,212,170,0.15);}
+.mc-val.teal{color:var(--teal);}
+.mc.orange{border-color:rgba(255,107,53,0.15);}
+.mc-val.orange{color:var(--orange);}
+.change-up{color:var(--teal)!important;}
+.change-dn{color:var(--pink)!important;}
 
-/* ── METRIC CARD ── */
-.mc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-.mc {
-  background: var(--surf);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 14px;
-  position: relative;
-  overflow: hidden;
-}
-.mc::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 1px;
-}
-.mc.lime::before { background: linear-gradient(90deg, transparent, rgba(201,255,71,0.55), transparent); }
-.mc.purple::before { background: linear-gradient(90deg, transparent, rgba(123,92,255,0.55), transparent); }
-.mc.orange::before { background: linear-gradient(90deg, transparent, rgba(255,107,53,0.55), transparent); }
-.mc.blue::before { background: linear-gradient(90deg, transparent, rgba(59,158,255,0.55), transparent); }
-.mc.teal::before { background: linear-gradient(90deg, transparent, rgba(0,212,170,0.55), transparent); }
-.mc-label { font-size: 9.5px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-.mc-val { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
-.mc-val.lime { color: var(--lime); }
-.mc-val.purple { color: var(--purple); }
-.mc-val.orange { color: var(--orange); }
-.mc-val.blue { color: var(--blue); }
-.mc-val.teal { color: var(--teal); }
-.mc-change { font-size: 10px; font-weight: 600; color: var(--teal); }
-.mc-ico { position: absolute; bottom: 10px; right: 12px; font-size: 22px; opacity: 0.2; }
+/* ── SEC HEAD ── */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:-0.3px;}
+.sec-sub{font-size:11px;color:var(--text3);margin-top:2px;}
 
-/* ── CARD ── */
-.card {
-  background: var(--surf);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  margin-bottom: 12px;
-}
-.card-head {
-  padding: 14px 16px 10px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.card-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; }
-.card-action { font-size: 11px; color: var(--lime); cursor: pointer; font-weight: 500; }
-.card-body { padding: 14px 16px; }
+/* ── CHIPS ── */
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:100px;padding:3px 9px;font-size:10px;font-weight:700;letter-spacing:0.03em;}
+.chip.lime{background:var(--lime-d);color:var(--lime);border:1px solid rgba(203,255,71,0.2);}
+.chip.purple{background:var(--purple-d);color:var(--purple);border:1px solid rgba(124,92,255,0.2);}
+.chip.teal{background:rgba(0,212,170,0.1);color:var(--teal);border:1px solid rgba(0,212,170,0.2);}
+.chip.blue{background:var(--blue-d);color:var(--blue);border:1px solid rgba(59,158,255,0.2);}
+.chip.orange{background:var(--orange-d);color:var(--orange);border:1px solid rgba(255,107,53,0.2);}
+.chip.muted{background:var(--surf3);color:var(--text3);border:1px solid var(--border);}
 
-/* ── CHIP ── */
-.chip {
-  display: inline-flex; align-items: center; gap: 4px;
-  border-radius: 100px; padding: 2px 9px;
-  font-size: 9.5px; font-weight: 700;
-}
-.chip.lime { background: var(--lime-d); color: var(--lime); border: 1px solid rgba(201,255,71,0.2); }
-.chip.purple { background: var(--purple-d); color: var(--purple); border: 1px solid rgba(123,92,255,0.2); }
-.chip.orange { background: var(--orange-d); color: var(--orange); border: 1px solid rgba(255,107,53,0.2); }
-.chip.blue { background: var(--blue-d); color: var(--blue); border: 1px solid rgba(59,158,255,0.2); }
-.chip.teal { background: var(--teal-d); color: var(--teal); border: 1px solid rgba(0,212,170,0.2); }
-.chip.muted { background: rgba(255,255,255,0.05); color: var(--text3); border: 1px solid transparent; }
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:10px;padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.btn-primary{background:var(--lime);color:#000;}
+.btn-primary:hover{opacity:0.88;}
+.btn-ghost{background:var(--surf3);color:var(--text2);border:1px solid var(--border2);}
+.btn-ghost:hover{border-color:var(--lime);color:var(--lime);}
+.btn-full{width:100%;}
 
-/* ── ENTRY LIST ── */
-.entry-list { display: flex; flex-direction: column; gap: 8px; }
-.entry {
-  display: flex; align-items: center; gap: 11px;
-  padding: 12px 14px;
-  background: var(--surf2);
-  border: 1px solid var(--border);
-  border-radius: 13px;
-}
-.entry:active { background: var(--surf3); }
-.entry-ico {
-  width: 38px; height: 38px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 17px; flex-shrink: 0;
-}
-.entry-info { flex: 1; min-width: 0; }
-.entry-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.entry-meta { font-size: 10.5px; color: var(--text3); margin-top: 1px; }
-.entry-amt { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-.entry-amt.pos { color: var(--lime); }
-.entry-amt.neg { color: var(--pink); }
-
-/* ── BAR CHART ── */
-.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
-.bbar { flex: 1; border-radius: 5px 5px 0 0; }
-.bar-labels { display: flex; justify-content: space-around; font-size: 8.5px; color: var(--text3); margin-top: 5px; font-family: 'Space Mono', monospace; }
-
-/* ── PROGRESS BAR ── */
-.prog { margin-bottom: 9px; }
-.prog-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
-.prog-key { color: var(--text2); }
-.prog-val { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 11px; }
-.prog-bar { height: 5px; background: var(--surf3); border-radius: 3px; overflow: hidden; }
-.prog-fill { height: 100%; border-radius: 3px; }
-
-/* ── SECTION HEAD ── */
-.sec-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-.sec-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; }
-.sec-sub { font-size: 10.5px; color: var(--text3); margin-top: 2px; }
+/* ── ENTRIES ── */
+.entry-list{display:flex;flex-direction:column;gap:6px;}
+.entry{display:flex;align-items:center;gap:11px;padding:11px 12px;background:var(--surf2);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:border-color 0.15s;}
+.entry:hover{border-color:var(--border2);}
+.entry-ico{width:36px;height:36px;border-radius:10px;background:var(--surf3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.entry-info{flex:1;min-width:0;}
+.entry-name{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.entry-meta{font-size:10px;color:var(--text3);margin-top:1px;}
+.entry-amt{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;white-space:nowrap;}
+.entry-amt.pos{color:var(--lime);}
+.entry-amt.neg{color:var(--pink);}
 
 /* ── AI CHAT ── */
-.ai-msgs { display: flex; flex-direction: column; gap: 8px; padding: 12px; max-height: 220px; overflow-y: auto; }
-.ai-msgs::-webkit-scrollbar { display: none; }
-.msg { max-width: 86%; padding: 9px 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; }
-.msg.ai { background: var(--surf2); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 3px; }
-.msg.u { background: var(--lime-d); border: 1px solid rgba(201,255,71,0.2); color: var(--lime); align-self: flex-end; border-bottom-right-radius: 3px; }
-.msg-time { font-size: 9px; color: var(--text3); margin-top: 3px; }
-.ai-input-row { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); }
-.ai-input {
-  flex: 1; background: var(--surf2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 9px 12px;
-  color: var(--text); font-size: 12.5px; font-family: 'DM Sans', sans-serif;
-  outline: none;
-}
-.ai-input::placeholder { color: var(--text3); }
-.ai-send {
-  background: var(--purple); border: none; border-radius: 10px;
-  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-  font-size: 15px; cursor: pointer; flex-shrink: 0;
-}
+.ai-msgs{max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:12px 14px;background:var(--bg);border-radius:12px;margin-bottom:10px;}
+.ai-msgs::-webkit-scrollbar{display:none;}
+.msg{max-width:88%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.5;}
+.msg.ai{background:var(--surf3);border:1px solid var(--border);align-self:flex-start;}
+.msg.u{background:var(--lime-d);border:1px solid rgba(203,255,71,0.15);align-self:flex-end;}
+.msg-time{font-size:9px;color:var(--text3);margin-top:4px;}
+.ai-input-row{display:flex;gap:8px;align-items:center;}
+.ai-input{flex:1;background:var(--surf3);border:1px solid var(--border2);border-radius:10px;padding:10px 13px;color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;outline:none;}
+.ai-input:focus{border-color:var(--lime);}
+.ai-send{width:36px;height:36px;border-radius:10px;background:var(--lime);border:none;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
-/* ── GOAL CARD ── */
-.goal-card {
-  background: var(--surf2); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px; margin-bottom: 10px;
-}
-.goal-emoji { font-size: 20px; }
-.goal-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; }
-.goal-deadline { font-size: 10px; color: var(--text3); }
-.goal-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
-.goal-amounts { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text3); margin-bottom: 5px; }
+/* ── PROGRESS BARS ── */
+.prog{margin-bottom:9px;}
+.prog-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;}
+.prog-key{color:var(--text2);}
+.prog-val{font-family:'Space Mono',monospace;font-weight:700;font-size:11px;}
+.prog-bar{height:5px;background:var(--surf3);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;}
 
-/* ── STREAK ── */
-.streak-grid { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0; }
-.sd {
-  width: 30px; height: 30px; border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 700; color: var(--text3);
-  background: var(--surf3);
-  font-family: 'Space Mono', monospace;
-}
-.sd.done { background: var(--lime); color: #000; }
-.sd.today { background: var(--lime-d); color: var(--lime); border: 1px solid var(--lime); }
+/* ── BAR CHART ── */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;}
+.bbar{flex:1;border-radius:4px 4px 0 0;min-height:8px;transition:height 0.3s;}
+.bar-labels{display:flex;gap:6px;margin-top:5px;}
+.bar-labels span{flex:1;text-align:center;font-size:9px;color:var(--text3);}
 
-/* ── TOGGLE ── */
-.tog { width: 42px; height: 24px; border-radius: 12px; background: var(--surf3); position: relative; cursor: pointer; flex-shrink: 0; }
-.tog.on { background: var(--lime); }
-.tog::after { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-.tog.on::after { transform: translateX(18px); }
-
-/* ── LEADERBOARD ── */
-.lb-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 13px;
-  background: var(--surf2); border: 1px solid var(--border);
-  border-radius: 12px; margin-bottom: 7px;
-}
-.lb-rank { width: 26px; height: 26px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; flex-shrink: 0; }
-.r1 { background: rgba(255,215,0,0.15); color: #FFD700; }
-.r2 { background: rgba(192,192,192,0.12); color: #C0C0C0; }
-.r3 { background: rgba(205,127,50,0.12); color: #CD7F32; }
-.rn { background: var(--surf3); color: var(--text3); }
-.lb-handle { font-size: 12.5px; font-weight: 600; }
-.lb-city { font-size: 10px; color: var(--text3); }
-.lb-amt { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; color: var(--lime); margin-left: auto; }
-
-/* ── TIP POST ── */
-.tip-post { background: var(--surf2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 9px; }
-.tp-av { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg,var(--purple),var(--blue)); display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; font-weight: 700; flex-shrink: 0; }
-.tp-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.tp-handle { font-size: 11.5px; font-weight: 600; }
-.tp-time { font-size: 9.5px; color: var(--text3); }
-.tp-text { font-size: 12px; color: var(--text2); line-height: 1.55; margin-bottom: 8px; }
-.tp-foot { display: flex; gap: 14px; padding-top: 8px; border-top: 1px solid var(--border); }
-.tp-action { font-size: 10.5px; color: var(--text3); cursor: pointer; }
-
-/* ── SETTING ROW ── */
-.setting-row {
-  display: flex; align-items: center; gap: 12px;
-  padding: 13px 14px;
-  background: var(--surf); border: 1px solid var(--border);
-  border-radius: 12px; margin-bottom: 6px; cursor: pointer;
-}
-.setting-row:active { background: var(--surf2); }
-.s-ico { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
-.s-info { flex: 1; }
-.s-name { font-size: 13px; font-weight: 600; }
-.s-desc { font-size: 10.5px; color: var(--text3); margin-top: 1px; }
-.s-sect-title { font-family: 'Syne', sans-serif; font-size: 12.5px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin: 16px 0 8px; }
-
-/* ── MOOD SELECTOR ── */
-.mood-row { display: flex; justify-content: space-around; padding: 10px 0; }
-.mood-opt { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px; border-radius: 12px; cursor: pointer; }
-.mood-opt.sel { background: var(--surf3); }
-.mood-emoji { font-size: 30px; }
-.mood-label { font-size: 9px; color: var(--text3); text-align: center; font-weight: 600; }
-
-/* ── SCHEME CARD ── */
-.scheme-card { background: var(--surf2); border: 1px solid rgba(59,158,255,0.18); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
-.sc-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 3px; }
-.sc-ministry { font-size: 9.5px; color: var(--text3); margin-bottom: 7px; }
-.sc-desc { font-size: 11.5px; color: var(--text2); line-height: 1.5; margin-bottom: 9px; }
-.sc-benefit { background: var(--teal-d); border: 1px solid rgba(0,212,170,0.2); border-radius: 8px; padding: 8px 10px; font-size: 11px; color: var(--teal); }
+/* ── MOOD ── */
+.mood-row{display:flex;justify-content:space-around;padding:10px 0;}
+.mood-opt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border-radius:12px;cursor:pointer;transition:background 0.15s;}
+.mood-opt.sel{background:var(--surf3);}
+.mood-emoji{font-size:30px;}
+.mood-label{font-size:9px;color:var(--text3);text-align:center;font-weight:600;}
 
 /* ── CLIENT HEALTH ── */
-.cls-card { display: flex; align-items: center; gap: 11px; padding: 12px 14px; background: var(--surf2); border: 1px solid var(--border); border-radius: 13px; margin-bottom: 8px; }
-.cls-score { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; flex-shrink: 0; }
-.sA { background: rgba(0,212,170,0.15); color: var(--teal); }
-.sB { background: rgba(201,255,71,0.12); color: var(--lime); }
-.sC { background: rgba(255,184,48,0.12); color: var(--gold); }
-.sD { background: rgba(255,107,53,0.1); color: var(--orange); }
-.cls-name { font-size: 12.5px; font-weight: 600; margin-bottom: 1px; }
-.cls-meta { font-size: 10px; color: var(--text3); }
-.cls-rev { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; color: var(--lime); text-align: right; }
-.cls-days { font-size: 9.5px; color: var(--text3); text-align: right; }
+.cls-card{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--surf2);border:1px solid var(--border);border-radius:13px;margin-bottom:8px;}
+.cls-score{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;flex-shrink:0;}
+.cls-score.sA{background:var(--lime-d);color:var(--lime);}
+.cls-score.sB{background:var(--purple-d);color:var(--purple);}
+.cls-score.sC{background:var(--orange-d);color:var(--orange);}
+.cls-name{font-size:12.5px;font-weight:600;margin-bottom:1px;}
+.cls-meta{font-size:10px;color:var(--text3);}
+.cls-rev{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--lime);text-align:right;}
+.cls-days{font-size:9.5px;color:var(--text3);text-align:right;}
 
-/* ── GRANT CARD ── */
-.grant-card { background: var(--surf2); border: 1px solid rgba(255,184,48,0.15); border-radius: 13px; padding: 14px; margin-bottom: 9px; }
-.gc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.gc-name { font-family: 'Syne', sans-serif; font-size: 12.5px; font-weight: 700; }
-.gc-city { font-size: 10px; color: var(--text3); }
-.gc-story { font-size: 11.5px; color: var(--text2); line-height: 1.5; margin-bottom: 8px; }
-.gc-impact { background: rgba(255,184,48,0.1); border: 1px solid rgba(255,184,48,0.2); border-radius: 8px; padding: 8px 10px; font-size: 11px; color: var(--gold); }
+/* ── EMERGENCY FUND ── */
+.ef-rule{background:var(--surf2);border:1px solid var(--border);border-radius:12px;padding:13px;margin-bottom:8px;}
 
-/* ── INCOME VERIFY ── */
-.ivr { background: #fff; color: #1a1a2e; border-radius: 14px; padding: 18px; }
-.ivr-logo { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; margin-bottom: 12px; }
-.ivr-logo span { color: #7B5CFF; }
-.ivr-section { margin-bottom: 10px; }
-.ivr-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #666; margin-bottom: 3px; }
-.ivr-val { font-size: 12.5px; font-weight: 600; }
-.ivr-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 10px 0; }
-.ivr-table th { text-align: left; padding: 6px 8px; background: #f5f5fc; font-size: 9px; text-transform: uppercase; color: #666; letter-spacing: 0.05em; }
-.ivr-table td { padding: 7px 8px; border-bottom: 1px solid #f0f0f8; }
-.ivr-sig { background: #f8f8ff; border: 1px solid #e0e0f0; border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 10px; color: #555; line-height: 1.5; }
-
-/* ── EF (Emergency Fund) ── */
-.ef-rule { background: var(--surf2); border: 1px solid var(--border); border-radius: 12px; padding: 13px; margin-bottom: 8px; }
-.efr-name { font-size: 12.5px; font-weight: 600; }
-.efr-pct { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--teal); }
-.efr-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
-.efr-desc { font-size: 11px; color: var(--text3); }
-
-/* ── VOICE LOG ── */
-.voice-btn {
-  width: 80px; height: 80px; border-radius: 50%;
-  background: var(--lime); border: none; cursor: pointer;
-  font-size: 32px; display: flex; align-items: center; justify-content: center;
-  margin: 20px auto 10px; box-shadow: 0 0 0 0 rgba(201,255,71,0.4);
-  transition: all 0.2s;
-}
-.voice-btn.listening { background: var(--orange); animation: vring 1.2s infinite; }
-@keyframes vring { 0% { box-shadow: 0 0 0 0 rgba(255,107,53,0.5); } 70% { box-shadow: 0 0 0 20px rgba(255,107,53,0); } 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0); } }
-.voice-hint { text-align: center; font-size: 12px; color: var(--text3); }
-.voice-result { background: var(--surf2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 14px; font-size: 13px; color: var(--lime); }
-
-/* ── BUTTON ── */
-.btn { background: var(--lime); color: #000; border: none; border-radius: 12px; padding: 12px 20px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-.btn:active { opacity: 0.85; transform: scale(0.98); }
-.btn-full { width: 100%; justify-content: center; }
-.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); border-radius: 12px; padding: 11px 18px; font-size: 12.5px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-
-/* ── SOURCE LEGEND ── */
-.sleg { display: flex; flex-direction: column; gap: 9px; margin-top: 12px; }
-.sli { display: flex; align-items: center; gap: 9px; }
-.sld { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.sln { font-size: 11.5px; color: var(--text2); flex: 1; }
-.slbw { flex: 1; height: 4px; background: var(--surf3); border-radius: 2px; overflow: hidden; }
-.slbf { height: 100%; border-radius: 2px; }
-.slp { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; }
-
-/* ── FOUND CARD ── */
-.found-hero { text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(255,184,48,0.08), rgba(0,212,170,0.06)); border: 1px solid rgba(255,184,48,0.2); border-radius: 16px; margin-bottom: 14px; }
-
-/* ── PRIVACY SCORE ── */
-.priv-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surf2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 7px; }
-.pi-ico { font-size: 18px; flex-shrink: 0; }
-.pi-info { flex: 1; }
-.pi-name { font-size: 12.5px; font-weight: 600; }
-.pi-desc { font-size: 10px; color: var(--text3); margin-top: 1px; }
-.pi-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; }
-.ok { background: rgba(0,212,170,0.15); color: var(--teal); }
-.warn { background: rgba(255,107,53,0.12); color: var(--orange); }
-
-/* ── DIVIDER ── */
-.divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-/* ── INLINE INFO BOX ── */
-.info-box { background: var(--blue-d); border: 1px solid rgba(59,158,255,0.2); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; font-size: 12px; color: var(--text2); line-height: 1.6; }
-.info-box strong { color: var(--blue); }
-.tip-box { background: var(--lime-d); border: 1px solid rgba(201,255,71,0.2); border-radius: 12px; padding: 11px 14px; margin: 10px 0; font-size: 11.5px; color: var(--text2); }
-.tip-box strong { color: var(--lime); }
-.warn-box { background: var(--orange-d); border: 1px solid rgba(255,107,53,0.18); border-radius: 12px; padding: 11px 14px; margin: 10px 0; font-size: 11.5px; color: var(--text2); }
-.warn-box strong { color: var(--orange); }
+/* ── INFO / TIP / WARN BOXES ── */
+.info-box{background:var(--blue-d);border:1px solid rgba(59,158,255,0.2);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12px;color:var(--text2);line-height:1.6;}
+.info-box strong{color:var(--blue);}
+.tip-box{background:var(--lime-d);border:1px solid rgba(203,255,71,0.2);border-radius:12px;padding:11px 14px;margin:10px 0;font-size:11.5px;color:var(--text2);}
+.tip-box strong{color:var(--lime);}
+.warn-box{background:var(--orange-d);border:1px solid rgba(255,107,53,0.18);border-radius:12px;padding:11px 14px;margin:10px 0;font-size:11.5px;color:var(--text2);}
+.warn-box strong{color:var(--orange);}
 
 /* ── DONUT ── */
-.donut-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 12px; }
-.donut-val { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.d-num { font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700; color: var(--lime); }
-.d-sub { font-size: 8.5px; color: var(--text3); }
+.donut-wrap{position:relative;width:100px;height:100px;margin:0 auto 12px;}
+.donut-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.d-num{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--lime);}
+.d-sub{font-size:8.5px;color:var(--text3);}
+
+/* ── PRIVACY ── */
+.priv-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surf2);border:1px solid var(--border);border-radius:12px;margin-bottom:7px;}
+.pi-ico{font-size:18px;flex-shrink:0;}
+.pi-info{flex:1;}
+.pi-name{font-size:12.5px;font-weight:600;}
+.pi-desc{font-size:10px;color:var(--text3);margin-top:1px;}
+.pi-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;}
+.ok{background:rgba(0,212,170,0.15);color:var(--teal);}
+.warn{background:rgba(255,107,53,0.12);color:var(--orange);}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--border);margin:14px 0;}
+
+/* ── TIP POSTS ── */
+.tip-post{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:9px;}
+
+/* ── RECEIPT SCANNER ── */
+.camera-preview{width:100%;border-radius:12px;max-height:200px;object-fit:cover;}
+.scan-result{background:var(--bg);border-radius:10px;padding:12px;font-size:12px;color:var(--text2);min-height:60px;margin-bottom:12px;white-space:pre-wrap;}
+
+/* ── RENTAL / BANK VERIFY ── */
+.rm-tab-row{display:flex;gap:6px;margin-bottom:20px;background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:5px;}
+.rm-tab{flex:1;padding:9px 8px;border-radius:10px;cursor:pointer;font-size:11px;font-weight:500;color:var(--text2);text-align:center;transition:all .15s;border:1px solid transparent;}
+.rm-tab.active{background:var(--lime-d);color:var(--lime);border-color:rgba(203,255,71,.2);font-weight:600;}
+.rm-panel{display:none;}
+.rm-panel.active{display:block;animation:fadeIn .3s ease;}
+.rm-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.rm-stat{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:13px;}
+.rm-stat-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.rm-stat-value{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--lime);}
+.rm-stat-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.rm-frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.rm-fgroup{display:flex;flex-direction:column;gap:4px;}
+.rm-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);}
+.rm-input,.rm-select{background:var(--surf2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;width:100%;}
+.rm-input:focus,.rm-select:focus{border-color:var(--lime);}
+.rm-source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.rm-source-chip{background:var(--surf2);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s;}
+.rm-source-chip:hover,.rm-source-chip.selected{border-color:var(--lime);background:var(--lime-d);}
+.rm-source-chip.selected .rm-chip-name{color:var(--lime);}
+.rm-chip-icon{font-size:18px;margin-bottom:4px;}
+.rm-chip-name{font-size:10px;font-weight:600;color:var(--text2);}
+.rm-entry-list{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;}
+.rm-entry-item{display:flex;align-items:center;gap:11px;background:var(--surf2);border:1px solid var(--border);border-radius:12px;padding:11px 13px;}
+.rm-entry-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.rm-entry-body{flex:1;min-width:0;}
+.rm-entry-name{font-size:12.5px;font-weight:600;}
+.rm-entry-meta{font-size:10px;color:var(--text3);margin-top:1px;}
+.rm-entry-amount{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--lime);white-space:nowrap;}
+.rm-entry-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:4px;flex-shrink:0;}
+.rm-bank-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+.rm-bank-chip{background:var(--surf2);border:1px solid var(--border);border-radius:12px;padding:11px 8px;text-align:center;cursor:pointer;transition:all .15s;}
+.rm-bank-chip:hover,.rm-bank-chip.selected{border-color:var(--purple);background:var(--purple-d);}
+.rm-bank-chip.selected{color:var(--purple);}
+.rm-bank-name{font-size:11px;font-weight:600;}
+.rm-bank-min{font-size:9.5px;color:var(--text3);margin-top:2px;}
+.rm-report-wrap{font-family:'DM Sans',sans-serif;font-size:12px;line-height:1.6;color:var(--text2);}
+
+/* ── SCHEME NAVIGATOR ── */
+.scheme-question{font-size:14px;font-weight:600;margin-bottom:12px;}
+.scheme-option{background:var(--surf2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s;font-size:12.5px;}
+.scheme-option:hover{border-color:var(--lime);color:var(--lime);}
+
+/* ── INVOICE ── */
+.inv-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.inv-row:last-child{border-bottom:none;}
+.inv-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;}
+.inv-status.paid{background:rgba(0,212,170,0.15);color:var(--teal);}
+.inv-status.pending{background:rgba(255,107,53,0.12);color:var(--orange);}
+
+/* ── COMMUNITY ── */
+.com-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.com-row:last-child{border-bottom:none;}
+.com-rank{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;width:24px;color:var(--text3);}
+.com-avatar{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:var(--surf3);}
+.com-name{flex:1;font-size:12.5px;font-weight:600;}
+.com-amt{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--lime);}
+
+/* ── VOICE LOG ── */
+.voice-btn-big{width:72px;height:72px;border-radius:50%;background:var(--lime-d);border:2px solid var(--lime);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;margin:0 auto 14px;transition:all .15s;}
+.voice-btn-big.listening{background:var(--lime);animation:pulse 1s infinite;}
+
+/* ── MORE GRID ── */
+.more-item{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .15s;}
+.more-item:hover,.more-item:active{border-color:var(--lime);background:var(--lime-d);}
+.more-item.highlight{border-color:rgba(0,212,170,0.2);background:rgba(0,212,170,0.05);}
+.more-item-ico{font-size:22px;margin-bottom:5px;}
+.more-item-label{font-size:10px;font-weight:600;color:var(--text2);}
+
+/* ── GREETING ── */
+.greeting{margin-bottom:16px;}
+.greeting-small{font-size:12px;color:var(--text3);margin-bottom:3px;}
+.greeting-big{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;line-height:1.2;letter-spacing:-0.4px;}
+.greeting-big span{color:var(--lime);}
+
+/* ── GOAL CARDS ── */
+.goal-card{background:var(--surf2);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;}
+.goal-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.goal-emoji{font-size:20px;width:36px;height:36px;background:var(--surf3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.goal-name{font-size:13px;font-weight:600;}
+.goal-deadline{font-size:10px;color:var(--text3);margin-top:1px;}
+.goal-amounts{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;}
+.prog-bar{height:5px;background:var(--surf3);border-radius:3px;overflow:hidden;}
+
+/* ── STREAK GRID ── */
+.streak-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.sd{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;background:var(--surf3);color:var(--text3);}
+.sd.done{background:var(--lime-d);color:var(--lime);}
+.sd.today{background:var(--lime);color:#000;}
+
+/* ── MISC MISSING STYLES ── */
+.mc-ico{font-size:18px;margin-top:6px;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;padding-top:max(14px,env(safe-area-inset-top));background:var(--surf);border-bottom:1px solid var(--border);flex-shrink:0;z-index:50;}
+.gc-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.gc-name{font-size:12.5px;font-weight:600;}
+.gc-city{font-size:10px;color:var(--text3);}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(203,255,71,0.4)}50%{box-shadow:0 0 0 12px rgba(203,255,71,0)}}
+.voice-hint{text-align:center;font-size:12px;color:var(--text3);margin-bottom:16px;}
+
+/* ══════════════════════════════════════════
+   AUTH LAYER — SPLASH / ONBOARDING / PIN
+══════════════════════════════════════════ */
+
+/* ── FULL-SCREEN OVERLAY BASE ── */
+.auth-layer {
+  position:fixed;inset:0;z-index:9000;
+  background:var(--bg);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:28px 28px max(28px,env(safe-area-inset-bottom));
+  overflow-y:auto;
+}
+.auth-layer.hidden{display:none;}
+
+/* ── SPLASH ── */
+#splash-screen {
+  animation:splashFade 0.6s ease 1.8s forwards;
+  opacity:1;
+  gap:16px;
+}
+@keyframes splashFade{to{opacity:0;pointer-events:none;}}
+.splash-logo{
+  width:88px;height:88px;border-radius:24px;background:var(--lime);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#000;
+  box-shadow:0 12px 40px rgba(203,255,71,0.4);
+  animation:logoPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+}
+@keyframes logoPop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+.splash-title{
+  font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.5px;
+  animation:fadeUp 0.5s ease 0.6s both;
+}
+.splash-title span{color:var(--lime);}
+.splash-sub{font-size:13px;color:var(--text3);animation:fadeUp 0.5s ease 0.8s both;}
+.splash-bar{
+  width:160px;height:3px;background:var(--surf3);border-radius:3px;overflow:hidden;
+  margin-top:32px;animation:fadeUp 0.5s ease 1s both;
+}
+.splash-bar-fill{
+  height:100%;background:var(--lime);border-radius:3px;
+  animation:loadBar 1.6s ease 0.2s both;
+}
+@keyframes loadBar{from{width:0}to{width:100%}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── ONBOARDING SLIDES ── */
+#onboard-screen { gap:0; padding:0; justify-content:flex-start; }
+.onboard-slides { width:100%; flex:1; overflow:hidden; position:relative; }
+.onboard-slide {
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 28px;
+  opacity:0;transform:translateX(40px);transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
+  pointer-events:none;
+}
+.onboard-slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.onboard-slide.exit{opacity:0;transform:translateX(-40px);}
+.onboard-art{font-size:72px;margin-bottom:24px;line-height:1;}
+.onboard-title{
+  font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
+  text-align:center;line-height:1.2;letter-spacing:-0.5px;margin-bottom:12px;
+}
+.onboard-title span{color:var(--lime);}
+.onboard-body{font-size:14px;color:var(--text2);text-align:center;line-height:1.65;max-width:300px;}
+.onboard-footer{
+  width:100%;padding:20px 28px max(24px,env(safe-area-inset-bottom));
+  border-top:1px solid var(--border);background:var(--bg);
+  display:flex;flex-direction:column;gap:12px;flex-shrink:0;
+}
+.onboard-dots{display:flex;gap:7px;justify-content:center;margin-bottom:4px;}
+.dot{width:6px;height:6px;border-radius:3px;background:var(--surf3);transition:all 0.3s;}
+.dot.active{width:20px;background:var(--lime);}
+.btn-lime{
+  width:100%;background:var(--lime);color:#000;border:none;border-radius:14px;
+  padding:16px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+}
+.btn-lime:active{transform:scale(0.98);}
+.btn-text{
+  background:none;border:none;color:var(--text3);font-size:13px;
+  cursor:pointer;padding:6px;text-align:center;
+}
+.btn-text:hover{color:var(--text2);}
+
+/* ── PROFILE SETUP ── */
+#profile-screen { gap:0; justify-content:flex-start; }
+.profile-form {
+  width:100%;max-width:420px;padding:32px 24px;
+  display:flex;flex-direction:column;gap:16px;
+}
+.profile-avatar-pick{
+  width:72px;height:72px;border-radius:20px;
+  background:linear-gradient(135deg,var(--purple),var(--lime));
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;cursor:pointer;margin:0 auto 8px;position:relative;
+}
+.avatar-edit{
+  position:absolute;bottom:-4px;right:-4px;
+  width:22px;height:22px;border-radius:50%;background:var(--lime);
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:#000;
+}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:10.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);}
+.form-input{
+  background:var(--surf2);border:1.5px solid var(--border2);border-radius:12px;
+  padding:13px 15px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;
+  outline:none;transition:border-color 0.2s;
+}
+.form-input:focus{border-color:var(--lime);}
+.form-input::placeholder{color:var(--text3);}
+.hustle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.hustle-chip{
+  background:var(--surf2);border:1.5px solid var(--border);border-radius:12px;
+  padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.15s;
+}
+.hustle-chip.selected{border-color:var(--lime);background:var(--lime-d);}
+.hustle-chip-ico{font-size:20px;margin-bottom:4px;}
+.hustle-chip-lbl{font-size:10px;font-weight:600;color:var(--text2);}
+.hustle-chip.selected .hustle-chip-lbl{color:var(--lime);}
+.consent-block{
+  background:var(--blue-d);border:1px solid rgba(59,158,255,0.2);
+  border-radius:12px;padding:13px;font-size:11.5px;color:var(--text2);line-height:1.6;
+}
+.consent-block strong{color:var(--blue);}
+.consent-block a{color:var(--blue);text-decoration:underline;}
+
+/* ── PIN SETUP & LOCK ── */
+#pin-setup-screen, #pin-lock-screen { gap:24px; }
+.pin-header{text-align:center;}
+.pin-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;}
+.pin-sub{font-size:13px;color:var(--text3);}
+.pin-dots{display:flex;gap:14px;justify-content:center;margin:4px 0;}
+.pin-dot{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid var(--border2);background:transparent;transition:all 0.2s;
+}
+.pin-dot.filled{background:var(--lime);border-color:var(--lime);}
+.pin-dot.error{background:var(--pink);border-color:var(--pink);animation:shake 0.4s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:280px;}
+.pin-key{
+  height:64px;border-radius:16px;background:var(--surf2);border:1px solid var(--border);
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--text);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.1s;user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.pin-key:active{background:var(--surf3);transform:scale(0.94);}
+.pin-key.lime{background:var(--lime);color:#000;}
+.pin-key.ghost{background:transparent;border-color:transparent;font-size:14px;color:var(--text3);}
+.pin-key.del{font-size:22px;}
+.biometric-btn{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;
+  padding:8px;
+}
+.biometric-btn span{font-size:32px;}
+
+/* ── TRANSITION HELPER ── */
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.slide-up{animation:slideUp 0.4s cubic-bezier(0.4,0,0.2,1) both;}
 </style>
 </head>
 <body>
-<div class="app">
 
-  <!-- ── TOP HEADER ── -->
+<!-- ══════════════════════════════════════════
+     AUTH LAYER (sits above the app until auth is complete)
+══════════════════════════════════════════ -->
+
+<!-- 1. SPLASH -->
+<div class="auth-layer" id="splash-screen">
+  <div class="splash-logo">S₹</div>
+  <div class="splash-title">Side<span>Stack</span></div>
+  <div class="splash-sub">India's Side Hustle OS</div>
+  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
+
+<!-- 2. ONBOARDING (3 slides) -->
+<div class="auth-layer hidden" id="onboard-screen">
+  <div class="onboard-slides">
+    <!-- Slide 1 -->
+    <div class="onboard-slide active" id="ob-1">
+      <div class="onboard-art">₹💸</div>
+      <div class="onboard-title">Every rupee.<br><span>Tracked.</span></div>
+      <div class="onboard-body">Log income from Upwork, Swiggy, YouTube, tutoring — any hustle. Your financial story, organised.</div>
+    </div>
+    <!-- Slide 2 -->
+    <div class="onboard-slide" id="ob-2">
+      <div class="onboard-art">🔒🤖</div>
+      <div class="onboard-title">100% private.<br><span>On-device AI.</span></div>
+      <div class="onboard-body">Your data never leaves your phone. Stacks AI analyses income, taxes, and mood — completely offline.</div>
+    </div>
+    <!-- Slide 3 -->
+    <div class="onboard-slide" id="ob-3">
+      <div class="onboard-art">🏛️📊</div>
+      <div class="onboard-title">Built for<br><span>India.</span></div>
+      <div class="onboard-body">GST estimates, ITR prep, government schemes, UPI income tracking, and bank-ready income reports.</div>
+    </div>
+  </div>
+  <div class="onboard-footer">
+    <div class="onboard-dots">
+      <div class="dot active" id="dot-0"></div>
+      <div class="dot" id="dot-1"></div>
+      <div class="dot" id="dot-2"></div>
+    </div>
+    <button class="btn-lime" id="ob-next-btn" onclick="obNext()">Get Started</button>
+    <button class="btn-text" id="ob-skip-btn" onclick="obSkip()">Skip intro</button>
+  </div>
+</div>
+
+<!-- 3. PROFILE SETUP -->
+<div class="auth-layer hidden" id="profile-screen">
+  <div class="profile-form slide-up">
+    <div style="text-align:center;margin-bottom:8px;">
+      <div class="profile-avatar-pick" id="avatar-pick" onclick="cycleAvatar()">
+        <span id="avatar-emoji">🦁</span>
+        <div class="avatar-edit">✏️</div>
+      </div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:8px;">Your Profile</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:3px;">Stored on-device only · Never shared</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Your Name</label>
+      <input class="form-input" id="p-name" type="text" placeholder="What should Stacks call you?" maxlength="32" autocomplete="name">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">City</label>
+      <input class="form-input" id="p-city" type="text" placeholder="Mumbai, Delhi, Bangalore…" maxlength="40" autocomplete="address-level2">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Primary Hustle</label>
+      <div class="hustle-grid">
+        <div class="hustle-chip selected" onclick="selectHustle(this,'Freelance')"><div class="hustle-chip-ico">💻</div><div class="hustle-chip-lbl">Freelance</div></div>
+        <div class="hustle-chip" onclick="selectHustle(this,'Teaching')"><div class="hustle-chip-ico">📚</div><div class="hustle-chip-lbl">Teaching</div></div>
+        <div class="hustle-chip" onclick="selectHustle(this,'Delivery')"><div class="hustle-chip-ico">🚗</div><div class="hustle-chip-lbl">Delivery</div></div>
+        <div class="hustle-chip" onclick="selectHustle(this,'Content')"><div class="hustle-chip-ico">📹</div><div class="hustle-chip-lbl">Content</div></div>
+        <div class="hustle-chip" onclick="selectHustle(this,'Design')"><div class="hustle-chip-ico">🎨</div><div class="hustle-chip-lbl">Design</div></div>
+        <div class="hustle-chip" onclick="selectHustle(this,'Other')"><div class="hustle-chip-ico">⚡</div><div class="hustle-chip-lbl">Other</div></div>
+      </div>
+    </div>
+
+    <div class="consent-block">
+      <strong>🔒 Your data stays on your phone.</strong> SideStack stores all information locally using device storage. No account needed. No data is uploaded unless you opt into cloud backup.<br><br>
+      By continuing you agree to our <a href="https://sidestack.in/privacy" target="_blank">Privacy Policy</a> and <a href="https://sidestack.in/terms" target="_blank">Terms of Use</a>.
+    </div>
+
+    <button class="btn-lime" onclick="saveProfile()">Continue → Set PIN</button>
+    <button class="btn-text" onclick="skipProfile()">Skip for now</button>
+  </div>
+</div>
+
+<!-- 4. PIN SETUP -->
+<div class="auth-layer hidden" id="pin-setup-screen">
+  <div class="pin-header slide-up">
+    <div class="pin-title">Create your PIN</div>
+    <div class="pin-sub">6-digit PIN to protect your income data</div>
+  </div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="ps-d0"></div>
+    <div class="pin-dot" id="ps-d1"></div>
+    <div class="pin-dot" id="ps-d2"></div>
+    <div class="pin-dot" id="ps-d3"></div>
+    <div class="pin-dot" id="ps-d4"></div>
+    <div class="pin-dot" id="ps-d5"></div>
+  </div>
+  <div style="font-size:11px;color:var(--text3);text-align:center;min-height:18px;" id="pin-setup-msg"></div>
+  <div class="pinpad">
+    <div class="pin-key" onclick="pinSetupKey('1')">1</div>
+    <div class="pin-key" onclick="pinSetupKey('2')">2</div>
+    <div class="pin-key" onclick="pinSetupKey('3')">3</div>
+    <div class="pin-key" onclick="pinSetupKey('4')">4</div>
+    <div class="pin-key" onclick="pinSetupKey('5')">5</div>
+    <div class="pin-key" onclick="pinSetupKey('6')">6</div>
+    <div class="pin-key" onclick="pinSetupKey('7')">7</div>
+    <div class="pin-key" onclick="pinSetupKey('8')">8</div>
+    <div class="pin-key" onclick="pinSetupKey('9')">9</div>
+    <div class="pin-key ghost" onclick="pinSetupSkip()">Skip</div>
+    <div class="pin-key" onclick="pinSetupKey('0')">0</div>
+    <div class="pin-key del" onclick="pinSetupDel()">⌫</div>
+  </div>
+</div>
+
+<!-- 5. PIN LOCK (shown on reopen if PIN is set) -->
+<div class="auth-layer hidden" id="pin-lock-screen">
+  <div class="pin-header slide-up">
+    <div style="font-size:40px;margin-bottom:10px;">S₹</div>
+    <div class="pin-title">Welcome back</div>
+    <div class="pin-sub" id="pin-lock-name">Enter your PIN</div>
+  </div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="pl-d0"></div>
+    <div class="pin-dot" id="pl-d1"></div>
+    <div class="pin-dot" id="pl-d2"></div>
+    <div class="pin-dot" id="pl-d3"></div>
+    <div class="pin-dot" id="pl-d4"></div>
+    <div class="pin-dot" id="pl-d5"></div>
+  </div>
+  <div style="font-size:11px;color:var(--pink);text-align:center;min-height:18px;" id="pin-lock-msg"></div>
+  <div class="pinpad">
+    <div class="pin-key" onclick="pinLockKey('1')">1</div>
+    <div class="pin-key" onclick="pinLockKey('2')">2</div>
+    <div class="pin-key" onclick="pinLockKey('3')">3</div>
+    <div class="pin-key" onclick="pinLockKey('4')">4</div>
+    <div class="pin-key" onclick="pinLockKey('5')">5</div>
+    <div class="pin-key" onclick="pinLockKey('6')">6</div>
+    <div class="pin-key" onclick="pinLockKey('7')">7</div>
+    <div class="pin-key" onclick="pinLockKey('8')">8</div>
+    <div class="pin-key" onclick="pinLockKey('9')">9</div>
+    <div class="pin-key ghost" id="bio-btn" onclick="tryBiometric()">
+      <span>🫆</span>
+    </div>
+    <div class="pin-key" onclick="pinLockKey('0')">0</div>
+    <div class="pin-key del" onclick="pinLockDel()">⌫</div>
+  </div>
+  <button class="btn-text" onclick="forgotPIN()">Forgot PIN?</button>
+</div>
+
+
+
+  <!-- ── HEADER ── -->
   <header class="header">
     <div class="header-logo">
       <div class="logo-icon">S₹</div>
@@ -567,7 +671,7 @@ body {
     </div>
     <div class="header-right">
       <span class="page-label" id="page-label">Home</span>
-      <div class="header-btn">
+      <div class="header-btn" onclick="showScreen('privacy')">
         🔔<div class="notif-dot"></div>
       </div>
     </div>
@@ -575,11 +679,9 @@ body {
 
   <!-- ── SCROLL AREA ── -->
   <div class="scroll-area" id="scroll-area">
-
-    <!-- ════ SCREEN: HOME ════ -->
     <div class="screen active" id="s-home">
       <div class="greeting">
-        <div class="greeting-small">Namaste 👋 Arjun</div>
+        <div class="greeting-small" id="home-greeting">Namaste 👋</div>
         <div class="greeting-big">₹5,500 away from<br><span>your April goal</span></div>
       </div>
 
@@ -830,7 +932,7 @@ body {
 
     <!-- ════ SCREEN: MORE ════ -->
     <div class="screen" id="s-more">
-      <div class="sec-head"><div><div class="sec-title">All Features</div><div class="sec-sub">SideStack v4.0</div></div></div>
+      <div class="sec-head"><div><div class="sec-title">All Features</div><div class="sec-sub">SideStack v5.0 · India Launch</div></div><span class="chip lime">20 Tools</span></div>
 
       <div class="more-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
         <div class="more-item" onclick="showScreen('goals')"><div class="more-item-ico">🎯</div><div class="more-item-label">Goals & Streaks</div></div>
@@ -843,8 +945,11 @@ body {
         <div class="more-item" onclick="showScreen('tips')"><div class="more-item-ico">💬</div><div class="more-item-label">Hustle Tips</div></div>
         <div class="more-item" onclick="showScreen('clients')"><div class="more-item-ico">👔</div><div class="more-item-label">Client Health</div></div>
         <div class="more-item" onclick="showScreen('voice')"><div class="more-item-ico">🎙️</div><div class="more-item-label">Voice Log</div></div>
+        <div class="more-item" onclick="showScreen('receipt')"><div class="more-item-ico">📷</div><div class="more-item-label">Receipt Scan</div></div>
+        <div class="more-item" onclick="showScreen('rental')"><div class="more-item-ico">🏦</div><div class="more-item-label">Bank Verify</div></div>
         <div class="more-item highlight" onclick="showScreen('foundation')"><div class="more-item-ico">🌱</div><div class="more-item-label">Foundation</div></div>
         <div class="more-item" onclick="showScreen('privacy')"><div class="more-item-ico">🔐</div><div class="more-item-label">Privacy</div></div>
+        <div class="more-item" onclick="showScreen('settings')"><div class="more-item-ico">⚙️</div><div class="more-item-label">Settings</div></div>
       </div>
 
       <!-- Pro upgrade -->
@@ -860,7 +965,7 @@ body {
         <div class="card-head"><div class="card-title">Refer & Earn</div></div>
         <div class="card-body">
           <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Refer 3 friends → get 1 month Pro free.</div>
-          <div style="font-family:'Space Mono',monospace;font-size:12.5px;background:var(--surf2);border-radius:9px;padding:10px;color:var(--lime);margin-bottom:10px;">HUSTLE-ARJUN-BLR</div>
+          <div style="font-family:'Space Mono',monospace;font-size:12.5px;background:var(--surf2);border-radius:9px;padding:10px;color:var(--lime);margin-bottom:10px;" id="referral-code">HUSTLE-USER-000</div>
           <div style="display:flex;gap:8px;">
             <button class="btn" style="flex:1;justify-content:center;font-size:11.5px;">📋 Copy</button>
             <button class="btn-ghost" style="flex:1;justify-content:center;font-size:11.5px;">📱 Share</button>
@@ -1008,7 +1113,7 @@ body {
       <div class="ivr">
         <div class="ivr-logo">Side<span>Stack</span> Income Report</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-          <div class="ivr-section"><div class="ivr-label">Name</div><div class="ivr-val">Arjun Kumar</div></div>
+          <div class="ivr-section"><div class="ivr-label">Name</div><div class="ivr-val" id="ivr-name">—</div></div>
           <div class="ivr-section"><div class="ivr-label">Period</div><div class="ivr-val">Jan–Mar 2026</div></div>
           <div class="ivr-section"><div class="ivr-label">City</div><div class="ivr-val">Bangalore</div></div>
           <div class="ivr-section"><div class="ivr-label">Date</div><div class="ivr-val">Apr 19, 2026</div></div>
@@ -1276,13 +1381,41 @@ body {
       <div class="sec-title" style="margin-bottom:14px;">Settings</div>
 
       <div class="s-sect-title">👤 Profile</div>
-      <div class="setting-row"><span class="s-ico">✏️</span><div class="s-info"><div class="s-name">Arjun Kumar</div><div class="s-desc">arjun.kumar@gmail.com</div></div><span style="color:var(--text3)">›</span></div>
-      <div class="setting-row"><span class="s-ico">🌐</span><div class="s-info"><div class="s-name">Language</div><div class="s-desc">English (EN)</div></div><span style="color:var(--text3)">›</span></div>
-      <div class="setting-row"><span class="s-ico">🏙️</span><div class="s-info"><div class="s-name">City</div><div class="s-desc">Bangalore, Karnataka</div></div><span style="color:var(--text3)">›</span></div>
+      <div class="setting-row" onclick="showScreen('profile-edit')">
+        <span class="s-ico" id="set-avatar" style="font-size:22px;">🦁</span>
+        <div class="s-info">
+          <div class="s-name" id="set-name">Your Name</div>
+          <div class="s-desc" id="set-city">Tap to edit profile</div>
+        </div>
+        <span style="color:var(--text3)">›</span>
+      </div>
+      <div class="setting-row">
+        <span class="s-ico">💼</span>
+        <div class="s-info"><div class="s-name">Primary Hustle</div><div class="s-desc" id="set-hustle">Not set</div></div>
+        <span style="color:var(--text3)">›</span>
+      </div>
+      <div class="setting-row">
+        <span class="s-ico">🌐</span>
+        <div class="s-info"><div class="s-name">Language</div><div class="s-desc">English (EN)</div></div>
+        <span style="color:var(--text3)">›</span>
+      </div>
+
+      <div class="s-sect-title">🔐 Security</div>
+      <div class="setting-row">
+        <span class="s-ico">🔢</span>
+        <div class="s-info"><div class="s-name">App PIN</div><div class="s-desc" id="set-pin-status">Not set</div></div>
+        <button class="btn-ghost" style="font-size:11px;padding:5px 11px;" onclick="showPinChange()" id="set-pin-btn">Set PIN</button>
+      </div>
+      <div class="setting-row">
+        <span class="s-ico">🫆</span>
+        <div class="s-info"><div class="s-name">Biometric Lock</div><div class="s-desc">Fingerprint / Face ID</div></div>
+        <div class="tog" id="tog-bio" onclick="toggleBiometric(this)"></div>
+      </div>
 
       <div class="s-sect-title">💸 Subscription</div>
       <div class="setting-row" style="border-color:rgba(201,255,71,0.2);background:rgba(201,255,71,0.04);">
-        <span class="s-ico">⭐</span><div class="s-info"><div class="s-name" style="color:var(--lime)">Pro+ Active</div><div class="s-desc">₹49/month · Renews May 19</div></div>
+        <span class="s-ico">⭐</span>
+        <div class="s-info"><div class="s-name" style="color:var(--lime)">Pro+ Active</div><div class="s-desc">₹49/month · Renews May 19</div></div>
         <div class="chip lime">Active</div>
       </div>
       <div class="setting-row"><span class="s-ico">📄</span><div class="s-info"><div class="s-name">Billing History</div></div><span style="color:var(--text3)">›</span></div>
@@ -1292,10 +1425,202 @@ body {
       <div class="setting-row"><span class="s-ico">🧠</span><div class="s-info"><div class="s-name">Mood Reminder</div><div class="s-desc">Daily 8pm</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
       <div class="setting-row"><span class="s-ico">🤖</span><div class="s-info"><div class="s-name">AI Daily Insights</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
 
+      <div class="s-sect-title">☁️ Backup</div>
+      <div class="setting-row">
+        <span class="s-ico">☁️</span>
+        <div class="s-info"><div class="s-name">Cloud Backup</div><div class="s-desc">Encrypted · Off by default</div></div>
+        <div class="tog" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row" onclick="exportData()">
+        <span class="s-ico">📤</span>
+        <div class="s-info"><div class="s-name">Export My Data</div><div class="s-desc">JSON / CSV — DPDP right</div></div>
+        <span style="color:var(--text3)">›</span>
+      </div>
+
       <div class="s-sect-title">⚠️ Danger Zone</div>
-      <div class="setting-row" style="border-color:rgba(255,77,139,0.2);">
-        <span class="s-ico">🗑️</span><div class="s-info"><div class="s-name" style="color:var(--pink)">Delete Account</div><div class="s-desc">Permanent · Immediate · 2 taps</div></div>
+      <div class="setting-row" style="border-color:rgba(255,77,139,0.2);" onclick="confirmDeleteAccount()">
+        <span class="s-ico">🗑️</span>
+        <div class="s-info"><div class="s-name" style="color:var(--pink)">Delete Account</div><div class="s-desc">Clears all local data · Permanent</div></div>
         <span style="color:var(--pink)">›</span>
+      </div>
+
+      <div style="text-align:center;padding:20px 0;font-size:11px;color:var(--text3);">
+        SideStack v5.0 · <a href="https://sidestack.in/privacy" style="color:var(--text3);">Privacy Policy</a> · <a href="https://sidestack.in/terms" style="color:var(--text3);">Terms</a>
+      </div>
+    </div>
+
+  </div><!-- end scroll-area -->
+
+
+    <!-- ════ SCREEN: RECEIPT SCANNER ════ -->
+    <div class="screen" id="s-receipt">
+      <div class="sec-head">
+        <div><div class="sec-title">Receipt Scanner</div><div class="sec-sub">Snap → auto-log expense · On-device OCR</div></div>
+        <span class="chip teal">🔒 On-Device</span>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">📷 Capture Receipt</div></div>
+        <div class="card-body">
+          <video id="camera-stream" class="camera-preview" autoplay playsinline style="display:none;"></video>
+          <canvas id="camera-canvas" style="display:none;"></canvas>
+          <div id="camera-placeholder" style="background:var(--bg);border-radius:12px;padding:32px;text-align:center;color:var(--text3);font-size:13px;">
+            📷<br><span style="font-size:11px;margin-top:6px;display:block;">Tap camera or upload image</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <button class="btn btn-primary" style="flex:1;" onclick="initCamera()">📸 Camera</button>
+            <button class="btn btn-ghost" id="capture-btn" onclick="captureReceipt()" disabled style="flex:1;">🔍 Scan</button>
+            <input type="file" accept="image/*" id="receipt-upload" style="display:none;" onchange="handleReceiptUpload(event)">
+            <button class="btn btn-ghost" onclick="document.getElementById('receipt-upload').click()" style="flex:1;">📁 Upload</button>
+          </div>
+          <div id="scan-status" style="margin-top:10px;font-size:11.5px;color:var(--teal);"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">📋 Extracted Data</div></div>
+        <div class="card-body">
+          <div class="scan-result" id="scan-result">Scan a receipt to auto-fill details below…</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <input id="vendor" class="ai-input" placeholder="Vendor / Shop name">
+            <input id="amount" class="ai-input" placeholder="Amount (₹)">
+            <input id="expense-cat" class="ai-input" placeholder="Category (e.g., Travel, Tools)">
+            <button class="btn btn-primary btn-full" onclick="saveExpense()">✅ Save Expense</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">🧾 Recent Scanned Receipts</div></div>
+        <div class="card-body" id="receipts-list">
+          <div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">No receipts yet. Scan your first one above!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SCREEN: RENTAL & BANK VERIFY ════ -->
+    <div class="screen" id="s-rental">
+      <div class="sec-head">
+        <div><div class="sec-title">Rental & Bank Verify</div><div class="sec-sub">Income proof for home loans & rentals</div></div>
+        <span class="chip lime">🔒 Local</span>
+      </div>
+
+      <div class="rm-tab-row">
+        <div class="rm-tab active" onclick="rmTab('log')">📋 Log</div>
+        <div class="rm-tab" onclick="rmTab('sources')">💼 Sources</div>
+        <div class="rm-tab" onclick="rmTab('report')">📄 Report</div>
+        <div class="rm-tab" onclick="rmTab('banks')">🏦 Banks</div>
+      </div>
+
+      <!-- LOG PANEL -->
+      <div class="rm-panel active" id="rm-log">
+        <div class="rm-stats-row">
+          <div class="rm-stat"><div class="rm-stat-label">This Month</div><div class="rm-stat-value" id="rm-stat-month">₹0</div><div class="rm-stat-sub">All sources</div></div>
+          <div class="rm-stat"><div class="rm-stat-label">Rental</div><div class="rm-stat-value" id="rm-stat-rental">₹0</div><div class="rm-stat-sub">Property</div></div>
+          <div class="rm-stat"><div class="rm-stat-label">Entries</div><div class="rm-stat-value" id="rm-stat-count">0</div><div class="rm-stat-sub">Logged</div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">💰 Add Income Entry</div></div>
+          <div class="card-body">
+            <div class="rm-frow">
+              <div class="rm-fgroup"><label class="rm-label">Source Type</label>
+                <select class="rm-select" id="rm-source-type">
+                  <option>🏠 Rental Income</option><option>💻 Freelance</option><option>📚 Tutoring</option>
+                  <option>🚗 Delivery</option><option>🎨 Design</option><option>📹 Content</option>
+                </select>
+              </div>
+              <div class="rm-fgroup"><label class="rm-label">Amount (₹)</label>
+                <input class="rm-input" id="rm-amount" type="number" placeholder="0">
+              </div>
+            </div>
+            <div class="rm-frow">
+              <div class="rm-fgroup"><label class="rm-label">Month</label>
+                <select class="rm-select" id="rm-month">
+                  <option>April 2026</option><option>March 2026</option><option>February 2026</option>
+                  <option>January 2026</option><option>December 2025</option><option>November 2025</option>
+                </select>
+              </div>
+              <div class="rm-fgroup"><label class="rm-label">Description</label>
+                <input class="rm-input" id="rm-desc" placeholder="Optional note">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="rmAddEntry()">+ Add Entry</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">📋 Income Entries <span style="font-size:11px;font-weight:400;color:var(--text3);" id="rm-entry-count-label"></span></div></div>
+          <div class="card-body"><div class="rm-entry-list" id="rm-entry-list"><div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">No entries yet. Add income above.</div></div></div>
+        </div>
+      </div>
+
+      <!-- SOURCES PANEL -->
+      <div class="rm-panel" id="rm-sources">
+        <div class="sec-title" style="margin-bottom:12px;">Select Income Sources</div>
+        <div class="rm-source-grid">
+          <div class="rm-source-chip" onclick="toggleSource(this)"><div class="rm-chip-icon">🏠</div><div class="rm-chip-name">Rental</div></div>
+          <div class="rm-source-chip" onclick="toggleSource(this)"><div class="rm-chip-icon">💻</div><div class="rm-chip-name">Freelance</div></div>
+          <div class="rm-source-chip" onclick="toggleSource(this)"><div class="rm-chip-icon">📚</div><div class="rm-chip-name">Tutoring</div></div>
+          <div class="rm-source-chip" onclick="toggleSource(this)"><div class="rm-chip-icon">🚗</div><div class="rm-chip-name">Delivery</div></div>
+          <div class="rm-source-chip" onclick="toggleSource(this)"><div class="rm-chip-icon">📹</div><div class="rm-chip-name">Content</div></div>
+          <div class="rm-source-chip" onclick="toggleSource(this)"><div class="rm-chip-icon">🎨</div><div class="rm-chip-name">Design</div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">📊 What Indian Banks Accept</div></div>
+          <div class="card-body">
+            <div class="ef-rule"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px;">✅ Rental Income</div><div style="font-size:11px;color:var(--text3);">Accepted by all banks with registered rent agreement + 3–6 months bank statement showing credits.</div></div>
+            <div class="ef-rule"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px;">✅ Freelance / Gig Income</div><div style="font-size:11px;color:var(--text3);">Accepted with 12-month ITR + bank statement. HDFC, ICICI, Kotak are most freelancer-friendly.</div></div>
+            <div class="ef-rule"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px;">⚠️ Cash Income</div><div style="font-size:11px;color:var(--text3);">Not accepted without bank proof. Deposit consistently and get a CA letter for best results.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORT PANEL -->
+      <div class="rm-panel" id="rm-report">
+        <div class="card">
+          <div class="card-head"><div class="card-title">📄 Generate Bank-Ready Report</div></div>
+          <div class="card-body">
+            <div class="rm-fgroup" style="margin-bottom:10px;"><label class="rm-label">Full Name (as per Aadhaar/PAN)</label><input class="rm-input" id="rm-rname" placeholder="Your full name"></div>
+            <div class="rm-frow">
+              <div class="rm-fgroup"><label class="rm-label">PAN Number</label><input class="rm-input" id="rm-rpan" placeholder="ABCDE1234F" maxlength="10" style="text-transform:uppercase"></div>
+              <div class="rm-fgroup"><label class="rm-label">Purpose</label>
+                <select class="rm-select" id="rm-rpurpose">
+                  <option>Home Loan</option><option>Personal Loan</option><option>Rental Application</option><option>Business Loan</option>
+                </select>
+              </div>
+            </div>
+            <div class="rm-fgroup" style="margin-bottom:12px;"><label class="rm-label">Bank / Institution</label>
+              <select class="rm-select" id="rm-rbank">
+                <option>HDFC Bank</option><option>ICICI Bank</option><option>State Bank of India</option><option>Axis Bank</option>
+                <option>Kotak Mahindra</option><option>Punjab National Bank</option><option>Bank of Baroda</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary" style="flex:1;" onclick="rmPreviewReport()">👁 Preview</button>
+              <button class="btn btn-ghost" style="flex:1;" onclick="rmDownloadPDF()">⬇ Download PDF</button>
+            </div>
+          </div>
+        </div>
+        <div class="card" id="rm-preview-card" style="display:none;">
+          <div class="card-head"><div class="card-title">📋 Report Preview</div></div>
+          <div class="card-body"><div class="rm-report-wrap" id="rm-preview-content"></div></div>
+        </div>
+      </div>
+
+      <!-- BANKS PANEL -->
+      <div class="rm-panel" id="rm-banks">
+        <div class="sec-title" style="margin-bottom:12px;">Bank Eligibility Guide</div>
+        <div class="rm-bank-grid">
+          <div class="rm-bank-chip"><div class="rm-bank-name">🏦 HDFC</div><div class="rm-bank-min">Min ₹25K/mo</div></div>
+          <div class="rm-bank-chip"><div class="rm-bank-name">🏦 ICICI</div><div class="rm-bank-min">Min ₹20K/mo</div></div>
+          <div class="rm-bank-chip"><div class="rm-bank-name">🏦 SBI</div><div class="rm-bank-min">Min ₹15K/mo</div></div>
+          <div class="rm-bank-chip"><div class="rm-bank-name">🏦 Axis</div><div class="rm-bank-min">Min ₹20K/mo</div></div>
+          <div class="rm-bank-chip"><div class="rm-bank-name">🏦 Kotak</div><div class="rm-bank-min">Min ₹30K/mo</div></div>
+          <div class="rm-bank-chip"><div class="rm-bank-name">🏦 PNB</div><div class="rm-bank-min">Min ₹12K/mo</div></div>
+        </div>
+        <div class="info-box">
+          <strong>💡 Pro Tip:</strong> Show 6 months of consistent income deposits (not withdrawals). Banks prefer NEFT/IMPS/UPI credits over cash deposits. Keep your income-to-EMI ratio below 50%.
+        </div>
+        <div class="tip-box"><strong>📋 Documents Checklist:</strong> ITR for 2 years · Bank statement 6–12 months · PAN + Aadhaar · Rent agreement (if applicable) · CA letter for gig workers</div>
       </div>
     </div>
 
@@ -1304,97 +1629,94 @@ body {
   <!-- ── BOTTOM NAVIGATION ── -->
   <nav class="bottom-nav">
     <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
-      <div class="nav-icon">🏠</div>
-      <div class="nav-label">Home</div>
+      <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
     </button>
     <button class="nav-item" id="nav-income" onclick="showScreen('income')">
-      <div class="nav-icon">💸</div>
-      <div class="nav-label">Income</div>
+      <span class="nav-icon">💸</span><span class="nav-label">Income</span>
     </button>
     <button class="nav-item" id="nav-ai" onclick="showScreen('ai')">
-      <div class="nav-icon">🤖</div>
-      <div class="nav-label">Stacks AI</div>
+      <span class="nav-icon">🤖</span><span class="nav-label">Stacks AI</span>
     </button>
     <button class="nav-item" id="nav-tax" onclick="showScreen('tax')">
-      <div class="nav-icon">📊</div>
-      <div class="nav-label">Tax</div>
+      <span class="nav-icon">📊</span><span class="nav-label">Tax</span>
     </button>
     <button class="nav-item" id="nav-more" onclick="showScreen('more')">
-      <div class="nav-icon">⋯</div>
-      <div class="nav-label">More</div>
+      <span class="nav-icon">⋯</span><span class="nav-label">More</span>
     </button>
   </nav>
 
-</div><!-- end app -->
+</div><!-- end .app -->
 
 <script>
+// ══════════════════════════════════════════
+// SIDESTACK v5.0 — INDIA LAUNCH
+// ══════════════════════════════════════════
+
+const { jsPDF } = window.jspdf;
+let currentLang = 'EN';
+
 // ── SCREEN MAP ──
 const screenMap = {
-  home: { nav: 'nav-home', label: 'Home' },
-  income: { nav: 'nav-income', label: 'Income Log' },
-  ai: { nav: 'nav-ai', label: 'AI Co-Pilot' },
-  tax: { nav: 'nav-tax', label: 'Tax Engine' },
-  more: { nav: 'nav-more', label: 'More' },
-  goals: { nav: null, label: 'Goals & Streaks' },
-  mood: { nav: null, label: 'Mood Tracker' },
-  emergency: { nav: null, label: 'Emergency Fund' },
-  verify: { nav: null, label: 'Income Proof' },
-  invoices: { nav: null, label: 'Invoices' },
-  schemes: { nav: null, label: 'Scheme Navigator' },
-  community: { nav: null, label: 'Leaderboard' },
-  tips: { nav: null, label: 'Hustle Tips' },
-  clients: { nav: null, label: 'Client Health' },
-  voice: { nav: null, label: 'Voice Log' },
-  foundation: { nav: null, label: 'Foundation' },
-  privacy: { nav: null, label: 'Privacy' },
-  settings: { nav: null, label: 'Settings' },
+  home:       { nav: 'nav-home',   label: 'Home' },
+  income:     { nav: 'nav-income', label: 'Income Log' },
+  ai:         { nav: 'nav-ai',     label: 'AI Co-Pilot · Stacks' },
+  tax:        { nav: 'nav-tax',    label: 'Tax Engine' },
+  more:       { nav: 'nav-more',   label: 'More' },
+  goals:      { nav: null, label: 'Goals & Streaks' },
+  mood:       { nav: null, label: 'Mood Tracker' },
+  emergency:  { nav: null, label: 'Emergency Fund' },
+  verify:     { nav: null, label: 'Income Proof' },
+  schemes:    { nav: null, label: 'Scheme Navigator' },
+  clients:    { nav: null, label: 'Client Health' },
+  voice:      { nav: null, label: 'Voice Log' },
+  invoices:   { nav: null, label: 'Invoices' },
+  community:  { nav: null, label: 'Leaderboard' },
+  tips:       { nav: null, label: 'Hustle Tips' },
+  foundation: { nav: null, label: 'SideStack Foundation' },
+  privacy:    { nav: null, label: 'Privacy Dashboard' },
+  settings:   { nav: null, label: 'Settings' },
+  receipt:    { nav: null, label: 'Receipt Scanner' },
+  rental:     { nav: null, label: 'Rental & Bank Verify' },
 };
 
+const subScreens = ['goals','mood','emergency','verify','invoices','schemes','community','tips','clients','voice','foundation','privacy','settings','receipt','rental'];
 let currentScreen = 'home';
 
 function showScreen(id) {
-  // Hide current
   const cur = document.getElementById('s-' + currentScreen);
   if (cur) cur.classList.remove('active');
-
-  // Remove all nav active states
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-  // Show new
   const next = document.getElementById('s-' + id);
   if (next) next.classList.add('active');
-
-  // Set nav active
   const info = screenMap[id] || { nav: null, label: id };
   if (info.nav) {
     const navEl = document.getElementById(info.nav);
     if (navEl) navEl.classList.add('active');
-  } else {
-    // For sub-screens reached from "More", keep More active
+  } else if (subScreens.includes(id)) {
     const moreNav = document.getElementById('nav-more');
-    if (['goals','mood','emergency','verify','invoices','schemes','community','tips','clients','voice','foundation','privacy','settings'].includes(id)) {
-      if (moreNav) moreNav.classList.add('active');
-    }
+    if (moreNav) moreNav.classList.add('active');
   }
-
-  // Update page label
   document.getElementById('page-label').textContent = info.label || id;
-
-  // Scroll to top
   document.getElementById('scroll-area').scrollTop = 0;
-
   currentScreen = id;
+  if (id === 'schemes') initSchemeFlow();
+  if (id === 'clients') renderClientScores();
+  if (id === 'receipt') updateReceiptsList();
+  if (id === 'rental') rmRefreshStats();
 }
 
-// ── AI CHAT ──
+// ── AI CHAT (Stacks) ──
 const aiResponses = [
   'Your freelance income is up 23% month-over-month — on track for ₹50K by June! 📈',
-  'Group tutoring earns ₹1,200/hr vs solo ₹600/hr. Add 2 group slots = +₹3,600/month.',
+  'Group tutoring earns ₹1,200/hr vs solo ₹600/hr. Add 2 group slots = +₹3,600/month. 🎯',
   'Canva Pro (₹999/mo) generates ₹20K+ in freelance revenue. Best ROI tool you have! 💡',
-  'Emergency fund growth directly correlates with better mood scores in your logs. Keep the autopilot on! 🛡️',
+  'Emergency fund growth correlates with better mood scores. Keep the autopilot on! 🛡️',
   'Thursdays–Sundays are your peak earning days. Batch client deliveries by Wednesday. ⏰',
-  'You need ₹5,500 more in 8 days — that is ₹688/day. Highly achievable at your pace! 🎯',
-  'GlobalTech Solutions is your best client: A+ score, pays in 3 days, ₹825/hr avg. Prioritise them.',
+  'You need ₹5,500 more in 8 days — that\'s ₹688/day. Highly achievable at your pace! 🎯',
+  'GlobalTech Solutions is your best client: A+ score, pays in 3 days, ₹825/hr avg.',
+  'GST tip: If annual turnover < ₹20L, you\'re exempt. Above that, register for GST and file quarterly.',
+  'Advance tax due Sept 15. Estimated: ₹8,208. Reserve ₹700/week now to be ready. 🧾',
+  'UPI ID income counts as business income. Keep receipts from Razorpay/Stripe for ITR.',
 ];
 let aiIdx = 0;
 
@@ -1417,34 +1739,880 @@ function askAI(q) {
   setTimeout(sendAI, 300);
 }
 
-// ── MOOD SELECT ──
+// ── MOOD ──
 function selectMood(el) {
   document.querySelectorAll('.mood-opt').forEach(o => o.classList.remove('sel'));
   el.classList.add('sel');
+  const emoji = el.querySelector('.mood-emoji').textContent;
+  const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+  moods.push({ date: new Date().toISOString().split('T')[0], mood: emoji });
+  localStorage.setItem('moods', JSON.stringify(moods.slice(-30)));
+  updateMoodDisplay();
 }
 
-// ── VOICE LOG ──
+function updateMoodDisplay() {
+  const moods = JSON.parse(localStorage.getItem('moods') || '[]').slice(-7);
+  const historyDiv = document.getElementById('mood-history');
+  if (historyDiv) historyDiv.innerHTML = moods.map(m => `<span style="font-size:20px;">${m.mood}</span>`).join('');
+  const insight = document.getElementById('mood-insight');
+  if (insight) {
+    const positive = moods.filter(m => ['😊', '😐'].includes(m.mood)).length;
+    insight.textContent = positive >= 4
+      ? '😊 Your mood is stable. Income patterns look steady.'
+      : '😐 Some fluctuations. Remember — dry months are normal.';
+  }
+}
+
+// ── MICROPHONE / VOICE ──
+let micPermission = null; // 'granted' | 'denied' | 'prompt' | null
+
+async function checkMicPermission() {
+  try {
+    const status = await navigator.permissions.query({ name: 'microphone' });
+    micPermission = status.state;
+    status.onchange = () => { micPermission = status.state; };
+    return status.state;
+  } catch { return 'prompt'; }
+}
+
+async function requestMicPermission() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach(t => t.stop()); // release immediately
+    micPermission = 'granted';
+    return true;
+  } catch (e) {
+    micPermission = 'denied';
+    return false;
+  }
+}
+
+function showMicDenied(hintId) {
+  const el = document.getElementById(hintId);
+  if (el) el.textContent = '⚠️ Microphone access denied. Enable it in browser/app settings.';
+}
+
 let vListening = false;
-function toggleVoice(btn) {
-  vListening = !vListening;
-  btn.textContent = vListening ? '⏹' : '🎙️';
-  btn.classList.toggle('listening', vListening);
-  document.getElementById('voice-hint').textContent = vListening ? 'Listening... speak now' : 'Tap to start speaking';
+async function toggleVoice(btn) {
   if (vListening) {
-    setTimeout(() => {
+    // Stop listening
+    vListening = false;
+    btn.textContent = '🎙️';
+    btn.classList.remove('listening');
+    document.getElementById('voice-hint').textContent = 'Tap to start speaking';
+    return;
+  }
+
+  // Check / request mic permission
+  const perm = await checkMicPermission();
+  if (perm === 'denied') { showMicDenied('voice-hint'); return; }
+  if (perm !== 'granted') {
+    const granted = await requestMicPermission();
+    if (!granted) { showMicDenied('voice-hint'); return; }
+  }
+
+  vListening = true;
+  btn.textContent = '⏹';
+  btn.classList.add('listening');
+  document.getElementById('voice-hint').textContent = 'Listening… speak now';
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition) {
+    const rec = new SpeechRecognition();
+    rec.lang = 'en-IN';
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+    rec.start();
+    rec.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      document.getElementById('voice-hint').textContent = `Parsed: "${transcript}"`;
+      document.getElementById('voice-result').style.display = 'block';
+      // Auto-parse income amount from speech
+      const amtMatch = transcript.match(/(\d[\d,]*)\s*(?:rupees?|rs\.?|₹)?/i);
+      if (amtMatch) {
+        const amtEl = document.getElementById('voice-amount');
+        if (amtEl) amtEl.value = amtMatch[1].replace(/,/g, '');
+      }
       vListening = false;
       btn.textContent = '🎙️';
       btn.classList.remove('listening');
-      document.getElementById('voice-hint').textContent = 'Entry parsed! ✓';
-      document.getElementById('voice-result').style.display = 'block';
-    }, 2800);
+    };
+    rec.onerror = (e) => {
+      vListening = false; btn.textContent = '🎙️'; btn.classList.remove('listening');
+      if (e.error === 'not-allowed') showMicDenied('voice-hint');
+      else document.getElementById('voice-hint').textContent = 'Could not hear you. Try again.';
+    };
+    rec.onend = () => {
+      if (vListening) { vListening = false; btn.textContent = '🎙️'; btn.classList.remove('listening'); }
+    };
+  } else {
+    // Fallback for browsers without SpeechRecognition
+    document.getElementById('voice-hint').textContent = '⚠️ Voice not supported in this browser. Use Chrome.';
+    vListening = false; btn.textContent = '🎙️'; btn.classList.remove('listening');
   }
+}
+
+// ── INCOME VERIFICATION PDF ──
+function generateVerificationPDF() {
+  const doc = new jsPDF();
+  doc.setFillColor(8, 8, 16);
+  doc.rect(0, 0, 210, 297, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(203, 255, 71);
+  doc.text('SideStack Income Verification', 20, 30);
+  doc.setFontSize(11);
+  doc.setTextColor(160, 160, 184);
+  doc.text('India\'s Side Hustle OS · v5.0', 20, 40);
+  doc.text('Generated: ' + new Date().toLocaleString('en-IN'), 20, 50);
+  doc.setDrawColor(203, 255, 71);
+  doc.line(20, 55, 190, 55);
+  doc.setFontSize(14);
+  doc.setTextColor(238, 238, 248);
+  doc.text('Monthly Income Summary', 20, 68);
+  const months = ['Nov 2025','Dec 2025','Jan 2026','Feb 2026','Mar 2026','Apr 2026'];
+  const amounts = [28500,31200,29800,33500,36200,34500];
+  let y = 80;
+  months.forEach((m, i) => {
+    doc.setFontSize(11);
+    doc.setTextColor(160, 160, 184);
+    doc.text(m, 25, y);
+    doc.setTextColor(203, 255, 71);
+    doc.text('₹' + amounts[i].toLocaleString('en-IN'), 120, y);
+    y += 9;
+  });
+  const total = amounts.reduce((a, b) => a + b, 0);
+  const avg = Math.round(total / amounts.length);
+  y += 5;
+  doc.setDrawColor(90, 90, 112);
+  doc.line(20, y, 190, y);
+  y += 10;
+  doc.setFontSize(12);
+  doc.setTextColor(238, 238, 248);
+  doc.text('6-Month Total:', 25, y);
+  doc.setTextColor(203, 255, 71);
+  doc.text('₹' + total.toLocaleString('en-IN'), 120, y);
+  y += 9;
+  doc.setTextColor(238, 238, 248);
+  doc.text('Monthly Average:', 25, y);
+  doc.setTextColor(203, 255, 71);
+  doc.text('₹' + avg.toLocaleString('en-IN'), 120, y);
+  y += 20;
+  doc.setFontSize(10);
+  doc.setTextColor(90, 90, 112);
+  doc.text('This document is generated from on-device data by SideStack.', 20, y);
+  doc.text('For queries: support@sidestack.in', 20, y + 7);
+  doc.save('SideStack_Income_Verification.pdf');
+  localStorage.setItem('lastPdfDate', new Date().toLocaleString('en-IN'));
+  const el = document.getElementById('last-pdf-date');
+  if (el) el.textContent = new Date().toLocaleString('en-IN');
+}
+
+// ── SCHEME NAVIGATOR ──
+const schemeDB = {
+  steps: [
+    { q: 'Monthly income range?', opts: ['Below ₹10,000', '₹10,000–₹25,000', '₹25,000–₹50,000', 'Above ₹50,000'] },
+    { q: 'Your state?', opts: ['Karnataka', 'Maharashtra', 'Tamil Nadu', 'Delhi', 'Uttar Pradesh', 'Other'] },
+    { q: 'Type of work?', opts: ['Delivery / Gig', 'Freelance / Design', 'Teaching / Tutor', 'Content / Creator', 'Trade / Artisan'] }
+  ],
+  results: {
+    'Below ₹10,000-Karnataka-Delivery / Gig': ['PM-SVANidhi (₹10,000 working capital)', 'e-Shram Card (₹2L accident insurance)', 'PMJJBY Life Insurance (₹436/yr)'],
+    'default': ['PM Jan Dhan Yojana', 'e-Shram Card (₹2L accident insurance)', 'PMJJBY Life Insurance (₹436/yr)', 'Pradhan Mantri Mudra Yojana (up to ₹10L loan)']
+  }
+};
+let schemeStep = 0, schemeAnswers = [];
+
+function initSchemeFlow() {
+  schemeStep = 0; schemeAnswers = [];
+  renderSchemeQuestion();
+}
+function renderSchemeQuestion() {
+  const container = document.getElementById('scheme-flow');
+  if (!container) return;
+  if (schemeStep < schemeDB.steps.length) {
+    const step = schemeDB.steps[schemeStep];
+    container.innerHTML = `<div class="scheme-question">Step ${schemeStep+1}/${schemeDB.steps.length}: ${step.q}</div>` +
+      step.opts.map(opt => `<div class="scheme-option" onclick="selectSchemeAnswer('${opt}')">${opt}</div>`).join('');
+  } else {
+    const key = schemeAnswers.join('-');
+    const schemes = schemeDB.results[key] || schemeDB.results.default;
+    container.innerHTML = `<div class="scheme-question">✅ You may be eligible for:</div>` +
+      schemes.map(s => `<div class="entry"><div class="entry-ico">🏛️</div><div class="entry-info"><div class="entry-name">${s}</div></div></div>`).join('') +
+      `<button class="btn btn-ghost btn-full" style="margin-top:14px;" onclick="initSchemeFlow()">🔄 Start Over</button>`;
+  }
+}
+function selectSchemeAnswer(ans) { schemeAnswers.push(ans); schemeStep++; renderSchemeQuestion(); }
+
+// ── CLIENT HEALTH ──
+function renderClientScores() {
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const clients = {};
+  entries.forEach(e => {
+    if (!e.client) return;
+    if (!clients[e.client]) clients[e.client] = { total: 0, count: 0 };
+    clients[e.client].total += e.amount;
+    clients[e.client].count++;
+  });
+  const container = document.getElementById('client-list-container');
+  if (!container) return;
+  const sorted = Object.entries(clients).sort((a, b) => b[1].total - a[1].total);
+  container.innerHTML = sorted.map(([name, data]) => {
+    const avg = data.total / data.count;
+    let score = 'B', cls = 'sB';
+    if (avg > 5000) { score = 'A'; cls = 'sA'; } else if (avg < 2000) { score = 'C'; cls = 'sC'; }
+    return `<div class="cls-card"><div class="cls-score ${cls}">${score}</div><div style="flex:1"><div class="cls-name">${name}</div><div class="cls-meta">${data.count} projects · avg ₹${Math.round(avg).toLocaleString('en-IN')}</div></div><div><div class="cls-rev">₹${data.total.toLocaleString('en-IN')}</div></div></div>`;
+  }).join('') || '<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px;">Log income with client names to see scores.</div>';
+}
+
+// ── RECEIPT SCANNER (Real Tesseract OCR) ──
+let cameraStream = null;
+
+async function initCamera() {
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    const video = document.getElementById('camera-stream');
+    video.srcObject = cameraStream;
+    video.style.display = 'block';
+    document.getElementById('camera-placeholder').style.display = 'none';
+    document.getElementById('capture-btn').disabled = false;
+  } catch (e) {
+    document.getElementById('scan-status').textContent = '⚠️ Camera access denied. Use Upload instead.';
+  }
+}
+
+function captureReceipt() {
+  const video = document.getElementById('camera-stream');
+  const canvas = document.getElementById('camera-canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  runOCR(canvas.toDataURL('image/jpeg'));
+}
+
+function handleReceiptUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.getElementById('camera-placeholder');
+    img.innerHTML = `<img src="${e.target.result}" style="width:100%;border-radius:12px;max-height:200px;object-fit:contain;">`;
+    runOCR(e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function runOCR(imageData) {
+  const status = document.getElementById('scan-status');
+  const result = document.getElementById('scan-result');
+  status.textContent = '🔍 Scanning receipt… (on-device OCR)';
+  try {
+    const { data: { text } } = await Tesseract.recognize(imageData, 'eng+hin', { logger: m => { if (m.status === 'recognizing text') status.textContent = `🔍 ${Math.round(m.progress * 100)}% scanned…`; } });
+    result.textContent = text || 'No text detected.';
+    status.textContent = '✅ Scan complete!';
+    // Auto-extract amount
+    const amtMatch = text.match(/(?:total|amount|₹|rs\.?|inr)\s*:?\s*([\d,]+(?:\.\d{2})?)/i);
+    if (amtMatch) document.getElementById('amount').value = amtMatch[1].replace(/,/g, '');
+    // Auto-extract vendor (first line)
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    if (lines[0]) document.getElementById('vendor').value = lines[0].slice(0, 40);
+  } catch (e) {
+    status.textContent = '⚠️ OCR failed. Please fill details manually.';
+  }
+}
+
+function saveExpense() {
+  const vendor = document.getElementById('vendor').value.trim();
+  const amount = document.getElementById('amount').value.trim();
+  const cat = document.getElementById('expense-cat').value.trim() || 'Misc';
+  if (!vendor || !amount) { alert('Please fill vendor and amount.'); return; }
+  const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  expenses.unshift({ vendor, amount: parseFloat(amount), cat, date: new Date().toLocaleDateString('en-IN') });
+  localStorage.setItem('expenses', JSON.stringify(expenses.slice(0, 50)));
+  document.getElementById('vendor').value = '';
+  document.getElementById('amount').value = '';
+  document.getElementById('expense-cat').value = '';
+  document.getElementById('scan-result').textContent = 'Scan a receipt to auto-fill details below…';
+  document.getElementById('scan-status').textContent = '✅ Expense saved!';
+  updateReceiptsList();
+}
+
+function updateReceiptsList() {
+  const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  const container = document.getElementById('receipts-list');
+  if (!container) return;
+  if (!expenses.length) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">No receipts yet. Scan your first one above!</div>';
+    return;
+  }
+  container.innerHTML = expenses.map(e => `
+    <div class="entry">
+      <div class="entry-ico">🧾</div>
+      <div class="entry-info"><div class="entry-name">${e.vendor}</div><div class="entry-meta">${e.cat} · ${e.date}</div></div>
+      <div class="entry-amt neg">-₹${parseFloat(e.amount).toLocaleString('en-IN')}</div>
+    </div>`).join('');
+}
+
+// ── RENTAL & BANK VERIFY ──
+let rmEntries = JSON.parse(localStorage.getItem('rmEntries') || '[]');
+
+function rmTab(id) {
+  document.querySelectorAll('.rm-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.rm-panel').forEach(p => p.classList.remove('active'));
+  const tabs = document.querySelectorAll('.rm-tab');
+  const panels = document.querySelectorAll('.rm-panel');
+  const idx = ['log','sources','report','banks'].indexOf(id);
+  if (tabs[idx]) tabs[idx].classList.add('active');
+  const panel = document.getElementById('rm-' + id);
+  if (panel) panel.classList.add('active');
+}
+
+function rmAddEntry() {
+  const sourceType = document.getElementById('rm-source-type').value;
+  const amount = parseFloat(document.getElementById('rm-amount').value);
+  const month = document.getElementById('rm-month').value;
+  const desc = document.getElementById('rm-desc').value;
+  if (!amount || isNaN(amount)) { alert('Enter a valid amount.'); return; }
+  rmEntries.unshift({ sourceType, amount, month, desc, id: Date.now() });
+  localStorage.setItem('rmEntries', JSON.stringify(rmEntries));
+  document.getElementById('rm-amount').value = '';
+  document.getElementById('rm-desc').value = '';
+  rmRefreshStats();
+  rmRenderEntries();
+}
+
+function rmRefreshStats() {
+  const monthly = rmEntries.reduce((a, e) => a + (e.month === 'April 2026' ? e.amount : 0), 0);
+  const rental = rmEntries.reduce((a, e) => a + (e.sourceType.includes('Rental') ? e.amount : 0), 0);
+  const ms = document.getElementById('rm-stat-month');
+  const rs = document.getElementById('rm-stat-rental');
+  const cs = document.getElementById('rm-stat-count');
+  if (ms) ms.textContent = '₹' + monthly.toLocaleString('en-IN');
+  if (rs) rs.textContent = '₹' + rental.toLocaleString('en-IN');
+  if (cs) cs.textContent = rmEntries.length;
+  const lbl = document.getElementById('rm-entry-count-label');
+  if (lbl) lbl.textContent = `(${rmEntries.length} total)`;
+  rmRenderEntries();
+}
+
+function rmRenderEntries() {
+  const list = document.getElementById('rm-entry-list');
+  if (!list) return;
+  if (!rmEntries.length) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">No entries yet. Add income above.</div>';
+    return;
+  }
+  const icons = { 'Rental': '🏠', 'Freelance': '💻', 'Tutoring': '📚', 'Delivery': '🚗', 'Content': '📹', 'Design': '🎨' };
+  list.innerHTML = rmEntries.map(e => {
+    const icon = Object.entries(icons).find(([k]) => e.sourceType.includes(k))?.[1] || '💰';
+    return `<div class="rm-entry-item">
+      <div class="rm-entry-icon" style="background:var(--lime-d);">${icon}</div>
+      <div class="rm-entry-body"><div class="rm-entry-name">${e.sourceType.replace(/^[^ ]+ /,'')}</div><div class="rm-entry-meta">${e.month}${e.desc ? ' · ' + e.desc : ''}</div></div>
+      <div class="rm-entry-amount">₹${e.amount.toLocaleString('en-IN')}</div>
+      <button class="rm-entry-del" onclick="rmDeleteEntry(${e.id})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function rmDeleteEntry(id) {
+  rmEntries = rmEntries.filter(e => e.id !== id);
+  localStorage.setItem('rmEntries', JSON.stringify(rmEntries));
+  rmRefreshStats();
+}
+
+function toggleSource(el) { el.classList.toggle('selected'); }
+
+function rmPreviewReport() {
+  const name = document.getElementById('rm-rname').value.trim() || 'Applicant Name';
+  const pan = document.getElementById('rm-rpan').value.trim() || 'XXXXX0000X';
+  const purpose = document.getElementById('rm-rpurpose').value;
+  const bank = document.getElementById('rm-rbank').value;
+  const total6m = rmEntries.slice(0, 6).reduce((a, e) => a + e.amount, 0);
+  const avg = rmEntries.length ? Math.round(total6m / Math.min(rmEntries.length, 6)) : 0;
+  document.getElementById('rm-preview-content').innerHTML = `
+    <div style="font-weight:700;font-size:14px;color:var(--lime);margin-bottom:8px;">INCOME VERIFICATION REPORT</div>
+    <div><strong>Name:</strong> ${name}</div>
+    <div><strong>PAN:</strong> ${pan}</div>
+    <div><strong>Purpose:</strong> ${purpose}</div>
+    <div><strong>Submitted to:</strong> ${bank}</div>
+    <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN')}</div>
+    <div style="margin-top:10px;font-weight:600;">Income Summary (Last 6 Months)</div>
+    <div style="margin-top:4px;">Total: <strong style="color:var(--lime)">₹${total6m.toLocaleString('en-IN')}</strong></div>
+    <div>Monthly Average: <strong style="color:var(--lime)">₹${avg.toLocaleString('en-IN')}</strong></div>
+    <div style="margin-top:8px;font-size:10px;color:var(--text3);">Generated by SideStack v5.0 · India's Side Hustle OS</div>`;
+  document.getElementById('rm-preview-card').style.display = 'block';
+}
+
+function rmDownloadPDF() {
+  const name = document.getElementById('rm-rname').value.trim() || 'Applicant';
+  const pan = document.getElementById('rm-rpan').value.trim() || 'XXXXX0000X';
+  const purpose = document.getElementById('rm-rpurpose').value;
+  const bank = document.getElementById('rm-rbank').value;
+  const total6m = rmEntries.slice(0, 6).reduce((a, e) => a + e.amount, 0);
+  const avg = rmEntries.length ? Math.round(total6m / Math.min(rmEntries.length, 6)) : 0;
+  const doc = new jsPDF();
+  doc.setFillColor(8,8,16); doc.rect(0,0,210,297,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(203,255,71);
+  doc.text('Income Verification Report', 20, 28);
+  doc.setFontSize(10); doc.setTextColor(90,90,112);
+  doc.text('SideStack v5.0 · India\'s Side Hustle OS', 20, 37);
+  doc.setDrawColor(203,255,71); doc.line(20,42,190,42);
+  doc.setFontSize(11); doc.setTextColor(238,238,248);
+  doc.text('Applicant: ' + name, 20, 54);
+  doc.text('PAN: ' + pan, 20, 63);
+  doc.text('Purpose: ' + purpose, 20, 72);
+  doc.text('Submitted to: ' + bank, 20, 81);
+  doc.text('Date: ' + new Date().toLocaleDateString('en-IN'), 20, 90);
+  doc.setDrawColor(30,30,38); doc.line(20,96,190,96);
+  doc.setFontSize(13); doc.setTextColor(203,255,71); doc.text('Income Summary', 20, 108);
+  let y = 118;
+  rmEntries.slice(0,6).forEach(e => {
+    doc.setFontSize(10); doc.setTextColor(160,160,184);
+    doc.text(e.month + ' · ' + e.sourceType.replace(/^[^ ]+ /,''), 25, y);
+    doc.setTextColor(203,255,71);
+    doc.text('₹' + e.amount.toLocaleString('en-IN'), 150, y);
+    y += 9;
+  });
+  y += 5; doc.setDrawColor(60,60,80); doc.line(20,y,190,y); y += 10;
+  doc.setFontSize(12); doc.setTextColor(238,238,248);
+  doc.text('6-Month Total:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+total6m.toLocaleString('en-IN'), 150, y); y += 9;
+  doc.setTextColor(238,238,248);
+  doc.text('Monthly Average:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+avg.toLocaleString('en-IN'), 150, y);
+  y += 20; doc.setFontSize(9); doc.setTextColor(90,90,112);
+  doc.text('This document is self-generated from on-device data using SideStack.', 20, y);
+  doc.text('For verification, please also provide bank statements and ITR.', 20, y+7);
+  doc.save('SideStack_Income_Proof_' + name.replace(/ /g,'_') + '.pdf');
+}
+
+// ══════════════════════════════════════════
+// AUTH SYSTEM — SPLASH → ONBOARD → PROFILE → PIN → APP
+// ══════════════════════════════════════════
+
+const AVATARS = ['🦁','🐯','🦊','🐺','🦅','🐉','⚡','🔥','💎','🚀','🌟','🎯'];
+let avatarIdx = 0;
+let selectedHustle = 'Freelance';
+let pinSetupEntry = '';
+let pinSetupConfirm = '';
+let pinSetupPhase = 'enter'; // 'enter' | 'confirm'
+let pinLockEntry = '';
+let pinLockAttempts = 0;
+
+// ── SPLASH → ROUTE ──
+function initApp() {
+  const profile = getProfile();
+  const pin = localStorage.getItem('ss_pin');
+  const hasOnboarded = localStorage.getItem('ss_onboarded');
+
+  // After splash animation ends (2.4s), route user
+  setTimeout(() => {
+    hide('splash-screen');
+    if (!hasOnboarded) {
+      show('onboard-screen');
+    } else if (pin) {
+      showPinLock();
+    } else {
+      unlockApp();
+    }
+  }, 2400);
+}
+
+// ── HELPERS ──
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem('ss_profile') || 'null'); } catch { return null; }
+}
+
+function unlockApp() {
+  // Hide all auth layers
+  ['splash-screen','onboard-screen','profile-screen','pin-setup-screen','pin-lock-screen']
+    .forEach(id => hide(id));
+  // Load profile into app
+  loadProfileIntoApp();
+}
+
+function loadProfileIntoApp() {
+  const p = getProfile();
+  if (!p) return;
+  // Update greeting
+  const greet = document.getElementById('home-greeting');
+  if (greet) greet.textContent = `Namaste 👋 ${p.name || 'Hustler'}`;
+  // Update income verify report name
+  const ivrName = document.getElementById('ivr-name');
+  if (ivrName) ivrName.textContent = p.name || '—';
+  // Generate referral code from name + city
+  const refEl = document.getElementById('referral-code');
+  if (refEl && p.name) {
+    const namePart = p.name.split(' ')[0].toUpperCase().slice(0,6);
+    const cityPart = (p.city || 'IN').split(',')[0].trim().toUpperCase().slice(0,3);
+    const num = (p.createdAt || '').slice(-3).replace(/\D/g,'') || Math.floor(Math.random()*900+100);
+    refEl.textContent = `HUSTLE-${namePart}-${cityPart}`;
+  }
+  // Update settings
+  const sName = document.getElementById('set-name');
+  const sCity = document.getElementById('set-city');
+  const sHustle = document.getElementById('set-hustle');
+  const sAvatar = document.getElementById('set-avatar');
+  if (sName) sName.textContent = p.name || 'Your Name';
+  if (sCity) sCity.textContent = p.city || 'Add your city';
+  if (sHustle) sHustle.textContent = p.hustle || 'Not set';
+  if (sAvatar) sAvatar.textContent = p.avatar || '🦁';
+  // PIN status
+  const pinStatus = document.getElementById('set-pin-status');
+  const pinBtn = document.getElementById('set-pin-btn');
+  if (localStorage.getItem('ss_pin')) {
+    if (pinStatus) pinStatus.textContent = '✓ Active — 6-digit PIN';
+    if (pinBtn) pinBtn.textContent = 'Change';
+  }
+}
+
+// ── ONBOARDING ──
+let obSlide = 0;
+const obSlides = ['ob-1','ob-2','ob-3'];
+const obLabels = ['Get Started','Next →','Create Profile →'];
+
+function obNext() {
+  if (obSlide < 2) {
+    document.getElementById(obSlides[obSlide]).classList.add('exit');
+    setTimeout(() => document.getElementById(obSlides[obSlide]).classList.remove('active','exit'), 350);
+    obSlide++;
+    const next = document.getElementById(obSlides[obSlide]);
+    setTimeout(() => next.classList.add('active'), 50);
+    // Update dots
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === obSlide));
+    document.getElementById('ob-next-btn').textContent = obLabels[obSlide];
+    if (obSlide > 0) document.getElementById('ob-skip-btn').style.display = 'none';
+  } else {
+    // Last slide → go to profile
+    localStorage.setItem('ss_onboarded','1');
+    hide('onboard-screen');
+    show('profile-screen');
+  }
+}
+
+function obSkip() {
+  localStorage.setItem('ss_onboarded','1');
+  hide('onboard-screen');
+  show('profile-screen');
+}
+
+// ── PROFILE SETUP ──
+function cycleAvatar() {
+  avatarIdx = (avatarIdx + 1) % AVATARS.length;
+  document.getElementById('avatar-emoji').textContent = AVATARS[avatarIdx];
+}
+
+function selectHustle(el, type) {
+  document.querySelectorAll('.hustle-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedHustle = type;
+}
+
+function saveProfile() {
+  const name = document.getElementById('p-name').value.trim();
+  const city = document.getElementById('p-city').value.trim();
+  if (!name) {
+    document.getElementById('p-name').focus();
+    document.getElementById('p-name').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('p-name').style.borderColor = '', 1500);
+    return;
+  }
+  const profile = {
+    name, city,
+    hustle: selectedHustle,
+    avatar: AVATARS[avatarIdx],
+    createdAt: new Date().toISOString()
+  };
+  localStorage.setItem('ss_profile', JSON.stringify(profile));
+  hide('profile-screen');
+  show('pin-setup-screen');
+}
+
+function skipProfile() {
+  localStorage.setItem('ss_profile', JSON.stringify({ name: 'Hustler', city: '', hustle: 'Freelance', avatar: '🦁', createdAt: new Date().toISOString() }));
+  hide('profile-screen');
+  show('pin-setup-screen');
+}
+
+// ── PIN SETUP ──
+// Fix: track original PIN properly
+let pinSetupOriginal = '';
+function pinSetupKey(digit) {
+  if (pinSetupPhase === 'enter') {
+    if (pinSetupEntry.length >= 6) return;
+    pinSetupEntry += digit;
+    updatePinDots('ps', pinSetupEntry.length);
+    if (pinSetupEntry.length === 6) {
+      pinSetupOriginal = pinSetupEntry;
+      setTimeout(() => {
+        pinSetupPhase = 'confirm';
+        pinSetupEntry = '';
+        document.querySelector('#pin-setup-screen .pin-title').textContent = 'Confirm your PIN';
+        document.querySelector('#pin-setup-screen .pin-sub').textContent = 'Enter the same 6 digits again';
+        document.getElementById('pin-setup-msg').textContent = '';
+        updatePinDots('ps', 0);
+      }, 200);
+    }
+  } else {
+    if (pinSetupEntry.length >= 6) return;
+    pinSetupEntry += digit;
+    updatePinDots('ps', pinSetupEntry.length);
+    if (pinSetupEntry.length === 6) {
+      setTimeout(() => {
+        if (pinSetupEntry === pinSetupOriginal) {
+          localStorage.setItem('ss_pin', btoa(pinSetupEntry)); // base64 obfuscation
+          document.getElementById('pin-setup-msg').textContent = '✓ PIN saved!';
+          setTimeout(() => { hide('pin-setup-screen'); unlockApp(); }, 700);
+        } else {
+          document.getElementById('pin-setup-msg').textContent = 'PINs do not match. Try again.';
+          pinSetupEntry = '';
+          pinSetupPhase = 'enter';
+          pinSetupOriginal = '';
+          document.querySelector('#pin-setup-screen .pin-title').textContent = 'Create your PIN';
+          document.querySelector('#pin-setup-screen .pin-sub').textContent = '6-digit PIN to protect your income data';
+          flashPinError('ps');
+          updatePinDots('ps', 0);
+        }
+      }, 200);
+    }
+  }
+}
+
+function pinSetupDel() {
+  pinSetupEntry = pinSetupEntry.slice(0, -1);
+  updatePinDots('ps', pinSetupEntry.length);
+}
+
+function pinSetupSkip() {
+  hide('pin-setup-screen');
+  unlockApp();
+}
+
+// ── PIN LOCK ──
+function showPinLock() {
+  const p = getProfile();
+  const nameEl = document.getElementById('pin-lock-name');
+  if (nameEl && p?.name) nameEl.textContent = `Welcome back, ${p.name}`;
+  show('pin-lock-screen');
+  pinLockEntry = '';
+  pinLockAttempts = 0;
+  updatePinDots('pl', 0);
+}
+
+function pinLockKey(digit) {
+  if (pinLockEntry.length >= 6) return;
+  pinLockEntry += digit;
+  updatePinDots('pl', pinLockEntry.length);
+  if (pinLockEntry.length === 6) {
+    setTimeout(() => {
+      const stored = atob(localStorage.getItem('ss_pin') || '');
+      if (pinLockEntry === stored) {
+        hide('pin-lock-screen');
+        unlockApp();
+        pinLockAttempts = 0;
+      } else {
+        pinLockAttempts++;
+        const msg = document.getElementById('pin-lock-msg');
+        if (pinLockAttempts >= 5) {
+          msg.textContent = `${pinLockAttempts} failed attempts. Try again in 30s.`;
+          setTimeout(() => { msg.textContent = ''; }, 30000);
+        } else {
+          msg.textContent = `Incorrect PIN · ${5 - pinLockAttempts} attempts left`;
+        }
+        flashPinError('pl');
+        pinLockEntry = '';
+        updatePinDots('pl', 0);
+      }
+    }, 200);
+  }
+}
+
+function pinLockDel() {
+  pinLockEntry = pinLockEntry.slice(0, -1);
+  updatePinDots('pl', pinLockEntry.length);
+}
+
+async function tryBiometric() {
+  // Check if WebAuthn / platform authenticator is available
+  if (!window.PublicKeyCredential) {
+    document.getElementById('pin-lock-msg').textContent = 'Biometrics not supported on this device.';
+    return;
+  }
+  try {
+    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if (!available) {
+      document.getElementById('pin-lock-msg').textContent = 'No biometric sensor found.';
+      return;
+    }
+    // Use credential stored at PIN setup time
+    const credId = localStorage.getItem('ss_bio_cred');
+    if (!credId) {
+      document.getElementById('pin-lock-msg').textContent = 'Biometric not registered. Use PIN first.';
+      return;
+    }
+    const assertion = await navigator.credentials.get({
+      publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        allowCredentials: [{ id: base64ToBuffer(credId), type: 'public-key' }],
+        userVerification: 'required',
+        timeout: 30000,
+      }
+    });
+    if (assertion) {
+      hide('pin-lock-screen');
+      unlockApp();
+    }
+  } catch (e) {
+    if (e.name !== 'NotAllowedError') {
+      document.getElementById('pin-lock-msg').textContent = 'Biometric failed. Use PIN.';
+    }
+  }
+}
+
+async function registerBiometric() {
+  if (!window.PublicKeyCredential) return false;
+  try {
+    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    if (!available) return false;
+    const p = getProfile();
+    const userId = crypto.getRandomValues(new Uint8Array(16));
+    const credential = await navigator.credentials.create({
+      publicKey: {
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        rp: { name: 'SideStack', id: location.hostname || 'localhost' },
+        user: { id: userId, name: p?.name || 'user', displayName: p?.name || 'SideStack User' },
+        pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
+        authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
+        timeout: 30000,
+      }
+    });
+    if (credential) {
+      localStorage.setItem('ss_bio_cred', bufferToBase64(credential.rawId));
+      return true;
+    }
+  } catch (e) { return false; }
+  return false;
+}
+
+function base64ToBuffer(b64) {
+  const bin = atob(b64); const buf = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  return buf.buffer;
+}
+function bufferToBase64(buf) {
+  return btoa(String.fromCharCode(...new Uint8Array(buf)));
+}
+
+// Wire biometric toggle in settings
+async function toggleBiometric(el) {
+  if (el.classList.contains('on')) {
+    // Turning OFF
+    el.classList.remove('on');
+    localStorage.removeItem('ss_bio_cred');
+  } else {
+    // Turning ON — register biometric
+    const ok = await registerBiometric();
+    if (ok) {
+      el.classList.add('on');
+    } else {
+      alert('Could not register biometric on this device. Ensure fingerprint or Face ID is set up in system settings.');
+    }
+  }
+}
+
+function forgotPIN() {
+  if (confirm('This will clear your PIN and open the app. Your income data is safe. Continue?')) {
+    localStorage.removeItem('ss_pin');
+    hide('pin-lock-screen');
+    unlockApp();
+  }
+}
+
+// ── PIN UTILS ──
+function updatePinDots(prefix, count) {
+  for (let i = 0; i < 6; i++) {
+    const d = document.getElementById(`${prefix}-d${i}`);
+    if (d) d.classList.toggle('filled', i < count);
+  }
+}
+
+function flashPinError(prefix) {
+  for (let i = 0; i < 6; i++) {
+    const d = document.getElementById(`${prefix}-d${i}`);
+    if (d) { d.classList.add('error'); setTimeout(() => d.classList.remove('error','filled'), 500); }
+  }
+}
+
+// ── PIN CHANGE (from Settings) ──
+function showPinChange() {
+  pinSetupEntry = '';
+  pinSetupOriginal = '';
+  pinSetupPhase = 'enter';
+  document.querySelector('#pin-setup-screen .pin-title').textContent = 'Create new PIN';
+  document.querySelector('#pin-setup-screen .pin-sub').textContent = '6-digit PIN to protect your data';
+  updatePinDots('ps', 0);
+  // Show pin-setup on top of app
+  document.getElementById('pin-setup-screen').classList.remove('hidden');
+}
+
+// ── DATA EXPORT (DPDP compliance) ──
+function exportData() {
+  const data = {
+    profile: getProfile(),
+    incomeEntries: JSON.parse(localStorage.getItem('incomeEntries') || '[]'),
+    expenses: JSON.parse(localStorage.getItem('expenses') || '[]'),
+    moods: JSON.parse(localStorage.getItem('moods') || '[]'),
+    rmEntries: JSON.parse(localStorage.getItem('rmEntries') || '[]'),
+    exportedAt: new Date().toISOString(),
+    note: 'Exported from SideStack v5.0 — India\'s Side Hustle OS'
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'SideStack_MyData.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── DELETE ACCOUNT ──
+function confirmDeleteAccount() {
+  const confirmed = confirm('Delete all your data? This is permanent and cannot be undone.');
+  if (!confirmed) return;
+  const confirmed2 = confirm('Are you sure? All income records, expenses, goals, and settings will be erased.');
+  if (!confirmed2) return;
+  ['ss_profile','ss_pin','ss_onboarded','incomeEntries','expenses','moods','rmEntries','lastPdfDate'].forEach(k => localStorage.removeItem(k));
+  location.reload();
 }
 
 // ── SERVICE WORKER ──
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  // ── AUTH INIT (runs first) ──
+  initApp();
+
+  updateMoodDisplay();
+  const lastPdf = document.getElementById('last-pdf-date');
+  if (lastPdf) lastPdf.textContent = localStorage.getItem('lastPdfDate') || 'Never';
+  if (!localStorage.getItem('incomeEntries')) {
+    localStorage.setItem('incomeEntries', JSON.stringify([
+      { client: 'TechStartup IN', amount: 8000 },
+      { client: 'Priya Sharma', amount: 1200 },
+      { client: 'GlobalTech Solutions', amount: 15000 },
+    ]));
+  }
+  if (!localStorage.getItem('moods')) {
+    localStorage.setItem('moods', JSON.stringify([
+      { date: '2026-04-20', mood: '😊' }, { date: '2026-04-21', mood: '😊' },
+      { date: '2026-04-22', mood: '😐' }, { date: '2026-04-23', mood: '😊' }
+    ]));
+  }
+  updateMoodDisplay();
+  updateReceiptsList();
+  rmRefreshStats();
+});
 </script>
 </body>
 </html>

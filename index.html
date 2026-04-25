@@ -627,6 +627,19 @@ body{
 
 /* More grid (was missing) */
 .more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+
+/* ── AI TYPING INDICATOR ── */
+.ai-typing{display:inline-flex;gap:4px;align-items:center;padding:2px 0;}
+.ai-typing span{
+  width:7px;height:7px;border-radius:50%;background:var(--lime);
+  animation:typingBounce 1.2s infinite;
+}
+.ai-typing span:nth-child(2){animation-delay:0.2s;}
+.ai-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes typingBounce{
+  0%,60%,100%{transform:translateY(0);opacity:0.4;}
+  30%{transform:translateY(-6px);opacity:1;}
+}
 </style>
 </head>
 <body>
@@ -979,9 +992,7 @@ body{
           </div>
         </div>
         <div class="ai-msgs" id="ai-msgs">
-          <div class="msg ai">Namaste! I'm Stacks. I analyse your income and mood privately — on your device only. Ask me anything! <div class="msg-time">Stacks</div></div>
-          <div class="msg u">Which hustle earns me most per hour?<div class="msg-time">You</div></div>
-          <div class="msg ai">📊 <strong>Hourly breakdown:</strong><br>• Group Tutoring: <strong>₹1,200/hr</strong> ← best!<br>• Freelance Design: ₹820/hr<br>• Solo Tutoring: ₹600/hr<br>• Delivery: ₹180/hr<br><br>💡 Add 2 group tutoring slots = +₹3,600/month for same hours.<div class="msg-time">Stacks</div></div>
+          <div class="msg ai">Namaste! I'm Stacks — your AI financial co-pilot, powered by Claude. I can see your actual income data and answer real questions about your earnings, taxes, clients, and goals. Ask me anything! 🤖<div class="msg-time">Stacks · Claude AI</div></div>
         </div>
         <div class="ai-input-row">
           <input class="ai-input" id="ai-inp" placeholder="Ask about income, taxes, goals..." onkeydown="if(event.key==='Enter')sendAI()">
@@ -1831,30 +1842,134 @@ function showScreen(id) {
 }
 
 // ── AI CHAT (Stacks) ──
-const aiResponses = [
-  'Your freelance income is up 23% month-over-month — on track for ₹50K by June! 📈',
-  'Group tutoring earns ₹1,200/hr vs solo ₹600/hr. Add 2 group slots = +₹3,600/month. 🎯',
-  'Canva Pro (₹999/mo) generates ₹20K+ in freelance revenue. Best ROI tool you have! 💡',
-  'Emergency fund growth correlates with better mood scores. Keep the autopilot on! 🛡️',
-  'Thursdays–Sundays are your peak earning days. Batch client deliveries by Wednesday. ⏰',
-  'You need ₹5,500 more in 8 days — that\'s ₹688/day. Highly achievable at your pace! 🎯',
-  'GlobalTech Solutions is your best client: A+ score, pays in 3 days, ₹825/hr avg.',
-  'GST tip: If annual turnover < ₹20L, you\'re exempt. Above that, register for GST and file quarterly.',
-  'Advance tax due Sept 15. Estimated: ₹8,208. Reserve ₹700/week now to be ready. 🧾',
-  'UPI ID income counts as business income. Keep receipts from Razorpay/Stripe for ITR.',
-];
-let aiIdx = 0;
+// ══════════════════════════════════════════
+// STACKS AI — Real Claude API Integration
+// Reads user's actual localStorage data for context
+// ══════════════════════════════════════════
 
-function sendAI() {
+let aiChatHistory = []; // maintain conversation history
+let aiTyping = false;
+
+function buildStacksContext() {
+  // Gather all user data from localStorage for AI context
+  const profile = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || 'null'); } catch { return null; } })();
+  const entries = (() => { try { return JSON.parse(localStorage.getItem('incomeEntries') || '[]'); } catch { return []; } })();
+  const expenses = (() => { try { return JSON.parse(localStorage.getItem('expenses') || '[]'); } catch { return []; } })();
+  const moods = (() => { try { return JSON.parse(localStorage.getItem('moods') || '[]'); } catch { return []; } })();
+  const rmEntries = (() => { try { return JSON.parse(localStorage.getItem('rmEntries') || '[]'); } catch { return []; } })();
+
+  // Calculate summary stats
+  const totalIncome = entries.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+  const totalExpenses = expenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+  const netIncome = totalIncome - totalExpenses;
+
+  // Group income by client
+  const byClient = {};
+  entries.forEach(e => {
+    if (e.client) {
+      byClient[e.client] = (byClient[e.client] || 0) + (parseFloat(e.amount) || 0);
+    }
+  });
+
+  // Group income by source type
+  const bySource = {};
+  rmEntries.forEach(e => {
+    const src = (e.sourceType || 'Other').replace(/^[^ ]+ /, '');
+    bySource[src] = (bySource[src] || 0) + (parseFloat(e.amount) || 0);
+  });
+
+  // Recent mood summary
+  const recentMoods = moods.slice(-7).map(m => m.mood).join(' ');
+
+  const systemPrompt = `You are Stacks, an AI financial co-pilot built into SideStack — India's Side Hustle OS. You are friendly, direct, and deeply knowledgeable about Indian gig economy finance including GST, ITR, advance tax, UPI income, PAN, Aadhaar, and government schemes like PM-SVANidhi and e-Shram.
+
+USER PROFILE:
+- Name: ${profile?.name || 'Hustler'}
+- City: ${profile?.city || 'India'}
+- Primary Hustle: ${profile?.hustle || 'Freelance'}
+
+FINANCIAL DATA (from their SideStack logs):
+- Total logged income: ₹${totalIncome.toLocaleString('en-IN')}
+- Total logged expenses: ₹${totalExpenses.toLocaleString('en-IN')}
+- Net income: ₹${netIncome.toLocaleString('en-IN')}
+- Income entries count: ${entries.length}
+- Expense entries count: ${expenses.length}
+${Object.keys(byClient).length > 0 ? `- Top clients: ${Object.entries(byClient).sort((a,b) => b[1]-a[1]).slice(0,5).map(([k,v]) => `${k} (₹${v.toLocaleString('en-IN')})`).join(', ')}` : ''}
+${Object.keys(bySource).length > 0 ? `- Income sources: ${Object.entries(bySource).map(([k,v]) => `${k} ₹${v.toLocaleString('en-IN')}`).join(', ')}` : ''}
+${recentMoods ? `- Recent mood (last 7 days): ${recentMoods}` : ''}
+
+RULES:
+- Keep responses SHORT — max 4 sentences or bullet points. This is a mobile app.
+- Always use ₹ and Indian number formatting (lakhs, not millions).
+- Be specific with numbers when you have them. Don't be vague.
+- If asked about data you don't have, say so honestly and suggest how to log it.
+- Never give investment advice. Tax estimates are approximations only.
+- Respond in the same language the user writes in (English or Hinglish).
+- Use emojis sparingly — 1-2 max per response.`;
+
+  return systemPrompt;
+}
+
+async function sendAI() {
+  if (aiTyping) return;
   const inp = document.getElementById('ai-inp');
-  if (!inp.value.trim()) return;
+  const question = inp.value.trim();
+  if (!question) return;
+
   const msgs = document.getElementById('ai-msgs');
-  msgs.innerHTML += `<div class="msg u">${inp.value}<div class="msg-time">You</div></div>`;
   inp.value = '';
-  setTimeout(() => {
-    msgs.innerHTML += `<div class="msg ai">${aiResponses[aiIdx++ % aiResponses.length]}<div class="msg-time">Stacks · On-device</div></div>`;
-    msgs.scrollTop = msgs.scrollHeight;
-  }, 650);
+  inp.disabled = true;
+
+  // Add user message to UI
+  msgs.innerHTML += `<div class="msg u">${question}<div class="msg-time">You</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Add to history
+  aiChatHistory.push({ role: 'user', content: question });
+
+  // Show typing indicator
+  aiTyping = true;
+  const typingId = 'typing-' + Date.now();
+  msgs.innerHTML += `<div class="msg ai" id="${typingId}"><span class="ai-typing"><span></span><span></span><span></span></span><div class="msg-time">Stacks · thinking…</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    // ── Call Stacks AI via Cloudflare Worker proxy ──
+    // Worker keeps the API key server-side — users never see it
+    const WORKER_URL = 'https://stacks-ai.mihir86-mp.workers.dev/ai';
+
+    const response = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: buildStacksContext(),
+        messages: aiChatHistory.slice(-10),
+      })
+    });
+
+    const data = await response.json();
+    const reply = data?.content?.[0]?.text || 'Sorry, I had trouble connecting. Try again in a moment.';
+
+    // Remove typing indicator, add real response
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) typingEl.remove();
+
+    msgs.innerHTML += `<div class="msg ai">${reply.replace(/\n/g, '<br>')}<div class="msg-time">Stacks · Claude AI</div></div>`;
+
+    // Add to history for follow-up context
+    aiChatHistory.push({ role: 'assistant', content: reply });
+    // Keep history manageable
+    if (aiChatHistory.length > 20) aiChatHistory = aiChatHistory.slice(-20);
+
+  } catch (err) {
+    const typingEl = document.getElementById(typingId);
+    if (typingEl) typingEl.remove();
+    msgs.innerHTML += `<div class="msg ai">I'm having trouble connecting right now. Check your internet and try again. 📡<div class="msg-time">Stacks</div></div>`;
+  }
+
+  aiTyping = false;
+  inp.disabled = false;
+  inp.focus();
   msgs.scrollTop = msgs.scrollHeight;
 }
 

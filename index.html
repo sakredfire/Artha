@@ -1473,14 +1473,14 @@ body{
         </div>
         <span style="color:var(--text3)">›</span>
       </div>
-      <div class="setting-row">
+      <div class="setting-row" onclick="showProfileEdit()">
         <span class="s-ico">💼</span>
         <div class="s-info"><div class="s-name">Primary Hustle</div><div class="s-desc" id="set-hustle">Not set</div></div>
         <span style="color:var(--text3)">›</span>
       </div>
-      <div class="setting-row">
+      <div class="setting-row" onclick="showLanguagePicker()">
         <span class="s-ico">🌐</span>
-        <div class="s-info"><div class="s-name">Language</div><div class="s-desc">English (EN)</div></div>
+        <div class="s-info"><div class="s-name">Language</div><div class="s-desc" id="set-lang">English (EN)</div></div>
         <span style="color:var(--text3)">›</span>
       </div>
 
@@ -2359,6 +2359,9 @@ function unlockApp() {
   }
   loadProfileIntoApp();
   renderIncomeEntries();
+  // Load saved language
+  const savedLang = localStorage.getItem('ss_lang');
+  if (savedLang) { const el = document.getElementById('set-lang'); const lang = [{code:'EN',native:'English'},{code:'HI',native:'हिन्दी'},{code:'TA',native:'தமிழ்'},{code:'TE',native:'తెలుగు'},{code:'MR',native:'मराठी'},{code:'KN',native:'ಕನ್ನಡ'}].find(l=>l.code===savedLang); if(el&&lang) el.textContent=lang.native+' ('+savedLang+')'; }
 }
 
 function loadProfileIntoApp() {
@@ -2899,6 +2902,60 @@ function shareTip(btn) {
   if (navigator.share) navigator.share({title:'Hustle Tip',text}); else navigator.clipboard.writeText(text).then(()=>{ btn.textContent='✓ Copied!'; setTimeout(()=>btn.textContent='+ Share',2000); });
 }
 document.addEventListener('click', e => { const m=document.getElementById('log-modal'); if(m&&e.target===m) hideLogModal(); });
+
+
+// ══ LANGUAGE PICKER ══
+const LANGUAGES = [
+  { code: 'EN', label: 'English', native: 'English' },
+  { code: 'HI', label: 'Hindi', native: 'हिन्दी' },
+  { code: 'TA', label: 'Tamil', native: 'தமிழ்' },
+  { code: 'TE', label: 'Telugu', native: 'తెలుగు' },
+  { code: 'MR', label: 'Marathi', native: 'मराठी' },
+  { code: 'KN', label: 'Kannada', native: 'ಕನ್ನಡ' },
+];
+
+function showLanguagePicker() {
+  const current = localStorage.getItem('ss_lang') || 'EN';
+  const options = LANGUAGES.map(l =>
+    `<div onclick="setLanguage('${l.code}')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surf2);border:1.5px solid ${l.code===current?'var(--lime)':'var(--border)'};border-radius:13px;margin-bottom:8px;cursor:pointer;">
+      <div>
+        <div style="font-size:13px;font-weight:600;">${l.native}</div>
+        <div style="font-size:11px;color:var(--text3);">${l.label}</div>
+      </div>
+      ${l.code===current?'<span style="color:var(--lime);font-size:16px;">✓</span>':''}
+    </div>`
+  ).join('');
+
+  // Create modal
+  const modal = document.createElement('div');
+  modal.id = 'lang-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;';
+  modal.innerHTML = `
+    <div style="background:var(--surf);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;border-top:1px solid var(--border2);animation:slideUp 0.3s ease;max-height:80vh;overflow-y:auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;">Language</div>
+        <button onclick="document.getElementById('lang-modal').remove()" style="background:var(--surf2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text2);font-size:13px;cursor:pointer;">✕</button>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:14px;">Full translation coming in v5.1. Hindi, Tamil & Telugu UI in progress.</div>
+      ${options}
+    </div>`;
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+}
+
+function setLanguage(code) {
+  localStorage.setItem('ss_lang', code);
+  const lang = LANGUAGES.find(l => l.code === code);
+  const el = document.getElementById('set-lang');
+  if (el) el.textContent = `${lang.native} (${lang.code})`;
+  document.getElementById('lang-modal')?.remove();
+  // Show confirmation
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;z-index:9999;animation:fadeIn 0.2s ease;';
+  toast.textContent = `✓ Language set to ${lang.native}`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
 
 // ── SERVICE WORKER ──
 if ('serviceWorker' in navigator) {

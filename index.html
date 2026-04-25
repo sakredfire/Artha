@@ -933,7 +933,7 @@ body{
 
     <!-- ════ SCREEN: INCOME ════ -->
     <div class="screen" id="s-income">
-      <div class="sec-head"><div><div class="sec-title">Income Log</div><div class="sec-sub">Every rupee tracked</div></div><button class="btn">+ Log</button></div>
+      <div class="sec-head"><div><div class="sec-title">Income Log</div><div class="sec-sub">Every rupee tracked</div></div><button class="btn btn-primary" onclick="showLogModal()">+ Log</button></div>
 
       <div class="mc-row">
         <div class="mc lime"><div class="mc-label">April Total</div><div class="mc-val lime" style="font-size:18px;">₹34,500</div></div>
@@ -946,7 +946,7 @@ body{
         <div class="chip purple" style="cursor:pointer;" onclick="showScreen('voice')">🎙️ Voice</div>
       </div>
 
-      <div class="entry-list">
+      <div class="entry-list" id="income-entries-list">
         <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">💻</div><div class="entry-info"><div class="entry-name">Upwork — Logo Design</div><div class="entry-meta">Freelance · Apr 19 · A+ client</div></div><div class="entry-amt pos">+₹8,000</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(123,92,255,0.1)">📚</div><div class="entry-info"><div class="entry-name">Physics Tutoring</div><div class="entry-meta">Teaching · Apr 18</div></div><div class="entry-amt pos">+₹1,200</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(59,158,255,0.1)">🎥</div><div class="entry-info"><div class="entry-name">YouTube AdSense</div><div class="entry-meta">Content · Apr 15 · 42K views</div></div><div class="entry-amt pos">+₹2,400</div></div>
@@ -1063,7 +1063,7 @@ body{
         </div>
       </div>
 
-      <button class="btn btn-full" style="background:var(--purple);color:#fff;">📥 Export ITR-1 Summary</button>
+      <button class="btn btn-full" style="background:var(--purple);color:#fff;" onclick="exportITR()">📥 Export ITR-1 Summary</button>
     </div>
 
     <!-- ════ SCREEN: MORE ════ -->
@@ -1092,7 +1092,7 @@ body{
       <div style="background:linear-gradient(135deg,rgba(201,255,71,0.08),rgba(123,92,255,0.08));border:1px solid rgba(201,255,71,0.18);border-radius:16px;padding:18px;margin-bottom:14px;">
         <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:5px;">Upgrade to Pro+</div>
         <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:12px;">Tax engine, AI forecasting, income verification, invoice builder & Foundation access.</div>
-        <button class="btn btn-full">Get Pro+ · ₹49/month</button>
+        <button class="btn btn-full" onclick="alert('Pro+ coming soon! You will be notified when billing goes live. 🚀')">Get Pro+ · ₹49/month</button>
         <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Cancel anytime · UPI Autopay · 7-day trial</div>
       </div>
 
@@ -1103,8 +1103,8 @@ body{
           <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Refer 3 friends → get 1 month Pro free.</div>
           <div style="font-family:'Space Mono',monospace;font-size:12.5px;background:var(--surf2);border-radius:9px;padding:10px;color:var(--lime);margin-bottom:10px;" id="referral-code">HUSTLE-USER-000</div>
           <div style="display:flex;gap:8px;">
-            <button class="btn" style="flex:1;justify-content:center;font-size:11.5px;">📋 Copy</button>
-            <button class="btn-ghost" style="flex:1;justify-content:center;font-size:11.5px;">📱 Share</button>
+            <button class="btn" style="flex:1;justify-content:center;font-size:11.5px;" onclick="copyReferral(this)">📋 Copy</button>
+            <button class="btn-ghost" style="flex:1;justify-content:center;font-size:11.5px;" onclick="shareReferral()">📱 Share</button>
           </div>
           <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">2/3 referred · 1 more for free month</div>
         </div>
@@ -1113,7 +1113,7 @@ body{
 
     <!-- ════ SCREEN: GOALS ════ -->
     <div class="screen" id="s-goals">
-      <div class="sec-head"><div><div class="sec-title">Goals & Streaks</div></div><button class="btn" style="padding:9px 14px;font-size:12px;">+ New</button></div>
+      <div id="goals-list-wrapper"><div class="sec-head"><div><div class="sec-title">Goals & Streaks</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="showNewGoalModal()">+ New</button></div>
 
       <div class="goal-card" style="border-color:rgba(201,255,71,0.2);">
         <div class="goal-head"><div class="goal-emoji">🎯</div><div><div class="goal-name">April Target</div><div class="goal-deadline">8 days left</div></div><div class="chip lime" style="margin-left:auto;">86%</div></div>
@@ -1169,7 +1169,7 @@ body{
             <div class="chip purple" style="cursor:pointer;">Overworked</div>
             <div class="chip teal" style="cursor:pointer;">Flow state</div>
           </div>
-          <button class="btn btn-full">✓ Log Today's Mood</button>
+          <button class="btn btn-full" onclick="logMoodConfirm(this)">✓ Log Today's Mood</button>
           <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Stored on-device only · Never shared</div>
         </div>
       </div>
@@ -1241,7 +1241,7 @@ body{
             <div class="entry">📅 Last 6 months (Oct 2025–Mar 2026)</div>
             <div class="entry">📅 Full FY 2025–26</div>
           </div>
-          <button class="btn btn-full" style="background:var(--purple);color:#fff;">🔏 Generate Signed PDF</button>
+          <button class="btn btn-full" style="background:var(--purple);color:#fff;" onclick="generateVerificationPDF()">🔏 Generate Signed PDF</button>
           <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">SHA-256 signed · QR verification · Free for Pro+</div>
         </div>
       </div>
@@ -1348,7 +1348,7 @@ body{
             <div style="font-size:10px;color:var(--text3);margin-bottom:5px;">PARSED ENTRY:</div>
             <div>💻 <strong>Upwork</strong> — ₹8,000 · Freelance · Today</div>
             <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;">
-              <button class="btn" style="font-size:12px;">✓ Confirm</button>
+              <button class="btn" style="font-size:12px;" onclick="confirmVoiceEntry(this)">✓ Confirm</button>
               <button class="btn-ghost" style="font-size:12px;" onclick="document.getElementById('voice-result').style.display='none'">Retry</button>
             </div>
           </div>
@@ -1371,15 +1371,15 @@ body{
     </div>
 
     <!-- ════ SCREEN: INVOICES ════ -->
-    <div class="screen" id="s-invoices">
-      <div class="sec-head"><div><div class="sec-title">Invoices</div><div class="sec-sub">60-second professional invoices</div></div><button class="btn" style="padding:9px 14px;font-size:12px;">+ New</button></div>
+    <div class="screen" id="s-invoices" data-screen="invoices">
+      <div class="sec-head"><div><div class="sec-title">Invoices</div><div class="sec-sub">60-second professional invoices</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="showNewInvoiceModal()">+ New</button></div>
 
       <div class="mc-row">
         <div class="mc teal"><div class="mc-label">Total Sent</div><div class="mc-val teal" style="font-size:18px;">₹89,400</div></div>
         <div class="mc orange"><div class="mc-label">Outstanding</div><div class="mc-val orange" style="font-size:18px;">₹4,800</div></div>
       </div>
 
-      <div class="entry-list">
+      <div class="entry-list" id="invoices-list">
         <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-043 · GlobalTech</div><div class="entry-meta">₹16,500 · Apr 19</div></div><div class="chip teal">Paid</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-042 · Priya Sharma</div><div class="entry-meta">₹4,800 · Apr 10</div></div><div class="chip orange">Overdue</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(255,77,139,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-041 · Client X</div><div class="entry-meta">₹2,800 · 3 weeks unpaid</div></div><div class="chip" style="background:rgba(255,77,139,0.1);color:var(--pink);border-color:rgba(255,77,139,0.2);">Chase</div></div>
@@ -1413,7 +1413,7 @@ body{
 
     <!-- ════ SCREEN: TIPS ════ -->
     <div class="screen" id="s-tips">
-      <div class="sec-head"><div><div class="sec-title">Hustle Tips</div><div class="sec-sub">Real stories · Anonymous</div></div><button class="btn" style="padding:9px 14px;font-size:12px;">+ Share</button></div>
+      <div class="sec-head"><div><div class="sec-title">Hustle Tips</div><div class="sec-sub">Real stories · Anonymous</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="shareTip(this)">+ Share</button></div>
 
       <div class="tip-post">
         <div class="tp-head"><div class="tp-av">H</div><div><div class="tp-handle">Hustler_PUN_034</div><div class="tp-time">Pune · 2 hrs ago</div></div></div>
@@ -1490,8 +1490,8 @@ body{
       <div class="priv-item"><span class="pi-ico">🤖</span><div class="pi-info"><div class="pi-name">On-Device AI</div><div class="pi-desc">No financial data sent to external APIs</div></div><span class="pi-status ok">✓ Done</span></div>
       <div class="priv-item"><span class="pi-ico">🎙️</span><div class="pi-info"><div class="pi-name">Voice Processing</div><div class="pi-desc">Device-native · No audio stored</div></div><span class="pi-status ok">✓ Done</span></div>
       <div class="priv-item"><span class="pi-ico">😊</span><div class="pi-info"><div class="pi-name">Mood Data</div><div class="pi-desc">On-device only · Never transmitted</div></div><span class="pi-status ok">✓ Done</span></div>
-      <div class="priv-item"><span class="pi-ico">🗑️</span><div class="pi-info"><div class="pi-name">Delete Account</div><div class="pi-desc">Permanent · 2 taps · Immediate</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;border-color:rgba(255,77,139,0.3);color:var(--pink);">Delete</button></div>
-      <div class="priv-item"><span class="pi-ico">📋</span><div class="pi-info"><div class="pi-name">Download My Data</div><div class="pi-desc">CSV / JSON export · DPDP right</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;">Export</button></div>
+      <div class="priv-item"><span class="pi-ico">🗑️</span><div class="pi-info"><div class="pi-name">Delete Account</div><div class="pi-desc">Permanent · 2 taps · Immediate</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;border-color:rgba(255,77,139,0.3);color:var(--pink);" onclick="confirmDeleteAccount()">Delete</button></div>
+      <div class="priv-item"><span class="pi-ico">📋</span><div class="pi-info"><div class="pi-name">Download My Data</div><div class="pi-desc">CSV / JSON export · DPDP right</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;" onclick="exportData()">Export</button></div>
 
       <div class="setting-row" style="margin-top:6px;">
         <span class="s-ico">☁️</span><div class="s-info"><div class="s-name">Cloud Backup</div><div class="s-desc">Encrypted · Off by default</div></div>
@@ -1517,7 +1517,7 @@ body{
       <div class="sec-title" style="margin-bottom:14px;">Settings</div>
 
       <div class="s-sect-title">👤 Profile</div>
-      <div class="setting-row" onclick="showScreen('profile-edit')">
+      <div class="setting-row" onclick="showProfileEdit()">
         <span class="s-ico" id="set-avatar" style="font-size:22px;">🦁</span>
         <div class="s-info">
           <div class="s-name" id="set-name">Your Name</div>
@@ -1839,6 +1839,8 @@ function showScreen(id) {
   if (id === 'clients') renderClientScores();
   if (id === 'receipt') updateReceiptsList();
   if (id === 'rental') rmRefreshStats();
+  if (id === 'goals') renderGoals();
+  if (id === 'invoices') renderInvoices();
 }
 
 // ── AI CHAT (Stacks) ──
@@ -2847,6 +2849,333 @@ function confirmDeleteAccount() {
   location.reload();
 }
 
+
+// ── LOG INCOME MODAL ──
+function showLogModal() {
+  const modal = document.getElementById('log-modal');
+  modal.style.display = 'flex';
+  // Set today's date as default
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('log-date').value = today;
+  setTimeout(() => document.getElementById('log-amount').focus(), 100);
+}
+
+function hideLogModal() {
+  document.getElementById('log-modal').style.display = 'none';
+  document.getElementById('log-amount').value = '';
+  document.getElementById('log-desc').value = '';
+  document.getElementById('log-client').value = '';
+}
+
+function submitLog() {
+  const amount = parseFloat(document.getElementById('log-amount').value);
+  const category = document.getElementById('log-category').value.replace(/^[^ ]+ /,'');
+  const desc = document.getElementById('log-desc').value.trim();
+  const client = document.getElementById('log-client').value.trim();
+  const date = document.getElementById('log-date').value;
+
+  if (!amount || isNaN(amount) || amount <= 0) {
+    document.getElementById('log-amount').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('log-amount').style.borderColor = '', 1500);
+    return;
+  }
+
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const newEntry = {
+    id: Date.now(),
+    amount,
+    category,
+    desc: desc || category,
+    client: client || null,
+    date: date || new Date().toISOString().split('T')[0],
+    source: category,
+  };
+  entries.unshift(newEntry);
+  localStorage.setItem('incomeEntries', JSON.stringify(entries));
+
+  hideLogModal();
+
+  // Refresh income screen entries list
+  renderIncomeEntries();
+
+  // Show success flash
+  const btn = document.querySelector('#s-income .btn-primary');
+  if (btn) { btn.textContent = '✓ Saved!'; setTimeout(() => btn.textContent = '+ Log', 1500); }
+}
+
+function renderIncomeEntries() {
+  const list = document.getElementById('income-entries-list');
+  if (!list) return;
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const icons = { Freelance:'💻', Teaching:'📚', Content:'📹', Delivery:'🚗', Design:'🎨', Royalties:'🎵', Rental:'🏠', Other:'⚡' };
+  list.innerHTML = entries.slice(0,20).map(e => `
+    <div class="entry">
+      <div class="entry-ico" style="background:rgba(203,255,71,0.08)">${icons[e.category] || '💰'}</div>
+      <div class="entry-info">
+        <div class="entry-name">${e.desc || e.category}</div>
+        <div class="entry-meta">${e.category}${e.client ? ' · ' + e.client : ''} · ${e.date || 'Today'}</div>
+      </div>
+      <div class="entry-amt pos">+₹${parseFloat(e.amount).toLocaleString('en-IN')}</div>
+    </div>`).join('') || '<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px;">No entries yet. Tap + Log to add your first income!</div>';
+}
+
+// ── EXPORT ITR-1 SUMMARY ──
+function exportITR() {
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const profile = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || '{}'); } catch { return {}; } })();
+  const total = entries.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const deduction = Math.round(total * 0.5); // Section 44ADA 50% presumptive
+  const taxable = total - deduction;
+
+  // Group by category
+  const byCategory = {};
+  entries.forEach(e => {
+    byCategory[e.category] = (byCategory[e.category] || 0) + (parseFloat(e.amount) || 0);
+  });
+
+  const doc = new jsPDF();
+  doc.setFillColor(8,8,16); doc.rect(0,0,210,297,'F');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(20); doc.setTextColor(203,255,71);
+  doc.text('ITR-1 Income Summary', 20, 28);
+  doc.setFontSize(10); doc.setTextColor(90,90,112);
+  doc.text('SideStack v5.0 · FY 2025-26 · Generated: ' + new Date().toLocaleDateString('en-IN'), 20, 37);
+  doc.setDrawColor(203,255,71); doc.line(20,42,190,42);
+
+  doc.setFontSize(12); doc.setTextColor(238,238,248);
+  doc.text('Taxpayer: ' + (profile.name || 'User'), 20, 54);
+  doc.text('City: ' + (profile.city || '—'), 20, 63);
+  doc.text('Assessment Year: 2026-27', 20, 72);
+
+  doc.setFontSize(13); doc.setTextColor(203,255,71);
+  doc.text('Income Breakdown', 20, 86);
+  doc.setDrawColor(40,40,60); doc.line(20,90,190,90);
+
+  let y = 100;
+  Object.entries(byCategory).forEach(([cat, amt]) => {
+    doc.setFontSize(11); doc.setTextColor(160,160,184);
+    doc.text(cat, 25, y);
+    doc.setTextColor(238,238,248);
+    doc.text('₹' + amt.toLocaleString('en-IN'), 150, y);
+    y += 9;
+  });
+
+  y += 5; doc.setDrawColor(60,60,80); doc.line(20,y,190,y); y += 10;
+  doc.setFontSize(12); doc.setTextColor(238,238,248);
+  doc.text('Gross Total Income:', 25, y); doc.setTextColor(203,255,71); doc.text('₹' + total.toLocaleString('en-IN'), 150, y); y += 9;
+  doc.setTextColor(238,238,248);
+  doc.text('Sec 44ADA Deduction (50%):', 25, y); doc.setTextColor(124,92,255); doc.text('-₹' + deduction.toLocaleString('en-IN'), 150, y); y += 9;
+  doc.setTextColor(238,238,248);
+  doc.text('Net Taxable Income:', 25, y); doc.setTextColor(203,255,71); doc.text('₹' + taxable.toLocaleString('en-IN'), 150, y);
+
+  y += 20; doc.setFontSize(9); doc.setTextColor(90,90,112);
+  doc.text('This is an estimate generated by SideStack for reference only.', 20, y);
+  doc.text('Please verify with a CA before filing your ITR.', 20, y+7);
+
+  doc.save('SideStack_ITR1_Summary_FY2025-26.pdf');
+}
+
+// ── PROFILE EDIT (inline overlay reusing profile-screen) ──
+function showProfileEdit() {
+  const p = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || '{}'); } catch { return {}; } })();
+  // Pre-fill profile form with existing data
+  const nameEl = document.getElementById('p-name');
+  const cityEl = document.getElementById('p-city');
+  if (nameEl) nameEl.value = p.name || '';
+  if (cityEl) cityEl.value = p.city || '';
+
+  // Find and pre-select hustle chip
+  document.querySelectorAll('.hustle-chip').forEach(chip => {
+    chip.classList.remove('selected');
+    if (chip.querySelector('.hustle-chip-lbl')?.textContent === p.hustle) {
+      chip.classList.add('selected');
+      selectedHustle = p.hustle;
+    }
+  });
+
+  // Change button text to "Save Changes"
+  const continueBtn = document.querySelector('#profile-screen .btn-lime');
+  if (continueBtn) {
+    continueBtn.textContent = 'Save Changes';
+    continueBtn.onclick = saveProfileEdit;
+  }
+
+  const skipBtn = document.querySelector('#profile-screen .btn-text');
+  if (skipBtn) skipBtn.style.display = 'none';
+
+  show('profile-screen');
+}
+
+function saveProfileEdit() {
+  const name = document.getElementById('p-name').value.trim();
+  const city = document.getElementById('p-city').value.trim();
+  if (!name) {
+    document.getElementById('p-name').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('p-name').style.borderColor = '', 1500);
+    return;
+  }
+  const existing = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || '{}'); } catch { return {}; } })();
+  const updated = { ...existing, name, city, hustle: selectedHustle };
+  localStorage.setItem('ss_profile', JSON.stringify(updated));
+  hide('profile-screen');
+  loadProfileIntoApp();
+
+  // Reset button for next time
+  const continueBtn = document.querySelector('#profile-screen .btn-lime');
+  if (continueBtn) { continueBtn.textContent = 'Continue → Set PIN'; continueBtn.onclick = saveProfile; }
+  const skipBtn = document.querySelector('#profile-screen .btn-text');
+  if (skipBtn) skipBtn.style.display = '';
+}
+
+// Close log modal on backdrop click
+document.addEventListener('click', (e) => {
+  const modal = document.getElementById('log-modal');
+  if (modal && e.target === modal) hideLogModal();
+});
+
+
+// ══════════════════════════════════════════
+// MISSING BUTTON FUNCTIONS
+// ══════════════════════════════════════════
+
+// ── COPY REFERRAL CODE ──
+function copyReferral(btn) {
+  const code = document.getElementById('referral-code')?.textContent || 'HUSTLE-USER';
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.color = 'var(--lime)';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+  }).catch(() => {
+    alert('Your referral code: ' + code);
+  });
+}
+
+// ── SHARE REFERRAL ──
+function shareReferral() {
+  const code = document.getElementById('referral-code')?.textContent || 'HUSTLE-USER';
+  const text = `Join me on SideStack — India's Side Hustle OS! Track income, taxes & get AI insights. Use my code: ${code} 🚀 https://app.sakredfire.ca`;
+  if (navigator.share) {
+    navigator.share({ title: 'SideStack', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('Share text copied to clipboard!')).catch(() => alert(text));
+  }
+}
+
+// ── LOG MOOD CONFIRM ──
+function logMoodConfirm(btn) {
+  const sel = document.querySelector('.mood-opt.sel');
+  if (!sel) { alert('Please select a mood first ☝️'); return; }
+  btn.textContent = '✓ Mood Logged!';
+  btn.style.background = 'var(--teal)';
+  setTimeout(() => { btn.textContent = '✓ Log Today's Mood'; btn.style.background = ''; }, 2500);
+}
+
+// ── CONFIRM VOICE ENTRY ──
+function confirmVoiceEntry(btn) {
+  const amtEl = document.getElementById('voice-amount');
+  const amount = amtEl?.value;
+  if (!amount) { alert('No amount detected. Please log manually.'); return; }
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  entries.unshift({ id: Date.now(), amount: parseFloat(amount), category: 'Freelance', desc: 'Voice entry', date: new Date().toISOString().split('T')[0] });
+  localStorage.setItem('incomeEntries', JSON.stringify(entries));
+  btn.textContent = '✓ Saved!';
+  btn.style.background = 'var(--teal)';
+  document.getElementById('voice-result').style.display = 'none';
+  renderIncomeEntries();
+  setTimeout(() => { btn.textContent = '✓ Confirm'; btn.style.background = ''; }, 2000);
+}
+
+// ── SHARE TIP ──
+function shareTip(btn) {
+  const tip = btn.closest('.tip-post')?.querySelector('p')?.textContent || 'Check out SideStack!';
+  const shareText = `💡 Hustle Tip from SideStack: "${tip.slice(0,100)}..." — https://app.sakredfire.ca`;
+  if (navigator.share) {
+    navigator.share({ title: 'Hustle Tip', text: shareText });
+  } else {
+    navigator.clipboard.writeText(shareText).then(() => {
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '+ Share', 2000);
+    });
+  }
+}
+
+// ── NEW GOAL MODAL ──
+function showNewGoalModal() {
+  const name = prompt('Goal name? (e.g. "Buy Laptop", "April Target")');
+  if (!name) return;
+  const target = prompt('Target amount (₹)?');
+  if (!target || isNaN(parseFloat(target))) return;
+  const deadline = prompt('Deadline? (e.g. "Jun 2026")') || 'No deadline';
+  const goals = JSON.parse(localStorage.getItem('ss_goals') || '[]');
+  goals.push({ id: Date.now(), name, target: parseFloat(target), current: 0, deadline, emoji: '🎯' });
+  localStorage.setItem('ss_goals', JSON.stringify(goals));
+  renderGoals();
+  alert(`✅ Goal "${name}" added!`);
+}
+
+function renderGoals() {
+  const container = document.getElementById('goals-list');
+  if (!container) return;
+  const goals = JSON.parse(localStorage.getItem('ss_goals') || '[]');
+  if (!goals.length) return;
+  container.innerHTML = goals.map(g => {
+    const pct = Math.min(100, Math.round((g.current / g.target) * 100));
+    const color = pct >= 80 ? 'var(--lime)' : pct >= 50 ? 'var(--purple)' : 'var(--blue)';
+    return `<div class="goal-card">
+      <div class="goal-head">
+        <div class="goal-emoji">${g.emoji}</div>
+        <div><div class="goal-name">${g.name}</div><div class="goal-deadline">${g.deadline}</div></div>
+        <span class="chip" style="background:rgba(203,255,71,0.1);color:var(--lime);margin-left:auto">${pct}%</span>
+      </div>
+      <div class="goal-amounts"><span>₹${(g.current||0).toLocaleString('en-IN')}</span><span>₹${g.target.toLocaleString('en-IN')}</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${color};height:5px;border-radius:3px;"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── NEW INVOICE MODAL ──
+function showNewInvoiceModal() {
+  const client = prompt('Client name?');
+  if (!client) return;
+  const amount = prompt('Invoice amount (₹)?');
+  if (!amount || isNaN(parseFloat(amount))) return;
+  const desc = prompt('Description? (e.g. "Logo Design")') || 'Services';
+  const invoices = JSON.parse(localStorage.getItem('ss_invoices') || '[]');
+  const invNum = 'INV-' + String(invoices.length + 44).padStart(3, '0');
+  invoices.unshift({ id: Date.now(), num: invNum, client, amount: parseFloat(amount), desc, status: 'Sent', date: new Date().toLocaleDateString('en-IN', {month:'short',day:'numeric'}) });
+  localStorage.setItem('ss_invoices', JSON.stringify(invoices));
+  renderInvoices();
+  alert(`✅ Invoice ${invNum} created for ${client}!`);
+}
+
+function renderInvoices() {
+  const list = document.getElementById('invoices-list');
+  if (!list) return;
+  const invoices = JSON.parse(localStorage.getItem('ss_invoices') || '[]');
+  if (!invoices.length) return;
+  const statusColors = { Paid:'var(--teal)', Overdue:'var(--orange)', Sent:'var(--blue)', Chase:'var(--pink)' };
+  list.innerHTML = invoices.map(inv => `
+    <div class="entry" onclick="cycleInvoiceStatus(${inv.id})">
+      <div class="entry-ico" style="background:var(--surf3)">📄</div>
+      <div class="entry-info">
+        <div class="entry-name">${inv.num} · ${inv.client}</div>
+        <div class="entry-meta">₹${inv.amount.toLocaleString('en-IN')} · ${inv.date}</div>
+      </div>
+      <span class="inv-status" style="background:rgba(0,0,0,0.3);color:${statusColors[inv.status]||'var(--text2)'};padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700">${inv.status}</span>
+    </div>`).join('');
+}
+
+function cycleInvoiceStatus(id) {
+  const invoices = JSON.parse(localStorage.getItem('ss_invoices') || '[]');
+  const statuses = ['Sent','Paid','Overdue','Chase'];
+  const inv = invoices.find(i => i.id === id);
+  if (!inv) return;
+  inv.status = statuses[(statuses.indexOf(inv.status) + 1) % statuses.length];
+  localStorage.setItem('ss_invoices', JSON.stringify(invoices));
+  renderInvoices();
+}
+
 // ── SERVICE WORKER ──
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
@@ -2874,9 +3203,59 @@ window.addEventListener('DOMContentLoaded', () => {
     ]));
   }
   updateMoodDisplay();
+  renderIncomeEntries();
   updateReceiptsList();
   rmRefreshStats();
 });
 </script>
+
+  <!-- ════ LOG INCOME MODAL ════ -->
+  <div id="log-modal" style="display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center;">
+    <div style="background:var(--surf);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;border-top:1px solid var(--border2);animation:slideUp 0.3s ease;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;">Log Income</div>
+        <button onclick="hideLogModal()" style="background:var(--surf2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text2);font-size:13px;cursor:pointer;">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <div class="form-label" style="margin-bottom:4px;">Amount (₹)</div>
+            <input id="log-amount" class="form-input" type="number" placeholder="0" style="font-size:20px;font-weight:700;font-family:'Space Mono',monospace;">
+          </div>
+          <div>
+            <div class="form-label" style="margin-bottom:4px;">Category</div>
+            <select id="log-category" class="form-input">
+              <option>💻 Freelance</option>
+              <option>📚 Teaching</option>
+              <option>📹 Content</option>
+              <option>🚗 Delivery</option>
+              <option>🎨 Design</option>
+              <option>🎵 Royalties</option>
+              <option>🏠 Rental</option>
+              <option>⚡ Other</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="form-label" style="margin-bottom:4px;">Description</div>
+          <input id="log-desc" class="form-input" type="text" placeholder="e.g. Upwork logo project, Swiggy weekend...">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <div class="form-label" style="margin-bottom:4px;">Client (optional)</div>
+            <input id="log-client" class="form-input" type="text" placeholder="Client name">
+          </div>
+          <div>
+            <div class="form-label" style="margin-bottom:4px;">Date</div>
+            <input id="log-date" class="form-input" type="date">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="btn btn-primary" style="flex:1;padding:14px;" onclick="submitLog()">✅ Save Entry</button>
+          <button class="btn btn-ghost" onclick="hideLogModal()" style="padding:14px 18px;">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

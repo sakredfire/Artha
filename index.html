@@ -1497,10 +1497,10 @@ body{
       </div>
 
       <div class="s-sect-title">💸 Subscription</div>
-      <div class="setting-row" style="border-color:rgba(201,255,71,0.2);background:rgba(201,255,71,0.04);">
+      <div class="setting-row" id="subscription-row" style="cursor:pointer;" onclick="showUpgradePrompt('ai')">
         <span class="s-ico">⭐</span>
-        <div class="s-info"><div class="s-name" style="color:var(--lime)">Pro+ Active</div><div class="s-desc">₹49/month · Renews May 19</div></div>
-        <div class="chip lime">Active</div>
+        <div class="s-info"><div class="s-name" id="sub-tier-name" style="color:var(--lime)">Free Plan</div><div class="s-desc" id="sub-tier-desc">5 AI/day · 5 scans/day · 2 PDFs/mo</div></div>
+        <div class="chip lime" id="sub-tier-chip">Upgrade</div>
       </div>
       <div class="setting-row"><span class="s-ico">📄</span><div class="s-info"><div class="s-name">Billing History</div></div><span style="color:var(--text3)">›</span></div>
 
@@ -1522,6 +1522,11 @@ body{
       </div>
 
       <div class="s-sect-title">⚠️ Danger Zone</div>
+      <div class="setting-row" id="cancel-trial-row" style="display:none;border-color:rgba(255,107,53,0.2);" onclick="cancelTrial()">
+        <span class="s-ico">⏸️</span>
+        <div class="s-info"><div class="s-name" style="color:var(--orange)">Cancel Trial</div><div class="s-desc" id="cancel-trial-desc">Cancel before trial ends to avoid charge</div></div>
+        <span style="color:var(--orange)">›</span>
+      </div>
       <div class="setting-row" style="border-color:rgba(255,77,139,0.2);" onclick="confirmDeleteAccount()">
         <span class="s-ico">🗑️</span>
         <div class="s-info"><div class="s-name" style="color:var(--pink)">Delete Account</div><div class="s-desc">Clears all local data · Permanent</div></div>
@@ -1789,6 +1794,7 @@ function showScreen(id) {
   if (id === 'rental') rmRefreshStats();
   if (id === 'goals') renderGoals();
   if (id === 'invoices') renderInvoices();
+  if (id === 'ai') updateAIUsageBadge();
 }
 
 // ── AI CHAT (Stacks) ──
@@ -1821,6 +1827,13 @@ async function sendAI() {
   const inp = document.getElementById('ai-inp');
   const question = inp.value.trim();
   if (!question) return;
+  // Check free tier limit
+  if (!checkLimit('ai')) {
+    showUpgradePrompt('ai');
+    return;
+  }
+  incrementUsage('ai');
+  updateAIUsageBadge();
   const msgs = document.getElementById('ai-msgs');
   inp.value = ''; inp.disabled = true;
   msgs.innerHTML += `<div class="msg u">${question}<div class="msg-time">You</div></div>`;
@@ -1832,13 +1845,29 @@ async function sendAI() {
   msgs.scrollTop = msgs.scrollHeight;
   try {
     const WORKER_URL = 'https://stacks-ai.mihir86-mp.workers.dev/ai';
+    const tierToken = localStorage.getItem('ss_tier_token') || '';
     const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ system: buildStacksContext(), messages: aiChatHistory.slice(-10) })
+      body: JSON.stringify({
+        system: buildStacksContext(),
+        messages: aiChatHistory.slice(-10),
+        tier_token: tierToken,
+      })
     });
     const data = await response.json();
+    // Handle limit error from worker
+    if (data?.error === 'daily_limit_reached') {
+      document.getElementById(typingId)?.remove();
+      msgs.innerHTML += `<div class="msg ai">⚡ ${data.message}<div class="msg-time">Stacks</div></div>`;
+      aiTyping = false; inp.disabled = false;
+      msgs.scrollTop = msgs.scrollHeight;
+      setTimeout(() => showUpgradePrompt('ai'), 500);
+      return;
+    }
     const reply = data?.content?.[0]?.text || 'Sorry, I had trouble connecting. Try again!';
+    // Sync remaining count from worker response
+    if (data?._usage) updateAIUsageBadge();
     document.getElementById(typingId)?.remove();
     msgs.innerHTML += `<div class="msg ai">${reply.replace(/\n/g,'<br>')}<div class="msg-time">Stacks · Claude AI</div></div>`;
     aiChatHistory.push({ role: 'assistant', content: reply });
@@ -1972,6 +2001,8 @@ async function toggleVoice(btn) {
 
 // ── INCOME VERIFICATION PDF ──
 function generateVerificationPDF() {
+  if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
+  incrementUsage('pdfs');
   const doc = new jsPDF();
   doc.setFillColor(8, 8, 16);
   doc.rect(0, 0, 210, 297, 'F');
@@ -2139,10 +2170,12 @@ async function runOCR(imageData) {
 }
 
 function saveExpense() {
+  if (!checkLimit('scans')) { showUpgradePrompt('scans'); return; }
   const vendor = document.getElementById('vendor').value.trim();
   const amount = document.getElementById('amount').value.trim();
   const cat = document.getElementById('expense-cat').value.trim() || 'Misc';
   if (!vendor || !amount) { alert('Please fill vendor and amount.'); return; }
+  incrementUsage('scans');
   const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
   expenses.unshift({ vendor, amount: parseFloat(amount), cat, date: new Date().toLocaleDateString('en-IN') });
   localStorage.setItem('expenses', JSON.stringify(expenses.slice(0, 50)));
@@ -2261,6 +2294,8 @@ function rmPreviewReport() {
 }
 
 function rmDownloadPDF() {
+  if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
+  incrementUsage('pdfs');
   const name = document.getElementById('rm-rname').value.trim() || 'Applicant';
   const pan = document.getElementById('rm-rpan').value.trim() || 'XXXXX0000X';
   const purpose = document.getElementById('rm-rpurpose').value;
@@ -2359,6 +2394,36 @@ function unlockApp() {
   }
   loadProfileIntoApp();
   renderIncomeEntries();
+  updateAIUsageBadge();
+  // Show cancel trial row if in trial
+  const trialRow = document.getElementById('cancel-trial-row');
+  if (trialRow) {
+    const inTrial = isInTrial();
+    trialRow.style.display = inTrial ? 'flex' : 'none';
+    const dLeft = trialDaysLeft();
+    const descEl = document.getElementById('cancel-trial-desc');
+    if (descEl && inTrial) descEl.textContent = dLeft + ' day' + (dLeft===1?'':'s') + ' left · Cancel to avoid ₹49/mo charge';
+  }
+  // Update subscription display
+  const tier = getTier();
+  const tierNames = { free: 'Free Plan', pro: 'Pro · ₹49/mo', proplus: 'Pro+ · ₹149/mo' };
+  const trialDays = trialDaysLeft();
+  const tierDescs = {
+    free: '3 AI/day · 3 scans/day · 1 PDF/mo',
+    pro: trialDays > 0 ? `Free trial · ${trialDays} day${trialDays===1?'':'s'} left · then ₹49/mo` : '10 AI/day · 10 scans/day · 5 PDFs/mo',
+    proplus: '50 AI/day · Unlimited scans & PDFs'
+  };
+  const tierChips = { free: 'Upgrade', pro: 'Active', proplus: 'Active ⚡' };
+  const tnEl = document.getElementById('sub-tier-name');
+  const tdEl = document.getElementById('sub-tier-desc');
+  const tcEl = document.getElementById('sub-tier-chip');
+  if (tnEl) tnEl.textContent = tierNames[tier];
+  if (tdEl) tdEl.textContent = tierDescs[tier];
+  if (tcEl) tcEl.textContent = tierChips[tier];
+  if (tier !== 'free' && document.getElementById('subscription-row')) {
+    document.getElementById('subscription-row').style.borderColor = 'rgba(203,255,71,0.2)';
+    document.getElementById('subscription-row').style.background = 'rgba(203,255,71,0.04)';
+  }
   // Apply saved language
   const savedLang = localStorage.getItem('ss_lang') || 'EN';
   if (savedLang !== 'EN') applyTranslations(savedLang);
@@ -2711,6 +2776,22 @@ function exportData() {
   URL.revokeObjectURL(url);
 }
 
+// ── CANCEL TRIAL ──
+function cancelTrial() {
+  const daysLeft = trialDaysLeft();
+  const confirmed = confirm(`Cancel your Pro trial? You have ${daysLeft} day${daysLeft===1?'':'s'} left.
+
+You will NOT be charged. Your account reverts to Free.`);
+  if (!confirmed) return;
+  localStorage.removeItem('ss_trial');
+  localStorage.setItem('ss_tier', 'free');
+  localStorage.removeItem('ss_tier_token');
+  loadProfileIntoApp();
+  updateAIUsageBadge();
+  document.getElementById('cancel-trial-row').style.display = 'none';
+  alert('Trial cancelled. No charge made. You are back on the Free plan.');
+}
+
 // ── DELETE ACCOUNT ──
 function confirmDeleteAccount() {
   const confirmed = confirm('Delete all your data? This is permanent and cannot be undone.');
@@ -2734,6 +2815,12 @@ function hideLogModal() {
   ['log-amount','log-desc','log-client'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
 }
 function submitLog() {
+  if (!checkLimit('entries')) {
+    hideLogModal();
+    showUpgradePrompt('entries');
+    return;
+  }
+  incrementUsage('entries');
   const amount = parseFloat(document.getElementById('log-amount').value);
   const category = document.getElementById('log-category').value.replace(/^[^ ]+ /,'');
   const desc = document.getElementById('log-desc').value.trim();
@@ -2766,6 +2853,8 @@ function renderIncomeEntries() {
 
 // ══ EXPORT ITR ══
 function exportITR() {
+  if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
+  incrementUsage('pdfs');
   const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
   const profile = (() => { try { return JSON.parse(localStorage.getItem('ss_profile')||'{}'); } catch { return {}; } })();
   const total = entries.reduce((s,e) => s+(parseFloat(e.amount)||0), 0);
@@ -3196,6 +3285,262 @@ function applyTranslations(lang) {
   if (pageLabel && pageLabel.textContent.includes('Setting')) {
     pageLabel.textContent = t.settings;
   }
+}
+
+
+// ══════════════════════════════════════════
+// USAGE LIMITS — Free vs Pro+
+// ══════════════════════════════════════════
+
+const LIMITS = {
+  free:    { ai: 3,   scans: 3,    pdfs: 1,    entries: 9999 },
+  pro:     { ai: 10,  scans: 10,   pdfs: 5,    entries: 9999 },
+  proplus: { ai: 50,  scans: 9999, pdfs: 9999, entries: 50   }
+};
+
+// Trial state helpers
+function getTrialState() {
+  try { return JSON.parse(localStorage.getItem('ss_trial') || 'null'); } catch { return null; }
+}
+function isInTrial() {
+  const t = getTrialState();
+  if (!t || !t.started) return false;
+  const daysLeft = 7 - Math.floor((Date.now() - t.started) / 86400000);
+  return daysLeft > 0;
+}
+function trialDaysLeft() {
+  const t = getTrialState();
+  if (!t) return 0;
+  return Math.max(0, 7 - Math.floor((Date.now() - t.started) / 86400000));
+}
+
+function getTier() {
+  // If in active trial, treat as Pro
+  if (isInTrial()) return 'pro';
+  const t = localStorage.getItem('ss_tier') || 'free';
+  return ['free','pro','proplus'].includes(t) ? t : 'free';
+}
+function isPro() { return getTier() !== 'free'; }
+function isProPlus() { return getTier() === 'proplus'; }
+
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+}
+
+function getMonthKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+function getUsage(type) {
+  const key = type === 'pdfs' ? 'ss_usage_pdf_' + getMonthKey() : 'ss_usage_' + type + '_' + getTodayKey();
+  return parseInt(localStorage.getItem(key) || '0');
+}
+
+function incrementUsage(type) {
+  const key = type === 'pdfs' ? 'ss_usage_pdf_' + getMonthKey() : 'ss_usage_' + type + '_' + getTodayKey();
+  const current = parseInt(localStorage.getItem(key) || '0');
+  localStorage.setItem(key, String(current + 1));
+}
+
+function checkLimit(type) {
+  const tier = getTier();
+  const limit = LIMITS[tier][type];
+  if (limit === 9999) return true;
+  const used = getUsage(type);
+  return used < limit;
+}
+
+function getRemainingText(type) {
+  const tier = getTier();
+  const limit = LIMITS[tier][type];
+  if (limit === 9999) return null;
+  const used = getUsage(type);
+  const remaining = Math.max(0, limit - used);
+  const labels = { ai: 'AI questions', scans: 'receipt scans', pdfs: 'PDF exports', entries: 'income entries' };
+  const periods = { ai: 'today', scans: 'today', pdfs: 'this month', entries: 'today' };
+  return remaining > 0 ? remaining + ' ' + labels[type] + ' remaining ' + periods[type] : null;
+}
+
+function showUpgradePrompt(type) {
+  const tier = getTier();
+  const nextTier = tier === 'free' ? 'Pro' : 'Pro+';
+  const nextPrice = tier === 'free' ? '₹49' : '₹149';
+  const messages = {
+    ai: {
+      title: "AI limit reached",
+      body: tier === 'free'
+        ? "You've used your 5 free AI questions today. Upgrade to Pro for 10/day, or Pro+ for 50/day with smarter Claude Sonnet AI."
+        : "You've used your 10 Pro AI questions today. Upgrade to Pro+ for 50 questions/day with Claude Sonnet."
+    },
+    scans: {
+      title: "Scan limit reached",
+      body: tier === 'free'
+        ? "You've used your 5 free receipt scans today. Pro gets you 10/day, Pro+ gets unlimited."
+        : "You've used your 10 Pro receipt scans today. Upgrade to Pro+ for unlimited scanning."
+    },
+    pdfs: {
+      title: "PDF limit reached",
+      body: tier === 'free'
+        ? "You've used your 2 free PDF exports this month. Pro gets 5/month, Pro+ gets unlimited."
+        : "You've used your 5 Pro PDF exports this month. Upgrade to Pro+ for unlimited exports."
+    },
+    entries: {
+      title: "Entry limit reached",
+      body: "You've logged 50 income entries today. This daily cap helps us keep Pro+ fast for everyone. Try again tomorrow!"
+    },
+  };
+  const m = messages[type];
+
+  // Remove existing modal if any
+  document.getElementById('upgrade-modal')?.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'upgrade-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;';
+  modal.innerHTML = `
+    <div style="background:var(--surf);border-radius:24px 24px 0 0;padding:28px;width:100%;max-width:480px;border-top:2px solid var(--lime);animation:slideUp 0.3s ease;">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:40px;margin-bottom:12px;">⚡</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">${m.title}</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;">${m.body}</div>
+      </div>
+      <!-- Pro card -->
+      <div style="background:var(--lime-d);border:1.5px solid rgba(203,255,71,0.35);border-radius:16px;padding:18px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--lime);">Pro</div>
+            <div style="font-size:11px;color:var(--text3);">Everything you need to hustle smarter</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--lime);">₹49<span style="font-size:12px;color:var(--text3)">/mo</span></div>
+            <div style="font-size:10px;color:var(--teal);font-weight:600;">7-day free trial</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
+          <div style="font-size:11px;color:var(--text2);">✓ 10 AI questions/day</div>
+          <div style="font-size:11px;color:var(--text2);">✓ 10 receipt scans/day</div>
+          <div style="font-size:11px;color:var(--text2);">✓ 5 PDF exports/month</div>
+          <div style="font-size:11px;color:var(--text2);">✓ Unlimited income entries</div>
+        </div>
+        <button onclick="startProTrial()" style="width:100%;padding:13px;background:var(--lime);border:none;border-radius:11px;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
+          Start 7-Day Free Trial →
+        </button>
+        <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text3);">
+          Card required · Cancel before day 7 to avoid ₹49/mo charge · UPI Autopay
+        </div>
+      </div>
+      <!-- Pro+ coming soon -->
+      <div style="background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px;opacity:0.7;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:13px;font-weight:700;">⚡ Pro+ <span style="font-size:10px;background:var(--surf3);color:var(--text3);padding:2px 8px;border-radius:100px;font-weight:400;">Coming Soon</span></div>
+            <div style="font-size:11px;color:var(--text3);margin-top:3px;">50 AI/day · Claude Sonnet · Unlimited everything</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--text3);">₹149/mo</div>
+        </div>
+        <button onclick="notifyProPlus()" style="width:100%;margin-top:10px;padding:9px;background:transparent;border:1px solid var(--border2);border-radius:10px;color:var(--text3);font-size:12px;cursor:pointer;">
+          🔔 Notify me when available
+        </button>
+      </div>
+      <button onclick="document.getElementById('upgrade-modal').remove()" style="width:100%;margin-top:4px;padding:11px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Maybe later</button>
+    </div>`;
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+}
+
+function handleUpgrade(plan) {
+  // Legacy — now handled by startProTrial / notifyProPlus
+  startProTrial();
+}
+
+function startProTrial() {
+  document.getElementById('upgrade-modal')?.remove();
+  // v1.0: simulate trial start (no payment yet)
+  // v1.1: open Razorpay checkout → on success → activate trial
+  // For now: show payment coming soon + start simulated trial for demo
+  const payModal = document.createElement('div');
+  payModal.id = 'pay-modal';
+  payModal.style.cssText = 'position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;';
+  payModal.innerHTML = `
+    <div style="background:var(--surf);border-radius:20px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border2);">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:36px;margin-bottom:10px;">💳</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;">Start Your Free Trial</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6;">Add your UPI ID or card to start the 7-day free trial.<br>You will NOT be charged today. Cancel anytime before day 7.</div>
+      </div>
+      <div style="background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span>Pro plan</span><span style="font-family:'Space Mono',monospace;">₹49/month</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;color:var(--teal);"><span>7-day free trial</span><span>-₹49</span></div>
+        <div style="border-top:1px solid var(--border);margin:8px 0;"></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;"><span>Due today</span><span style="color:var(--lime);">₹0</span></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:6px;">₹49 charged on day 8 if not cancelled</div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px;">UPI ID</label>
+        <input id="upi-input" placeholder="yourname@upi" style="width:100%;background:var(--surf2);border:1.5px solid var(--border2);border-radius:10px;padding:11px 13px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--lime)'" onblur="this.style.borderColor='var(--border2)'">
+      </div>
+      <button onclick="activateTrial()" style="width:100%;padding:14px;background:var(--lime);border:none;border-radius:12px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;">
+        Activate Free Trial →
+      </button>
+      <button onclick="document.getElementById('pay-modal').remove()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Cancel</button>
+      <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--text3);">🔒 Secured by Razorpay · DPDP compliant · No hidden charges</div>
+    </div>`;
+  payModal.addEventListener('click', e => { if(e.target===payModal) payModal.remove(); });
+  document.body.appendChild(payModal);
+}
+
+function activateTrial() {
+  const upi = document.getElementById('upi-input')?.value?.trim();
+  if (!upi || !upi.includes('@')) {
+    document.getElementById('upi-input').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('upi-input').style.borderColor='var(--border2)', 1500);
+    return;
+  }
+  // v1.0: store trial locally — v1.1: verify via Razorpay mandate
+  const trial = { started: Date.now(), upi, plan: 'pro' };
+  localStorage.setItem('ss_trial', JSON.stringify(trial));
+  localStorage.setItem('ss_tier', 'pro');
+  localStorage.setItem('ss_tier_token', 'pro_trial_' + Date.now());
+  localStorage.setItem('ss_upgrade_interest', JSON.stringify({ plan:'pro', upi, at: new Date().toISOString() }));
+  document.getElementById('pay-modal')?.remove();
+
+  // Update UI
+  loadProfileIntoApp();
+  updateAIUsageBadge();
+
+  // Show success
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:14px 24px;border-radius:14px;font-size:13px;font-weight:700;z-index:9999;text-align:center;max-width:320px;';
+  toast.innerHTML = '🎉 Pro trial activated! 7 days free.<br><span style="font-weight:400;font-size:11px;">Cancel anytime in Settings before day 7</span>';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 5000);
+}
+
+function notifyProPlus() {
+  document.getElementById('upgrade-modal')?.remove();
+  localStorage.setItem('ss_proplus_notify', new Date().toISOString());
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--surf2);border:1px solid var(--purple);color:var(--purple);padding:12px 20px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;white-space:nowrap;';
+  toast.textContent = '⚡ You will be first to know when Pro+ launches!';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+// Show usage badge in AI screen
+function updateAIUsageBadge() {
+  const badge = document.getElementById('ai-usage-badge');
+  if (!badge) return;
+  const tier = getTier();
+  const limit = LIMITS[tier].ai;
+  if (limit === 9999) { badge.textContent = ''; return; }
+  const used = getUsage('ai');
+  const remaining = Math.max(0, limit - used);
+  const tierLabel = { free: 'Free', pro: 'Pro', proplus: 'Pro+' }[tier];
+  badge.textContent = remaining > 0
+    ? tierLabel + ' · ' + remaining + ' AI questions left today'
+    : 'Daily AI limit reached · upgrade to get more';
+  badge.style.color = remaining > 2 ? 'var(--text3)' : remaining > 0 ? 'var(--orange)' : 'var(--pink)';
 }
 
 // ── SERVICE WORKER ──

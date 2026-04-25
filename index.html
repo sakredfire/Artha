@@ -353,7 +353,6 @@ body{
   align-items:center;justify-content:center;
   padding:28px 28px max(28px,env(safe-area-inset-bottom));
   overflow-y:auto;
-  height:100%;min-height:100dvh;
 }
 .auth-layer.hidden{display:none;}
 
@@ -363,7 +362,7 @@ body{
   opacity:1;
   gap:16px;
 }
-@keyframes splashFade{to{opacity:0;pointer-events:none;visibility:hidden;}}
+@keyframes splashFade{to{opacity:0;pointer-events:none;}}
 .splash-logo{
   width:88px;height:88px;border-radius:24px;background:var(--lime);
   display:flex;align-items:center;justify-content:center;
@@ -390,27 +389,16 @@ body{
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── ONBOARDING SLIDES ── */
-#onboard-screen { gap:0; padding:0; justify-content:flex-start; height:100%; min-height:100dvh; }
-.onboard-slides {
-  width:100%;flex:1;display:flex;align-items:center;justify-content:center;
-  overflow:hidden;min-height:0;
-}
+#onboard-screen { gap:0; padding:0; justify-content:flex-start; }
+.onboard-slides { width:100%; flex:1; overflow:hidden; position:relative; }
 .onboard-slide {
-  display:none;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:40px 28px;width:100%;
-  opacity:0;transform:translateX(40px);
-  transition:opacity 0.5s ease, transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 28px;
+  opacity:0;transform:translateX(40px);transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
   pointer-events:none;
 }
-.onboard-slide.active{
-  display:flex;opacity:1;transform:translateX(0);pointer-events:all;
-}
-.onboard-slide.exit{
-  display:flex;opacity:0;transform:translateX(-40px);
-  transition:opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.6,1);
-  pointer-events:none;
-}
+.onboard-slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.onboard-slide.exit{opacity:0;transform:translateX(-40px);}
 .onboard-art{font-size:72px;margin-bottom:24px;line-height:1;}
 .onboard-title{
   font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
@@ -515,40 +503,20 @@ body{
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 .slide-up{animation:slideUp 0.4s cubic-bezier(0.4,0,0.2,1) both;}
 
-/* ══════════════════════════════════════════
-   SETTINGS SCREEN CSS
-══════════════════════════════════════════ */
-.s-sect-title{
-  font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--text3);padding:0 4px;margin:20px 0 8px;
-}
-.setting-row{
-  display:flex;align-items:center;gap:12px;
-  background:var(--surf2);border:1px solid var(--border);
-  border-radius:13px;padding:13px 14px;margin-bottom:8px;
-  cursor:pointer;transition:border-color 0.15s;
-}
+/* ══ SETTINGS ══ */
+.s-sect-title{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);padding:0 4px;margin:20px 0 8px;}
+.setting-row{display:flex;align-items:center;gap:12px;background:var(--surf2);border:1px solid var(--border);border-radius:13px;padding:13px 14px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s;}
 .setting-row:hover{border-color:var(--border2);}
 .s-ico{font-size:18px;flex-shrink:0;width:28px;text-align:center;}
 .s-info{flex:1;min-width:0;}
 .s-name{font-size:13px;font-weight:600;margin-bottom:1px;}
 .s-desc{font-size:11px;color:var(--text3);margin-top:1px;}
-
-/* Toggle switch */
-.tog{
-  width:42px;height:24px;border-radius:12px;background:var(--surf3);
-  border:1px solid var(--border2);position:relative;cursor:pointer;
-  transition:background 0.2s,border-color 0.2s;flex-shrink:0;
-}
-.tog::after{
-  content:'';position:absolute;top:3px;left:3px;
-  width:16px;height:16px;border-radius:50%;background:var(--text3);
-  transition:transform 0.2s,background 0.2s;
-}
+.tog{width:42px;height:24px;border-radius:12px;background:var(--surf3);border:1px solid var(--border2);position:relative;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.tog::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--text3);transition:transform 0.2s,background 0.2s;}
 .tog.on{background:var(--lime);border-color:var(--lime);}
 .tog.on::after{transform:translateX(18px);background:#000;}
 
-/* Goal cards CSS (also missing) */
+/* ══ GOALS ══ */
 .goal-card{background:var(--surf2);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px;}
 .goal-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .goal-emoji{font-size:20px;width:36px;height:36px;background:var(--surf3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -560,37 +528,13 @@ body{
 .sd.done{background:var(--lime-d);color:var(--lime);}
 .sd.today{background:var(--lime);color:#000;}
 
-/* Invoice rows */
-.inv-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
-.inv-row:last-child{border-bottom:none;}
-.inv-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;}
-.inv-status.paid{background:rgba(0,212,170,0.15);color:var(--teal);}
-.inv-status.pending{background:rgba(255,107,53,0.12);color:var(--orange);}
-
-/* Community rows */
-.com-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
-.com-row:last-child{border-bottom:none;}
-.com-rank{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;width:24px;color:var(--text3);}
-.com-avatar{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:var(--surf3);}
-.com-name{flex:1;font-size:12.5px;font-weight:600;}
-.com-amt{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--lime);}
-
-/* Gold color var fix */
-.gc-story{font-size:11px;color:var(--text2);font-style:italic;margin-top:6px;line-height:1.5;}
-
-/* ══════════════════════════════════════════
-   MISSING SCREEN CSS — Emergency Fund, Foundation,
-   Income Verify, Leaderboard, Schemes, Tips, More
-══════════════════════════════════════════ */
-
-/* Emergency Fund rules */
+/* ══ EMERGENCY FUND ══ */
 .efr-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .efr-name{font-size:13px;font-weight:600;}
 .efr-pct{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--lime);}
 .efr-desc{font-size:11px;color:var(--text3);line-height:1.5;}
 
-/* Income Verify Report */
-.ivr-table{width:100%;border-collapse:collapse;margin:12px 0;}
+/* ══ INCOME VERIFY ══ */
 .ivr-section{padding:8px 0;border-bottom:1px solid var(--border);}
 .ivr-section:last-child{border-bottom:none;}
 .ivr-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;}
@@ -598,48 +542,49 @@ body{
 .ivr-logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--lime);margin-bottom:4px;}
 .ivr-sig{font-size:10px;color:var(--text3);font-family:'Space Mono',monospace;margin-top:12px;line-height:1.6;}
 
-/* Foundation / Grants */
+/* ══ FOUNDATION ══ */
 .found-hero{text-align:center;padding:24px 0;margin-bottom:16px;}
 .grant-card{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
 .gc-impact{font-size:11px;color:var(--text3);margin-top:4px;}
 
-/* Leaderboard */
+/* ══ LEADERBOARD ══ */
 .lb-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surf2);border:1px solid var(--border);border-radius:13px;margin-bottom:8px;}
 .lb-rank{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;width:28px;color:var(--text3);flex-shrink:0;}
 .lb-handle{font-size:13px;font-weight:600;}
 .lb-city{font-size:10px;color:var(--text3);margin-top:1px;}
 .lb-amt{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--lime);white-space:nowrap;}
 
-/* Scheme cards */
+/* ══ SCHEMES ══ */
 .scheme-card{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
 .sc-title{font-size:13px;font-weight:700;margin-bottom:3px;}
 .sc-ministry{font-size:10px;color:var(--text3);margin-bottom:8px;}
 .sc-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px;}
 .sc-benefit{display:inline-flex;align-items:center;gap:4px;background:var(--lime-d);color:var(--lime);border:1px solid rgba(203,255,71,0.2);border-radius:100px;padding:3px 10px;font-size:10px;font-weight:700;}
 
-/* Tips */
-.tp-action{display:flex;gap:8px;margin-top:10px;}
+/* ══ INVOICE ══ */
+.inv-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.inv-row:last-child{border-bottom:none;}
+.inv-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;}
+.inv-status.paid{background:rgba(0,212,170,0.15);color:var(--teal);}
+.inv-status.pending{background:rgba(255,107,53,0.12);color:var(--orange);}
 
-/* Bar chart labels */
-.slbf{height:100%;border-radius:3px;}
-.slbw{display:flex;align-items:flex-end;gap:4px;height:60px;}
-.sleg{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
-
-/* More grid (was missing) */
-.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
-
-/* ── AI TYPING INDICATOR ── */
+/* ══ AI TYPING ══ */
 .ai-typing{display:inline-flex;gap:4px;align-items:center;padding:2px 0;}
-.ai-typing span{
-  width:7px;height:7px;border-radius:50%;background:var(--lime);
-  animation:typingBounce 1.2s infinite;
-}
+.ai-typing span{width:7px;height:7px;border-radius:50%;background:var(--lime);animation:typingBounce 1.2s infinite;}
 .ai-typing span:nth-child(2){animation-delay:0.2s;}
 .ai-typing span:nth-child(3){animation-delay:0.4s;}
-@keyframes typingBounce{
-  0%,60%,100%{transform:translateY(0);opacity:0.4;}
-  30%{transform:translateY(-6px);opacity:1;}
-}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:0.4;}30%{transform:translateY(-6px);opacity:1;}}
+
+/* ══ LOG MODAL ══ */
+#log-modal{display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center;}
+
+/* ══ MORE GRID ══ */
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.more-item{background:var(--surf2);border:1px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.15s;}
+.more-item:hover,.more-item:active{border-color:var(--lime);background:var(--lime-d);}
+.more-item.highlight{border-color:rgba(0,212,170,0.2);background:rgba(0,212,170,0.05);}
+.more-item-ico{font-size:22px;margin-bottom:5px;}
+.more-item-label{font-size:10px;font-weight:600;color:var(--text2);}
 </style>
 </head>
 <body>
@@ -725,7 +670,7 @@ body{
 
     <div class="consent-block">
       <strong>🔒 Your data stays on your phone.</strong> SideStack stores all information locally using device storage. No account needed. No data is uploaded unless you opt into cloud backup.<br><br>
-      By continuing you agree to our <a href="https://app.sakredfire.ca/privacy.html" target="_blank">Privacy Policy</a> and <a href="https://app.sakredfire.ca/privacy.html" target="_blank">Terms of Use</a>.
+      By continuing you agree to our <a href="https://sidestack.in/privacy" target="_blank">Privacy Policy</a> and <a href="https://sidestack.in/terms" target="_blank">Terms of Use</a>.
     </div>
 
     <button class="btn-lime" onclick="saveProfile()">Continue → Set PIN</button>
@@ -799,7 +744,7 @@ body{
   <button class="btn-text" onclick="forgotPIN()">Forgot PIN?</button>
 </div>
 
-
+<div class="app">
 
   <!-- ── HEADER ── -->
   <header class="header">
@@ -946,7 +891,7 @@ body{
         <div class="chip purple" style="cursor:pointer;" onclick="showScreen('voice')">🎙️ Voice</div>
       </div>
 
-      <div class="entry-list" id="income-entries-list">
+      <div class="entry-list">
         <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">💻</div><div class="entry-info"><div class="entry-name">Upwork — Logo Design</div><div class="entry-meta">Freelance · Apr 19 · A+ client</div></div><div class="entry-amt pos">+₹8,000</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(123,92,255,0.1)">📚</div><div class="entry-info"><div class="entry-name">Physics Tutoring</div><div class="entry-meta">Teaching · Apr 18</div></div><div class="entry-amt pos">+₹1,200</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(59,158,255,0.1)">🎥</div><div class="entry-info"><div class="entry-name">YouTube AdSense</div><div class="entry-meta">Content · Apr 15 · 42K views</div></div><div class="entry-amt pos">+₹2,400</div></div>
@@ -992,7 +937,9 @@ body{
           </div>
         </div>
         <div class="ai-msgs" id="ai-msgs">
-          <div class="msg ai">Namaste! I'm Stacks — your AI financial co-pilot, powered by Claude. I can see your actual income data and answer real questions about your earnings, taxes, clients, and goals. Ask me anything! 🤖<div class="msg-time">Stacks · Claude AI</div></div>
+          <div class="msg ai">Namaste! I'm Stacks. I analyse your income and mood privately — on your device only. Ask me anything! <div class="msg-time">Stacks</div></div>
+          <div class="msg u">Which hustle earns me most per hour?<div class="msg-time">You</div></div>
+          <div class="msg ai">📊 <strong>Hourly breakdown:</strong><br>• Group Tutoring: <strong>₹1,200/hr</strong> ← best!<br>• Freelance Design: ₹820/hr<br>• Solo Tutoring: ₹600/hr<br>• Delivery: ₹180/hr<br><br>💡 Add 2 group tutoring slots = +₹3,600/month for same hours.<div class="msg-time">Stacks</div></div>
         </div>
         <div class="ai-input-row">
           <input class="ai-input" id="ai-inp" placeholder="Ask about income, taxes, goals..." onkeydown="if(event.key==='Enter')sendAI()">
@@ -1113,7 +1060,8 @@ body{
 
     <!-- ════ SCREEN: GOALS ════ -->
     <div class="screen" id="s-goals">
-      <div id="goals-list-wrapper"><div class="sec-head"><div><div class="sec-title">Goals & Streaks</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="showNewGoalModal()">+ New</button></div>
+      <div class="sec-head"><div><div class="sec-title">Goals & Streaks</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="showNewGoalModal()">+ New</button></div>
+      <div id="goals-list"></div>
 
       <div class="goal-card" style="border-color:rgba(201,255,71,0.2);">
         <div class="goal-head"><div class="goal-emoji">🎯</div><div><div class="goal-name">April Target</div><div class="goal-deadline">8 days left</div></div><div class="chip lime" style="margin-left:auto;">86%</div></div>
@@ -1371,7 +1319,7 @@ body{
     </div>
 
     <!-- ════ SCREEN: INVOICES ════ -->
-    <div class="screen" id="s-invoices" data-screen="invoices">
+    <div class="screen" id="s-invoices">
       <div class="sec-head"><div><div class="sec-title">Invoices</div><div class="sec-sub">60-second professional invoices</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="showNewInvoiceModal()">+ New</button></div>
 
       <div class="mc-row">
@@ -1379,7 +1327,7 @@ body{
         <div class="mc orange"><div class="mc-label">Outstanding</div><div class="mc-val orange" style="font-size:18px;">₹4,800</div></div>
       </div>
 
-      <div class="entry-list" id="invoices-list">
+      <div class="entry-list">
         <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-043 · GlobalTech</div><div class="entry-meta">₹16,500 · Apr 19</div></div><div class="chip teal">Paid</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-042 · Priya Sharma</div><div class="entry-meta">₹4,800 · Apr 10</div></div><div class="chip orange">Overdue</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(255,77,139,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-041 · Client X</div><div class="entry-meta">₹2,800 · 3 weeks unpaid</div></div><div class="chip" style="background:rgba(255,77,139,0.1);color:var(--pink);border-color:rgba(255,77,139,0.2);">Chase</div></div>
@@ -1413,7 +1361,7 @@ body{
 
     <!-- ════ SCREEN: TIPS ════ -->
     <div class="screen" id="s-tips">
-      <div class="sec-head"><div><div class="sec-title">Hustle Tips</div><div class="sec-sub">Real stories · Anonymous</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="shareTip(this)">+ Share</button></div>
+      <div class="sec-head"><div><div class="sec-title">Hustle Tips</div><div class="sec-sub">Real stories · Anonymous</div></div><button class="btn" onclick="shareTip(this)">+ Share</button></div>
 
       <div class="tip-post">
         <div class="tp-head"><div class="tp-av">H</div><div><div class="tp-handle">Hustler_PUN_034</div><div class="tp-time">Pune · 2 hrs ago</div></div></div>
@@ -1581,11 +1529,11 @@ body{
       </div>
 
       <div style="text-align:center;padding:20px 0;font-size:11px;color:var(--text3);">
-        SideStack v5.0 · <a href="https://app.sakredfire.ca/privacy.html" style="color:var(--text3);">Privacy Policy</a> · <a href="https://app.sakredfire.ca/privacy.html" style="color:var(--text3);">Terms</a>
+        SideStack v5.0 · <a href="https://sidestack.in/privacy" style="color:var(--text3);">Privacy Policy</a> · <a href="https://sidestack.in/terms" style="color:var(--text3);">Terms</a>
       </div>
     </div>
 
-  </div><!-- end scroll-area -->
+
 
 
     <!-- ════ SCREEN: RECEIPT SCANNER ════ -->
@@ -1844,72 +1792,28 @@ function showScreen(id) {
 }
 
 // ── AI CHAT (Stacks) ──
-// ══════════════════════════════════════════
-// STACKS AI — Real Claude API Integration
-// Reads user's actual localStorage data for context
-// ══════════════════════════════════════════
-
-let aiChatHistory = []; // maintain conversation history
+// ══ STACKS AI — Real Claude via Cloudflare Worker ══
+let aiChatHistory = [];
 let aiTyping = false;
 
 function buildStacksContext() {
-  // Gather all user data from localStorage for AI context
   const profile = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || 'null'); } catch { return null; } })();
   const entries = (() => { try { return JSON.parse(localStorage.getItem('incomeEntries') || '[]'); } catch { return []; } })();
   const expenses = (() => { try { return JSON.parse(localStorage.getItem('expenses') || '[]'); } catch { return []; } })();
   const moods = (() => { try { return JSON.parse(localStorage.getItem('moods') || '[]'); } catch { return []; } })();
-  const rmEntries = (() => { try { return JSON.parse(localStorage.getItem('rmEntries') || '[]'); } catch { return []; } })();
-
-  // Calculate summary stats
-  const totalIncome = entries.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-  const totalExpenses = expenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-  const netIncome = totalIncome - totalExpenses;
-
-  // Group income by client
+  const totalIncome = entries.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const totalExpenses = expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
   const byClient = {};
-  entries.forEach(e => {
-    if (e.client) {
-      byClient[e.client] = (byClient[e.client] || 0) + (parseFloat(e.amount) || 0);
-    }
-  });
-
-  // Group income by source type
-  const bySource = {};
-  rmEntries.forEach(e => {
-    const src = (e.sourceType || 'Other').replace(/^[^ ]+ /, '');
-    bySource[src] = (bySource[src] || 0) + (parseFloat(e.amount) || 0);
-  });
-
-  // Recent mood summary
+  entries.forEach(e => { if (e.client) byClient[e.client] = (byClient[e.client]||0) + (parseFloat(e.amount)||0); });
   const recentMoods = moods.slice(-7).map(m => m.mood).join(' ');
+  return `You are Stacks, an AI financial co-pilot in SideStack — India's Side Hustle OS. Be friendly, direct, and knowledgeable about Indian gig finance (GST, ITR, advance tax, UPI, PAN, Aadhaar, PM-SVANidhi, e-Shram).
 
-  const systemPrompt = `You are Stacks, an AI financial co-pilot built into SideStack — India's Side Hustle OS. You are friendly, direct, and deeply knowledgeable about Indian gig economy finance including GST, ITR, advance tax, UPI income, PAN, Aadhaar, and government schemes like PM-SVANidhi and e-Shram.
+USER: ${profile?.name||'Hustler'} · ${profile?.city||'India'} · ${profile?.hustle||'Freelance'}
+INCOME: ₹${totalIncome.toLocaleString('en-IN')} total · ₹${totalExpenses.toLocaleString('en-IN')} expenses · Net: ₹${(totalIncome-totalExpenses).toLocaleString('en-IN')}
+ENTRIES: ${entries.length} logged${Object.keys(byClient).length ? ' · Top: '+Object.entries(byClient).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>k+' ₹'+v.toLocaleString('en-IN')).join(', ') : ''}
+MOOD (last 7): ${recentMoods||'none logged'}
 
-USER PROFILE:
-- Name: ${profile?.name || 'Hustler'}
-- City: ${profile?.city || 'India'}
-- Primary Hustle: ${profile?.hustle || 'Freelance'}
-
-FINANCIAL DATA (from their SideStack logs):
-- Total logged income: ₹${totalIncome.toLocaleString('en-IN')}
-- Total logged expenses: ₹${totalExpenses.toLocaleString('en-IN')}
-- Net income: ₹${netIncome.toLocaleString('en-IN')}
-- Income entries count: ${entries.length}
-- Expense entries count: ${expenses.length}
-${Object.keys(byClient).length > 0 ? `- Top clients: ${Object.entries(byClient).sort((a,b) => b[1]-a[1]).slice(0,5).map(([k,v]) => `${k} (₹${v.toLocaleString('en-IN')})`).join(', ')}` : ''}
-${Object.keys(bySource).length > 0 ? `- Income sources: ${Object.entries(bySource).map(([k,v]) => `${k} ₹${v.toLocaleString('en-IN')}`).join(', ')}` : ''}
-${recentMoods ? `- Recent mood (last 7 days): ${recentMoods}` : ''}
-
-RULES:
-- Keep responses SHORT — max 4 sentences or bullet points. This is a mobile app.
-- Always use ₹ and Indian number formatting (lakhs, not millions).
-- Be specific with numbers when you have them. Don't be vague.
-- If asked about data you don't have, say so honestly and suggest how to log it.
-- Never give investment advice. Tax estimates are approximations only.
-- Respond in the same language the user writes in (English or Hinglish).
-- Use emojis sparingly — 1-2 max per response.`;
-
-  return systemPrompt;
+Keep responses SHORT (max 4 sentences). Use ₹ and Indian number format. Be specific with their real numbers. Use 1-2 emojis max.`;
 }
 
 async function sendAI() {
@@ -1917,61 +1821,33 @@ async function sendAI() {
   const inp = document.getElementById('ai-inp');
   const question = inp.value.trim();
   if (!question) return;
-
   const msgs = document.getElementById('ai-msgs');
-  inp.value = '';
-  inp.disabled = true;
-
-  // Add user message to UI
+  inp.value = ''; inp.disabled = true;
   msgs.innerHTML += `<div class="msg u">${question}<div class="msg-time">You</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
-
-  // Add to history
   aiChatHistory.push({ role: 'user', content: question });
-
-  // Show typing indicator
   aiTyping = true;
   const typingId = 'typing-' + Date.now();
   msgs.innerHTML += `<div class="msg ai" id="${typingId}"><span class="ai-typing"><span></span><span></span><span></span></span><div class="msg-time">Stacks · thinking…</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
-
   try {
-    // ── Call Stacks AI via Cloudflare Worker proxy ──
-    // Worker keeps the API key server-side — users never see it
     const WORKER_URL = 'https://stacks-ai.mihir86-mp.workers.dev/ai';
-
     const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system: buildStacksContext(),
-        messages: aiChatHistory.slice(-10),
-      })
+      body: JSON.stringify({ system: buildStacksContext(), messages: aiChatHistory.slice(-10) })
     });
-
     const data = await response.json();
-    const reply = data?.content?.[0]?.text || 'Sorry, I had trouble connecting. Try again in a moment.';
-
-    // Remove typing indicator, add real response
-    const typingEl = document.getElementById(typingId);
-    if (typingEl) typingEl.remove();
-
-    msgs.innerHTML += `<div class="msg ai">${reply.replace(/\n/g, '<br>')}<div class="msg-time">Stacks · Claude AI</div></div>`;
-
-    // Add to history for follow-up context
+    const reply = data?.content?.[0]?.text || 'Sorry, I had trouble connecting. Try again!';
+    document.getElementById(typingId)?.remove();
+    msgs.innerHTML += `<div class="msg ai">${reply.replace(/\n/g,'<br>')}<div class="msg-time">Stacks · Claude AI</div></div>`;
     aiChatHistory.push({ role: 'assistant', content: reply });
-    // Keep history manageable
     if (aiChatHistory.length > 20) aiChatHistory = aiChatHistory.slice(-20);
-
-  } catch (err) {
-    const typingEl = document.getElementById(typingId);
-    if (typingEl) typingEl.remove();
-    msgs.innerHTML += `<div class="msg ai">I'm having trouble connecting right now. Check your internet and try again. 📡<div class="msg-time">Stacks</div></div>`;
+  } catch(err) {
+    document.getElementById(typingId)?.remove();
+    msgs.innerHTML += `<div class="msg ai">Trouble connecting. Check internet and try again 📡<div class="msg-time">Stacks</div></div>`;
   }
-
-  aiTyping = false;
-  inp.disabled = false;
-  inp.focus();
+  aiTyping = false; inp.disabled = false; inp.focus();
   msgs.scrollTop = msgs.scrollHeight;
 }
 
@@ -2444,7 +2320,8 @@ function initApp() {
   const pin = localStorage.getItem('ss_pin');
   const hasOnboarded = localStorage.getItem('ss_onboarded');
 
-  function afterSplash() {
+  // After splash animation ends (2.4s), route user
+  setTimeout(() => {
     hide('splash-screen');
     if (!hasOnboarded) {
       show('onboard-screen');
@@ -2453,17 +2330,7 @@ function initApp() {
     } else {
       unlockApp();
     }
-  }
-
-  // Use animationend for precision, fallback setTimeout
-  const splash = document.getElementById('splash-screen');
-  let splashDone = false;
-  splash.addEventListener('animationend', () => {
-    if (!splashDone) { splashDone = true; afterSplash(); }
-  });
-  setTimeout(() => {
-    if (!splashDone) { splashDone = true; afterSplash(); }
-  }, 2600); // slightly longer than CSS 2.4s as safety net
+  }, 2400);
 }
 
 // ── HELPERS ──
@@ -2475,11 +2342,23 @@ function getProfile() {
 }
 
 function unlockApp() {
-  // Hide all auth layers
   ['splash-screen','onboard-screen','profile-screen','pin-setup-screen','pin-lock-screen']
     .forEach(id => hide(id));
-  // Load profile into app
+  if (!localStorage.getItem('incomeEntries')) {
+    localStorage.setItem('incomeEntries', JSON.stringify([
+      {id:1,client:'GlobalTech Solutions',amount:15000,category:'Freelance',desc:'Upwork — Logo Design',date:'2026-04-19'},
+      {id:2,client:'Priya Sharma',amount:1200,category:'Teaching',desc:'Physics Tutoring',date:'2026-04-18'},
+      {id:3,client:'Swiggy',amount:850,category:'Delivery',desc:'Swiggy Weekend',date:'2026-04-14'},
+    ]));
+  }
+  if (!localStorage.getItem('moods')) {
+    localStorage.setItem('moods', JSON.stringify([
+      {date:'2026-04-20',mood:'😊'},{date:'2026-04-21',mood:'😊'},
+      {date:'2026-04-22',mood:'😐'},{date:'2026-04-23',mood:'😊'}
+    ]));
+  }
   loadProfileIntoApp();
+  renderIncomeEntries();
 }
 
 function loadProfileIntoApp() {
@@ -2524,32 +2403,17 @@ const obLabels = ['Get Started','Next →','Create Profile →'];
 
 function obNext() {
   if (obSlide < 2) {
-    const btn = document.getElementById('ob-next-btn');
-    btn.disabled = true;
-    const current = document.getElementById(obSlides[obSlide]);
-    current.classList.add('exit');
+    document.getElementById(obSlides[obSlide]).classList.add('exit');
+    setTimeout(() => document.getElementById(obSlides[obSlide]).classList.remove('active','exit'), 350);
     obSlide++;
     const next = document.getElementById(obSlides[obSlide]);
-    // Step 1: after exit animation (400ms), hide current
-    setTimeout(() => {
-      current.classList.remove('active', 'exit');
-      // Step 2: prepare next slide — set initial state before display:flex kicks in
-      next.style.opacity = '0';
-      next.style.transform = 'translateX(40px)';
-      next.style.transition = 'none';
-      next.classList.add('active');
-      // Step 3: force reflow then animate in
-      next.getBoundingClientRect();
-      next.style.transition = '';
-      next.style.opacity = '';
-      next.style.transform = '';
-      // Update UI
-      document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === obSlide));
-      btn.textContent = obLabels[obSlide];
-      document.getElementById('ob-skip-btn').style.display = 'none';
-      setTimeout(() => { btn.disabled = false; }, 520);
-    }, 420);
+    setTimeout(() => next.classList.add('active'), 50);
+    // Update dots
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === obSlide));
+    document.getElementById('ob-next-btn').textContent = obLabels[obSlide];
+    if (obSlide > 0) document.getElementById('ob-skip-btn').style.display = 'none';
   } else {
+    // Last slide → go to profile
     localStorage.setItem('ss_onboarded','1');
     hide('onboard-screen');
     show('profile-screen');
@@ -2850,331 +2714,191 @@ function confirmDeleteAccount() {
 }
 
 
-// ── LOG INCOME MODAL ──
+// ══ LOG MODAL ══
 function showLogModal() {
   const modal = document.getElementById('log-modal');
   modal.style.display = 'flex';
-  // Set today's date as default
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('log-date').value = today;
+  document.getElementById('log-date').value = new Date().toISOString().split('T')[0];
   setTimeout(() => document.getElementById('log-amount').focus(), 100);
 }
-
 function hideLogModal() {
   document.getElementById('log-modal').style.display = 'none';
-  document.getElementById('log-amount').value = '';
-  document.getElementById('log-desc').value = '';
-  document.getElementById('log-client').value = '';
+  ['log-amount','log-desc','log-client'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
 }
-
 function submitLog() {
   const amount = parseFloat(document.getElementById('log-amount').value);
   const category = document.getElementById('log-category').value.replace(/^[^ ]+ /,'');
   const desc = document.getElementById('log-desc').value.trim();
   const client = document.getElementById('log-client').value.trim();
   const date = document.getElementById('log-date').value;
-
   if (!amount || isNaN(amount) || amount <= 0) {
-    document.getElementById('log-amount').style.borderColor = 'var(--pink)';
-    setTimeout(() => document.getElementById('log-amount').style.borderColor = '', 1500);
+    const el = document.getElementById('log-amount');
+    el.style.borderColor = 'var(--pink)';
+    setTimeout(() => el.style.borderColor='', 1500);
     return;
   }
-
   const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
-  const newEntry = {
-    id: Date.now(),
-    amount,
-    category,
-    desc: desc || category,
-    client: client || null,
-    date: date || new Date().toISOString().split('T')[0],
-    source: category,
-  };
-  entries.unshift(newEntry);
+  entries.unshift({ id:Date.now(), amount, category, desc:desc||category, client:client||null, date:date||new Date().toISOString().split('T')[0] });
   localStorage.setItem('incomeEntries', JSON.stringify(entries));
-
   hideLogModal();
-
-  // Refresh income screen entries list
   renderIncomeEntries();
-
-  // Show success flash
-  const btn = document.querySelector('#s-income .btn-primary');
-  if (btn) { btn.textContent = '✓ Saved!'; setTimeout(() => btn.textContent = '+ Log', 1500); }
 }
-
 function renderIncomeEntries() {
   const list = document.getElementById('income-entries-list');
   if (!list) return;
   const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
-  const icons = { Freelance:'💻', Teaching:'📚', Content:'📹', Delivery:'🚗', Design:'🎨', Royalties:'🎵', Rental:'🏠', Other:'⚡' };
+  const icons = {Freelance:'💻',Teaching:'📚',Content:'📹',Delivery:'🚗',Design:'🎨',Royalties:'🎵',Rental:'🏠',Other:'⚡'};
   list.innerHTML = entries.slice(0,20).map(e => `
     <div class="entry">
-      <div class="entry-ico" style="background:rgba(203,255,71,0.08)">${icons[e.category] || '💰'}</div>
-      <div class="entry-info">
-        <div class="entry-name">${e.desc || e.category}</div>
-        <div class="entry-meta">${e.category}${e.client ? ' · ' + e.client : ''} · ${e.date || 'Today'}</div>
-      </div>
+      <div class="entry-ico" style="background:rgba(203,255,71,0.08)">${icons[e.category]||'💰'}</div>
+      <div class="entry-info"><div class="entry-name">${e.desc||e.category}</div><div class="entry-meta">${e.category||''}${e.client?' · '+e.client:''} · ${e.date||'Today'}</div></div>
       <div class="entry-amt pos">+₹${parseFloat(e.amount).toLocaleString('en-IN')}</div>
     </div>`).join('') || '<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px;">No entries yet. Tap + Log to add your first income!</div>';
 }
 
-// ── EXPORT ITR-1 SUMMARY ──
+// ══ EXPORT ITR ══
 function exportITR() {
   const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
-  const profile = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || '{}'); } catch { return {}; } })();
-  const total = entries.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
-  const deduction = Math.round(total * 0.5); // Section 44ADA 50% presumptive
+  const profile = (() => { try { return JSON.parse(localStorage.getItem('ss_profile')||'{}'); } catch { return {}; } })();
+  const total = entries.reduce((s,e) => s+(parseFloat(e.amount)||0), 0);
+  const deduction = Math.round(total * 0.5);
   const taxable = total - deduction;
-
-  // Group by category
   const byCategory = {};
-  entries.forEach(e => {
-    byCategory[e.category] = (byCategory[e.category] || 0) + (parseFloat(e.amount) || 0);
-  });
-
+  entries.forEach(e => { byCategory[e.category||'Other'] = (byCategory[e.category||'Other']||0) + (parseFloat(e.amount)||0); });
   const doc = new jsPDF();
   doc.setFillColor(8,8,16); doc.rect(0,0,210,297,'F');
-  doc.setFont('helvetica','bold');
-  doc.setFontSize(20); doc.setTextColor(203,255,71);
+  doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor(203,255,71);
   doc.text('ITR-1 Income Summary', 20, 28);
   doc.setFontSize(10); doc.setTextColor(90,90,112);
-  doc.text('SideStack v5.0 · FY 2025-26 · Generated: ' + new Date().toLocaleDateString('en-IN'), 20, 37);
+  doc.text('SideStack v5.0 · FY 2025-26 · Generated: '+new Date().toLocaleDateString('en-IN'), 20, 37);
   doc.setDrawColor(203,255,71); doc.line(20,42,190,42);
-
-  doc.setFontSize(12); doc.setTextColor(238,238,248);
-  doc.text('Taxpayer: ' + (profile.name || 'User'), 20, 54);
-  doc.text('City: ' + (profile.city || '—'), 20, 63);
-  doc.text('Assessment Year: 2026-27', 20, 72);
-
-  doc.setFontSize(13); doc.setTextColor(203,255,71);
-  doc.text('Income Breakdown', 20, 86);
-  doc.setDrawColor(40,40,60); doc.line(20,90,190,90);
-
-  let y = 100;
-  Object.entries(byCategory).forEach(([cat, amt]) => {
-    doc.setFontSize(11); doc.setTextColor(160,160,184);
-    doc.text(cat, 25, y);
-    doc.setTextColor(238,238,248);
-    doc.text('₹' + amt.toLocaleString('en-IN'), 150, y);
-    y += 9;
+  doc.setFontSize(11); doc.setTextColor(238,238,248);
+  doc.text('Taxpayer: '+(profile.name||'User'), 20, 54);
+  doc.text('City: '+(profile.city||'—'), 20, 63);
+  let y = 80;
+  Object.entries(byCategory).forEach(([cat,amt]) => {
+    doc.setTextColor(160,160,184); doc.text(cat, 25, y);
+    doc.setTextColor(238,238,248); doc.text('₹'+amt.toLocaleString('en-IN'), 150, y); y+=9;
   });
-
-  y += 5; doc.setDrawColor(60,60,80); doc.line(20,y,190,y); y += 10;
-  doc.setFontSize(12); doc.setTextColor(238,238,248);
-  doc.text('Gross Total Income:', 25, y); doc.setTextColor(203,255,71); doc.text('₹' + total.toLocaleString('en-IN'), 150, y); y += 9;
-  doc.setTextColor(238,238,248);
-  doc.text('Sec 44ADA Deduction (50%):', 25, y); doc.setTextColor(124,92,255); doc.text('-₹' + deduction.toLocaleString('en-IN'), 150, y); y += 9;
-  doc.setTextColor(238,238,248);
-  doc.text('Net Taxable Income:', 25, y); doc.setTextColor(203,255,71); doc.text('₹' + taxable.toLocaleString('en-IN'), 150, y);
-
-  y += 20; doc.setFontSize(9); doc.setTextColor(90,90,112);
-  doc.text('This is an estimate generated by SideStack for reference only.', 20, y);
-  doc.text('Please verify with a CA before filing your ITR.', 20, y+7);
-
-  doc.save('SideStack_ITR1_Summary_FY2025-26.pdf');
+  y+=5; doc.setDrawColor(60,60,80); doc.line(20,y,190,y); y+=10;
+  doc.setTextColor(238,238,248); doc.text('Gross:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+total.toLocaleString('en-IN'), 150, y); y+=9;
+  doc.setTextColor(238,238,248); doc.text('Sec 44ADA (50%):', 25, y); doc.setTextColor(124,92,255); doc.text('-₹'+deduction.toLocaleString('en-IN'), 150, y); y+=9;
+  doc.setTextColor(238,238,248); doc.text('Taxable:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+taxable.toLocaleString('en-IN'), 150, y);
+  doc.save('SideStack_ITR1_FY2025-26.pdf');
 }
 
-// ── PROFILE EDIT (inline overlay reusing profile-screen) ──
+// ══ PROFILE EDIT ══
 function showProfileEdit() {
-  const p = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || '{}'); } catch { return {}; } })();
-  // Pre-fill profile form with existing data
-  const nameEl = document.getElementById('p-name');
-  const cityEl = document.getElementById('p-city');
-  if (nameEl) nameEl.value = p.name || '';
-  if (cityEl) cityEl.value = p.city || '';
-
-  // Find and pre-select hustle chip
+  const p = (() => { try { return JSON.parse(localStorage.getItem('ss_profile')||'{}'); } catch { return {}; } })();
+  const nameEl = document.getElementById('p-name'), cityEl = document.getElementById('p-city');
+  if (nameEl) nameEl.value = p.name||'';
+  if (cityEl) cityEl.value = p.city||'';
   document.querySelectorAll('.hustle-chip').forEach(chip => {
     chip.classList.remove('selected');
-    if (chip.querySelector('.hustle-chip-lbl')?.textContent === p.hustle) {
-      chip.classList.add('selected');
-      selectedHustle = p.hustle;
-    }
+    if (chip.querySelector('.hustle-chip-lbl')?.textContent === p.hustle) { chip.classList.add('selected'); selectedHustle = p.hustle; }
   });
-
-  // Change button text to "Save Changes"
-  const continueBtn = document.querySelector('#profile-screen .btn-lime');
-  if (continueBtn) {
-    continueBtn.textContent = 'Save Changes';
-    continueBtn.onclick = saveProfileEdit;
-  }
-
-  const skipBtn = document.querySelector('#profile-screen .btn-text');
-  if (skipBtn) skipBtn.style.display = 'none';
-
+  const btn = document.querySelector('#profile-screen .btn-lime');
+  if (btn) { btn.textContent = 'Save Changes'; btn.onclick = saveProfileEdit; }
+  const skip = document.querySelector('#profile-screen .btn-text');
+  if (skip) skip.style.display = 'none';
   show('profile-screen');
 }
-
 function saveProfileEdit() {
   const name = document.getElementById('p-name').value.trim();
   const city = document.getElementById('p-city').value.trim();
-  if (!name) {
-    document.getElementById('p-name').style.borderColor = 'var(--pink)';
-    setTimeout(() => document.getElementById('p-name').style.borderColor = '', 1500);
-    return;
-  }
-  const existing = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || '{}'); } catch { return {}; } })();
-  const updated = { ...existing, name, city, hustle: selectedHustle };
-  localStorage.setItem('ss_profile', JSON.stringify(updated));
+  if (!name) { document.getElementById('p-name').style.borderColor='var(--pink)'; setTimeout(()=>document.getElementById('p-name').style.borderColor='',1500); return; }
+  const existing = (() => { try { return JSON.parse(localStorage.getItem('ss_profile')||'{}'); } catch { return {}; } })();
+  localStorage.setItem('ss_profile', JSON.stringify({...existing, name, city, hustle:selectedHustle}));
   hide('profile-screen');
   loadProfileIntoApp();
-
-  // Reset button for next time
-  const continueBtn = document.querySelector('#profile-screen .btn-lime');
-  if (continueBtn) { continueBtn.textContent = 'Continue → Set PIN'; continueBtn.onclick = saveProfile; }
-  const skipBtn = document.querySelector('#profile-screen .btn-text');
-  if (skipBtn) skipBtn.style.display = '';
+  const btn = document.querySelector('#profile-screen .btn-lime');
+  if (btn) { btn.textContent = 'Continue → Set PIN'; btn.onclick = saveProfile; }
+  const skip = document.querySelector('#profile-screen .btn-text');
+  if (skip) skip.style.display = '';
 }
 
-// Close log modal on backdrop click
-document.addEventListener('click', (e) => {
-  const modal = document.getElementById('log-modal');
-  if (modal && e.target === modal) hideLogModal();
-});
-
-
-// ══════════════════════════════════════════
-// MISSING BUTTON FUNCTIONS
-// ══════════════════════════════════════════
-
-// ── COPY REFERRAL CODE ──
-function copyReferral(btn) {
-  const code = document.getElementById('referral-code')?.textContent || 'HUSTLE-USER';
-  navigator.clipboard.writeText(code).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = '✓ Copied!';
-    btn.style.color = 'var(--lime)';
-    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
-  }).catch(() => {
-    alert('Your referral code: ' + code);
-  });
-}
-
-// ── SHARE REFERRAL ──
-function shareReferral() {
-  const code = document.getElementById('referral-code')?.textContent || 'HUSTLE-USER';
-  const text = `Join me on SideStack — India's Side Hustle OS! Track income, taxes & get AI insights. Use my code: ${code} 🚀 https://app.sakredfire.ca`;
-  if (navigator.share) {
-    navigator.share({ title: 'SideStack', text });
-  } else {
-    navigator.clipboard.writeText(text).then(() => alert('Share text copied to clipboard!')).catch(() => alert(text));
-  }
-}
-
-// ── LOG MOOD CONFIRM ──
-function logMoodConfirm(btn) {
-  const sel = document.querySelector('.mood-opt.sel');
-  if (!sel) { alert('Please select a mood first ☝️'); return; }
-  btn.textContent = '✓ Mood Logged!';
-  btn.style.background = 'var(--teal)';
-  setTimeout(() => { btn.textContent = '✓ Log Today's Mood'; btn.style.background = ''; }, 2500);
-}
-
-// ── CONFIRM VOICE ENTRY ──
-function confirmVoiceEntry(btn) {
-  const amtEl = document.getElementById('voice-amount');
-  const amount = amtEl?.value;
-  if (!amount) { alert('No amount detected. Please log manually.'); return; }
-  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
-  entries.unshift({ id: Date.now(), amount: parseFloat(amount), category: 'Freelance', desc: 'Voice entry', date: new Date().toISOString().split('T')[0] });
-  localStorage.setItem('incomeEntries', JSON.stringify(entries));
-  btn.textContent = '✓ Saved!';
-  btn.style.background = 'var(--teal)';
-  document.getElementById('voice-result').style.display = 'none';
-  renderIncomeEntries();
-  setTimeout(() => { btn.textContent = '✓ Confirm'; btn.style.background = ''; }, 2000);
-}
-
-// ── SHARE TIP ──
-function shareTip(btn) {
-  const tip = btn.closest('.tip-post')?.querySelector('p')?.textContent || 'Check out SideStack!';
-  const shareText = `💡 Hustle Tip from SideStack: "${tip.slice(0,100)}..." — https://app.sakredfire.ca`;
-  if (navigator.share) {
-    navigator.share({ title: 'Hustle Tip', text: shareText });
-  } else {
-    navigator.clipboard.writeText(shareText).then(() => {
-      btn.textContent = '✓ Copied!';
-      setTimeout(() => btn.textContent = '+ Share', 2000);
-    });
-  }
-}
-
-// ── NEW GOAL MODAL ──
+// ══ GOALS ══
 function showNewGoalModal() {
-  const name = prompt('Goal name? (e.g. "Buy Laptop", "April Target")');
-  if (!name) return;
-  const target = prompt('Target amount (₹)?');
-  if (!target || isNaN(parseFloat(target))) return;
-  const deadline = prompt('Deadline? (e.g. "Jun 2026")') || 'No deadline';
-  const goals = JSON.parse(localStorage.getItem('ss_goals') || '[]');
-  goals.push({ id: Date.now(), name, target: parseFloat(target), current: 0, deadline, emoji: '🎯' });
+  const name = prompt('Goal name? (e.g. "Buy Laptop")'); if (!name) return;
+  const target = prompt('Target amount (₹)?'); if (!target||isNaN(parseFloat(target))) return;
+  const deadline = prompt('Deadline? (e.g. "Jun 2026")')||'No deadline';
+  const goals = JSON.parse(localStorage.getItem('ss_goals')||'[]');
+  goals.push({id:Date.now(),name,target:parseFloat(target),current:0,deadline,emoji:'🎯'});
   localStorage.setItem('ss_goals', JSON.stringify(goals));
   renderGoals();
-  alert(`✅ Goal "${name}" added!`);
 }
-
 function renderGoals() {
   const container = document.getElementById('goals-list');
   if (!container) return;
-  const goals = JSON.parse(localStorage.getItem('ss_goals') || '[]');
+  const goals = JSON.parse(localStorage.getItem('ss_goals')||'[]');
   if (!goals.length) return;
   container.innerHTML = goals.map(g => {
-    const pct = Math.min(100, Math.round((g.current / g.target) * 100));
-    const color = pct >= 80 ? 'var(--lime)' : pct >= 50 ? 'var(--purple)' : 'var(--blue)';
-    return `<div class="goal-card">
-      <div class="goal-head">
-        <div class="goal-emoji">${g.emoji}</div>
-        <div><div class="goal-name">${g.name}</div><div class="goal-deadline">${g.deadline}</div></div>
-        <span class="chip" style="background:rgba(203,255,71,0.1);color:var(--lime);margin-left:auto">${pct}%</span>
-      </div>
-      <div class="goal-amounts"><span>₹${(g.current||0).toLocaleString('en-IN')}</span><span>₹${g.target.toLocaleString('en-IN')}</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${color};height:5px;border-radius:3px;"></div></div>
-    </div>`;
+    const pct = Math.min(100, Math.round((g.current/g.target)*100));
+    const color = pct>=80?'var(--lime)':pct>=50?'var(--purple)':'var(--blue)';
+    return `<div class="goal-card"><div class="goal-head"><div class="goal-emoji">${g.emoji}</div><div><div class="goal-name">${g.name}</div><div class="goal-deadline">${g.deadline}</div></div><span class="chip" style="background:rgba(203,255,71,0.1);color:var(--lime);margin-left:auto">${pct}%</span></div><div class="goal-amounts"><span>₹${(g.current||0).toLocaleString('en-IN')}</span><span>₹${g.target.toLocaleString('en-IN')}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${color};height:5px;border-radius:3px;"></div></div></div>`;
   }).join('');
 }
 
-// ── NEW INVOICE MODAL ──
+// ══ INVOICES ══
 function showNewInvoiceModal() {
-  const client = prompt('Client name?');
-  if (!client) return;
-  const amount = prompt('Invoice amount (₹)?');
-  if (!amount || isNaN(parseFloat(amount))) return;
-  const desc = prompt('Description? (e.g. "Logo Design")') || 'Services';
-  const invoices = JSON.parse(localStorage.getItem('ss_invoices') || '[]');
-  const invNum = 'INV-' + String(invoices.length + 44).padStart(3, '0');
-  invoices.unshift({ id: Date.now(), num: invNum, client, amount: parseFloat(amount), desc, status: 'Sent', date: new Date().toLocaleDateString('en-IN', {month:'short',day:'numeric'}) });
+  const client = prompt('Client name?'); if (!client) return;
+  const amount = prompt('Amount (₹)?'); if (!amount||isNaN(parseFloat(amount))) return;
+  const desc = prompt('Description?')||'Services';
+  const invoices = JSON.parse(localStorage.getItem('ss_invoices')||'[]');
+  const num = 'INV-'+String(invoices.length+44).padStart(3,'0');
+  invoices.unshift({id:Date.now(),num,client,amount:parseFloat(amount),desc,status:'Sent',date:new Date().toLocaleDateString('en-IN',{month:'short',day:'numeric'})});
   localStorage.setItem('ss_invoices', JSON.stringify(invoices));
   renderInvoices();
-  alert(`✅ Invoice ${invNum} created for ${client}!`);
 }
-
 function renderInvoices() {
   const list = document.getElementById('invoices-list');
   if (!list) return;
-  const invoices = JSON.parse(localStorage.getItem('ss_invoices') || '[]');
+  const invoices = JSON.parse(localStorage.getItem('ss_invoices')||'[]');
   if (!invoices.length) return;
-  const statusColors = { Paid:'var(--teal)', Overdue:'var(--orange)', Sent:'var(--blue)', Chase:'var(--pink)' };
-  list.innerHTML = invoices.map(inv => `
-    <div class="entry" onclick="cycleInvoiceStatus(${inv.id})">
-      <div class="entry-ico" style="background:var(--surf3)">📄</div>
-      <div class="entry-info">
-        <div class="entry-name">${inv.num} · ${inv.client}</div>
-        <div class="entry-meta">₹${inv.amount.toLocaleString('en-IN')} · ${inv.date}</div>
-      </div>
-      <span class="inv-status" style="background:rgba(0,0,0,0.3);color:${statusColors[inv.status]||'var(--text2)'};padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700">${inv.status}</span>
-    </div>`).join('');
+  const sc = {Paid:'var(--teal)',Overdue:'var(--orange)',Sent:'var(--blue)',Chase:'var(--pink)'};
+  list.innerHTML = invoices.map(inv => `<div class="entry" onclick="cycleInvoiceStatus(${inv.id})"><div class="entry-ico" style="background:var(--surf3)">📄</div><div class="entry-info"><div class="entry-name">${inv.num} · ${inv.client}</div><div class="entry-meta">₹${inv.amount.toLocaleString('en-IN')} · ${inv.date}</div></div><span style="background:rgba(0,0,0,0.3);color:${sc[inv.status]||'var(--text2)'};padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700">${inv.status}</span></div>`).join('');
 }
-
 function cycleInvoiceStatus(id) {
-  const invoices = JSON.parse(localStorage.getItem('ss_invoices') || '[]');
-  const statuses = ['Sent','Paid','Overdue','Chase'];
-  const inv = invoices.find(i => i.id === id);
-  if (!inv) return;
-  inv.status = statuses[(statuses.indexOf(inv.status) + 1) % statuses.length];
+  const invoices = JSON.parse(localStorage.getItem('ss_invoices')||'[]');
+  const st = ['Sent','Paid','Overdue','Chase'];
+  const inv = invoices.find(i => i.id===id); if (!inv) return;
+  inv.status = st[(st.indexOf(inv.status)+1)%st.length];
   localStorage.setItem('ss_invoices', JSON.stringify(invoices));
   renderInvoices();
 }
+
+// ══ MISC BUTTONS ══
+function copyReferral(btn) {
+  const code = document.getElementById('referral-code')?.textContent||'HUSTLE-USER';
+  navigator.clipboard.writeText(code).then(() => { btn.textContent='✓ Copied!'; setTimeout(()=>btn.textContent='📋 Copy',2000); }).catch(()=>alert('Code: '+code));
+}
+function shareReferral() {
+  const code = document.getElementById('referral-code')?.textContent||'HUSTLE-USER';
+  const text = `Join me on SideStack! Use code: ${code} 🚀 https://app.sakredfire.ca`;
+  if (navigator.share) navigator.share({title:'SideStack',text}); else navigator.clipboard.writeText(text).then(()=>alert('Copied!'));
+}
+function logMoodConfirm(btn) {
+  if (!document.querySelector('.mood-opt.sel')) { alert('Select a mood first ☝️'); return; }
+  btn.textContent='✓ Mood Logged!'; btn.style.background='var(--teal)';
+  setTimeout(()=>{ btn.textContent="✓ Log Today's Mood"; btn.style.background=''; }, 2500);
+}
+function confirmVoiceEntry(btn) {
+  const amt = document.getElementById('voice-amount')?.value;
+  if (!amt) { alert('No amount detected.'); return; }
+  const entries = JSON.parse(localStorage.getItem('incomeEntries')||'[]');
+  entries.unshift({id:Date.now(),amount:parseFloat(amt),category:'Freelance',desc:'Voice entry',date:new Date().toISOString().split('T')[0]});
+  localStorage.setItem('incomeEntries', JSON.stringify(entries));
+  btn.textContent='✓ Saved!'; btn.style.background='var(--teal)';
+  document.getElementById('voice-result').style.display='none';
+  renderIncomeEntries();
+  setTimeout(()=>{ btn.textContent='✓ Confirm'; btn.style.background=''; }, 2000);
+}
+function shareTip(btn) {
+  const tip = btn.closest('.tip-post')?.querySelector('p')?.textContent||'Check out SideStack!';
+  const text = `💡 Hustle Tip: "${tip.slice(0,100)}..." — https://app.sakredfire.ca`;
+  if (navigator.share) navigator.share({title:'Hustle Tip',text}); else navigator.clipboard.writeText(text).then(()=>{ btn.textContent='✓ Copied!'; setTimeout(()=>btn.textContent='+ Share',2000); });
+}
+document.addEventListener('click', e => { const m=document.getElementById('log-modal'); if(m&&e.target===m) hideLogModal(); });
 
 // ── SERVICE WORKER ──
 if ('serviceWorker' in navigator) {
@@ -3203,14 +2927,13 @@ window.addEventListener('DOMContentLoaded', () => {
     ]));
   }
   updateMoodDisplay();
-  renderIncomeEntries();
   updateReceiptsList();
   rmRefreshStats();
 });
 </script>
 
-  <!-- ════ LOG INCOME MODAL ════ -->
-  <div id="log-modal" style="display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center;">
+  <!-- LOG INCOME MODAL -->
+  <div id="log-modal">
     <div style="background:var(--surf);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;border-top:1px solid var(--border2);animation:slideUp 0.3s ease;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
         <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;">Log Income</div>
@@ -3218,37 +2941,19 @@ window.addEventListener('DOMContentLoaded', () => {
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div>
-            <div class="form-label" style="margin-bottom:4px;">Amount (₹)</div>
-            <input id="log-amount" class="form-input" type="number" placeholder="0" style="font-size:20px;font-weight:700;font-family:'Space Mono',monospace;">
-          </div>
-          <div>
-            <div class="form-label" style="margin-bottom:4px;">Category</div>
+          <div><div class="form-label" style="margin-bottom:4px;">Amount (₹)</div><input id="log-amount" class="form-input" type="number" placeholder="0" style="font-size:20px;font-weight:700;font-family:'Space Mono',monospace;"></div>
+          <div><div class="form-label" style="margin-bottom:4px;">Category</div>
             <select id="log-category" class="form-input">
-              <option>💻 Freelance</option>
-              <option>📚 Teaching</option>
-              <option>📹 Content</option>
-              <option>🚗 Delivery</option>
-              <option>🎨 Design</option>
-              <option>🎵 Royalties</option>
-              <option>🏠 Rental</option>
-              <option>⚡ Other</option>
+              <option>💻 Freelance</option><option>📚 Teaching</option><option>📹 Content</option>
+              <option>🚗 Delivery</option><option>🎨 Design</option><option>🎵 Royalties</option>
+              <option>🏠 Rental</option><option>⚡ Other</option>
             </select>
           </div>
         </div>
-        <div>
-          <div class="form-label" style="margin-bottom:4px;">Description</div>
-          <input id="log-desc" class="form-input" type="text" placeholder="e.g. Upwork logo project, Swiggy weekend...">
-        </div>
+        <div><div class="form-label" style="margin-bottom:4px;">Description</div><input id="log-desc" class="form-input" type="text" placeholder="e.g. Upwork logo project…"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div>
-            <div class="form-label" style="margin-bottom:4px;">Client (optional)</div>
-            <input id="log-client" class="form-input" type="text" placeholder="Client name">
-          </div>
-          <div>
-            <div class="form-label" style="margin-bottom:4px;">Date</div>
-            <input id="log-date" class="form-input" type="date">
-          </div>
+          <div><div class="form-label" style="margin-bottom:4px;">Client (optional)</div><input id="log-client" class="form-input" type="text" placeholder="Client name"></div>
+          <div><div class="form-label" style="margin-bottom:4px;">Date</div><input id="log-date" class="form-input" type="date"></div>
         </div>
         <div style="display:flex;gap:8px;margin-top:4px;">
           <button class="btn btn-primary" style="flex:1;padding:14px;" onclick="submitLog()">✅ Save Entry</button>

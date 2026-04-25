@@ -2359,9 +2359,14 @@ function unlockApp() {
   }
   loadProfileIntoApp();
   renderIncomeEntries();
-  // Load saved language
-  const savedLang = localStorage.getItem('ss_lang');
-  if (savedLang) { const el = document.getElementById('set-lang'); const lang = [{code:'EN',native:'English'},{code:'HI',native:'हिन्दी'},{code:'TA',native:'தமிழ்'},{code:'TE',native:'తెలుగు'},{code:'MR',native:'मराठी'},{code:'KN',native:'ಕನ್ನಡ'}].find(l=>l.code===savedLang); if(el&&lang) el.textContent=lang.native+' ('+savedLang+')'; }
+  // Apply saved language
+  const savedLang = localStorage.getItem('ss_lang') || 'EN';
+  if (savedLang !== 'EN') applyTranslations(savedLang);
+  const langEl = document.getElementById('set-lang');
+  if (langEl) {
+    const lang = LANGUAGES.find(l => l.code === savedLang);
+    if (lang) langEl.textContent = lang.native + ' (' + savedLang + ')';
+  }
 }
 
 function loadProfileIntoApp() {
@@ -2944,17 +2949,243 @@ function showLanguagePicker() {
 }
 
 function setLanguage(code) {
-  localStorage.setItem('ss_lang', code);
   const lang = LANGUAGES.find(l => l.code === code);
+  if (!lang) return;
   const el = document.getElementById('set-lang');
   if (el) el.textContent = `${lang.native} (${lang.code})`;
   document.getElementById('lang-modal')?.remove();
-  // Show confirmation
+  // Apply translations immediately
+  applyTranslations(code);
+  // Show confirmation toast
   const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;z-index:9999;animation:fadeIn 0.2s ease;';
-  toast.textContent = `✓ Language set to ${lang.native}`;
+  toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;z-index:9999;';
+  toast.textContent = `✓ Language: ${lang.native}`;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 2500);
+}
+
+
+// ══════════════════════════════════════════
+// TRANSLATION SYSTEM — SideStack v5.0
+// Supported: EN, HI, TA, TE, MR, KN
+// ══════════════════════════════════════════
+
+const TRANSLATIONS = {
+  EN: {
+    // Nav
+    nav_home: 'Home', nav_income: 'Income', nav_ai: 'Stacks AI', nav_tax: 'Tax', nav_more: 'More',
+    // Home
+    greeting: 'Namaste 👋',
+    this_month: 'THIS MONTH', net_income: 'NET INCOME', tax_reserved: 'TAX RESERVED', emergency_fund: 'EMERGENCY FUND',
+    weekly_trend: 'Weekly Trend', recent_income: 'Recent Income', view_all: 'View All →',
+    // Income
+    income_log: 'Income Log', every_rupee: 'Every rupee tracked', log_btn: '+ Log',
+    april_total: 'APRIL TOTAL', best_day: 'BEST DAY',
+    // AI
+    ai_title: 'AI Co-Pilot', ai_sub: 'Stacks · On-device · Private',
+    ai_placeholder: 'Ask about income, taxes, goals…',
+    // Tax
+    tax_title: 'Tax Engine', tax_sub: 'FY 2025–26 estimate',
+    tax_owed: 'TAX OWED', reserved: 'RESERVED', breakdown: 'Breakdown',
+    // Settings
+    settings: 'Settings', profile: 'Profile', security: 'Security',
+    app_pin: 'App PIN', biometric: 'Biometric Lock', biometric_sub: 'Fingerprint / Face ID',
+    subscription: 'Subscription', notifications: 'Notifications', backup: 'Backup',
+    language: 'Language', primary_hustle: 'Primary Hustle',
+    // More
+    all_features: 'All Features',
+    // Goals
+    goals_title: 'Goals & Streaks',
+    // Common
+    save: 'Save', cancel: 'Cancel', delete: 'Delete', export: 'Export', change: 'Change',
+  },
+  HI: {
+    nav_home: 'होम', nav_income: 'आय', nav_ai: 'Stacks AI', nav_tax: 'कर', nav_more: 'अधिक',
+    greeting: 'नमस्ते 👋',
+    this_month: 'इस महीने', net_income: 'शुद्ध आय', tax_reserved: 'कर आरक्षित', emergency_fund: 'आपातकालीन निधि',
+    weekly_trend: 'साप्ताहिक रुझान', recent_income: 'हालिया आय', view_all: 'सभी देखें →',
+    income_log: 'आय लॉग', every_rupee: 'हर रुपया ट्रैक किया', log_btn: '+ लॉग',
+    april_total: 'अप्रैल कुल', best_day: 'सर्वश्रेष्ठ दिन',
+    ai_title: 'AI सह-पायलट', ai_sub: 'Stacks · ऑन-डिवाइस · निजी',
+    ai_placeholder: 'आय, कर, लक्ष्य के बारे में पूछें…',
+    tax_title: 'कर इंजन', tax_sub: 'FY 2025–26 अनुमान',
+    tax_owed: 'देय कर', reserved: 'आरक्षित', breakdown: 'विवरण',
+    settings: 'सेटिंग्स', profile: 'प्रोफ़ाइल', security: 'सुरक्षा',
+    app_pin: 'ऐप PIN', biometric: 'बायोमेट्रिक लॉक', biometric_sub: 'फिंगरप्रिंट / Face ID',
+    subscription: 'सदस्यता', notifications: 'सूचनाएं', backup: 'बैकअप',
+    language: 'भाषा', primary_hustle: 'मुख्य काम',
+    all_features: 'सभी सुविधाएं',
+    goals_title: 'लक्ष्य और स्ट्रीक',
+    save: 'सहेजें', cancel: 'रद्द करें', delete: 'हटाएं', export: 'निर्यात', change: 'बदलें',
+  },
+  TA: {
+    nav_home: 'முகப்பு', nav_income: 'வருமானம்', nav_ai: 'Stacks AI', nav_tax: 'வரி', nav_more: 'மேலும்',
+    greeting: 'வணக்கம் 👋',
+    this_month: 'இந்த மாதம்', net_income: 'நிகர வருமானம்', tax_reserved: 'வரி ஒதுக்கு', emergency_fund: 'அவசர நிதி',
+    weekly_trend: 'வாராந்திர போக்கு', recent_income: 'சமீபத்திய வருமானம்', view_all: 'அனைத்தும் காண்க →',
+    income_log: 'வருமான பதிவு', every_rupee: 'ஒவ்வொரு ரூபாயும் கண்காணிக்கப்படுகிறது', log_btn: '+ பதிவு',
+    april_total: 'ஏப்ரல் மொத்தம்', best_day: 'சிறந்த நாள்',
+    ai_title: 'AI துணை-பைலட்', ai_sub: 'Stacks · ஆன்-டிவைஸ் · தனிப்பட்ட',
+    ai_placeholder: 'வருமானம், வரி, இலக்குகளைப் பற்றி கேளுங்கள்…',
+    tax_title: 'வரி இயந்திரம்', tax_sub: 'FY 2025–26 மதிப்பீடு',
+    tax_owed: 'செலுத்த வேண்டிய வரி', reserved: 'ஒதுக்கப்பட்டது', breakdown: 'விவரம்',
+    settings: 'அமைப்புகள்', profile: 'சுயவிவரம்', security: 'பாதுகாப்பு',
+    app_pin: 'ஆப் PIN', biometric: 'பயோமெட்ரிக் லாக்', biometric_sub: 'கைரேகை / Face ID',
+    subscription: 'சந்தா', notifications: 'அறிவிப்புகள்', backup: 'காப்புப்பிரதி',
+    language: 'மொழி', primary_hustle: 'முதன்மை தொழில்',
+    all_features: 'அனைத்து அம்சங்கள்',
+    goals_title: 'இலக்குகள் & தொடர்',
+    save: 'சேமி', cancel: 'ரத்து செய்', delete: 'நீக்கு', export: 'ஏற்றுமதி', change: 'மாற்று',
+  },
+  TE: {
+    nav_home: 'హోమ్', nav_income: 'ఆదాయం', nav_ai: 'Stacks AI', nav_tax: 'పన్ను', nav_more: 'మరిన్ని',
+    greeting: 'నమస్కారం 👋',
+    this_month: 'ఈ నెల', net_income: 'నికర ఆదాయం', tax_reserved: 'పన్ను నిల్వ', emergency_fund: 'అత్యవసర నిధి',
+    weekly_trend: 'వారపు ట్రెండ్', recent_income: 'ఇటీవలి ఆదాయం', view_all: 'అన్నీ చూడు →',
+    income_log: 'ఆదాయ లాగ్', every_rupee: 'ప్రతి రూపాయి ట్రాక్ చేయబడింది', log_btn: '+ లాగ్',
+    april_total: 'ఏప్రిల్ మొత్తం', best_day: 'అత్యుత్తమ రోజు',
+    ai_title: 'AI కో-పైలట్', ai_sub: 'Stacks · ఆన్-డివైస్ · ప్రైవేట్',
+    ai_placeholder: 'ఆదాయం, పన్ను, లక్ష్యాల గురించి అడగండి…',
+    tax_title: 'పన్ను ఇంజిన్', tax_sub: 'FY 2025–26 అంచనా',
+    tax_owed: 'చెల్లించాల్సిన పన్ను', reserved: 'నిల్వ', breakdown: 'వివరాలు',
+    settings: 'సెట్టింగ్‌లు', profile: 'ప్రొఫైల్', security: 'భద్రత',
+    app_pin: 'యాప్ PIN', biometric: 'బయోమెట్రిక్ లాక్', biometric_sub: 'వేలిముద్ర / Face ID',
+    subscription: 'సభ్యత్వం', notifications: 'నోటిఫికేషన్లు', backup: 'బ్యాకప్',
+    language: 'భాష', primary_hustle: 'ప్రాథమిక పని',
+    all_features: 'అన్ని ఫీచర్లు',
+    goals_title: 'లక్ష్యాలు & స్ట్రీక్స్',
+    save: 'సేవ్', cancel: 'రద్దు', delete: 'తొలగించు', export: 'ఎగుమతి', change: 'మార్చు',
+  },
+  MR: {
+    nav_home: 'मुख्यपृष्ठ', nav_income: 'उत्पन्न', nav_ai: 'Stacks AI', nav_tax: 'कर', nav_more: 'अधिक',
+    greeting: 'नमस्कार 👋',
+    this_month: 'या महिन्यात', net_income: 'निव्वळ उत्पन्न', tax_reserved: 'कर राखीव', emergency_fund: 'आपत्कालीन निधी',
+    weekly_trend: 'साप्ताहिक कल', recent_income: 'अलीकडील उत्पन्न', view_all: 'सर्व पाहा →',
+    income_log: 'उत्पन्न नोंद', every_rupee: 'प्रत्येक रुपया ट्रॅक केला', log_btn: '+ नोंद',
+    april_total: 'एप्रिल एकूण', best_day: 'सर्वोत्तम दिवस',
+    ai_title: 'AI सह-चालक', ai_sub: 'Stacks · ऑन-डिव्हाइस · खाजगी',
+    ai_placeholder: 'उत्पन्न, कर, उद्दिष्टांबद्दल विचारा…',
+    tax_title: 'कर इंजिन', tax_sub: 'FY 2025–26 अंदाज',
+    tax_owed: 'देय कर', reserved: 'राखीव', breakdown: 'तपशील',
+    settings: 'सेटिंग्ज', profile: 'प्रोफाइल', security: 'सुरक्षा',
+    app_pin: 'अॅप PIN', biometric: 'बायोमेट्रिक लॉक', biometric_sub: 'फिंगरप्रिंट / Face ID',
+    subscription: 'सदस्यता', notifications: 'सूचना', backup: 'बॅकअप',
+    language: 'भाषा', primary_hustle: 'मुख्य काम',
+    all_features: 'सर्व वैशिष्ट्ये',
+    goals_title: 'उद्दिष्टे आणि स्ट्रीक',
+    save: 'जतन करा', cancel: 'रद्द करा', delete: 'हटवा', export: 'निर्यात', change: 'बदला',
+  },
+  KN: {
+    nav_home: 'ಮುಖಪುಟ', nav_income: 'ಆದಾಯ', nav_ai: 'Stacks AI', nav_tax: 'ತೆರಿಗೆ', nav_more: 'ಇನ್ನಷ್ಟು',
+    greeting: 'ನಮಸ್ಕಾರ 👋',
+    this_month: 'ಈ ತಿಂಗಳು', net_income: 'ನಿವ್ವಳ ಆದಾಯ', tax_reserved: 'ತೆರಿಗೆ ಮೀಸಲು', emergency_fund: 'ತುರ್ತು ನಿಧಿ',
+    weekly_trend: 'ವಾರದ ಟ್ರೆಂಡ್', recent_income: 'ಇತ್ತೀಚಿನ ಆದಾಯ', view_all: 'ಎಲ್ಲ ನೋಡಿ →',
+    income_log: 'ಆದಾಯ ದಾಖಲೆ', every_rupee: 'ಪ್ರತಿ ರೂಪಾಯಿ ಟ್ರ್ಯಾಕ್ ಆಗಿದೆ', log_btn: '+ ದಾಖಲಿಸಿ',
+    april_total: 'ಏಪ್ರಿಲ್ ಒಟ್ಟು', best_day: 'ಅತ್ಯುತ್ತಮ ದಿನ',
+    ai_title: 'AI ಸಹ-ಪೈಲಟ್', ai_sub: 'Stacks · ಆನ್-ಡಿವೈಸ್ · ಖಾಸಗಿ',
+    ai_placeholder: 'ಆದಾಯ, ತೆರಿಗೆ, ಗುರಿಗಳ ಬಗ್ಗೆ ಕೇಳಿ…',
+    tax_title: 'ತೆರಿಗೆ ಎಂಜಿನ್', tax_sub: 'FY 2025–26 ಅಂದಾಜು',
+    tax_owed: 'ಪಾವತಿಸಬೇಕಾದ ತೆರಿಗೆ', reserved: 'ಮೀಸಲು', breakdown: 'ವಿವರ',
+    settings: 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು', profile: 'ಪ್ರೊಫೈಲ್', security: 'ಭದ್ರತೆ',
+    app_pin: 'ಆಪ್ PIN', biometric: 'ಬಯೋಮೆಟ್ರಿಕ್ ಲಾಕ್', biometric_sub: 'ಬೆರಳಚ್ಚು / Face ID',
+    subscription: 'ಚಂದಾದಾರಿಕೆ', notifications: 'ಅಧಿಸೂಚನೆಗಳು', backup: 'ಬ್ಯಾಕಪ್',
+    language: 'ಭಾಷೆ', primary_hustle: 'ಮುಖ್ಯ ಕೆಲಸ',
+    all_features: 'ಎಲ್ಲ ವೈಶಿಷ್ಟ್ಯಗಳು',
+    goals_title: 'ಗುರಿಗಳು & ಸ್ಟ್ರೀಕ್ಸ್',
+    save: 'ಉಳಿಸಿ', cancel: 'ರದ್ದು', delete: 'ಅಳಿಸಿ', export: 'ರಫ್ತು', change: 'ಬದಲಿಸಿ',
+  }
+};
+
+// ── APPLY TRANSLATIONS TO UI ──
+function applyTranslations(lang) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.EN;
+  
+  // Helper to safely set text
+  const set = (id, key) => { const el = document.getElementById(id); if (el && t[key]) el.textContent = t[key]; };
+  const setAll = (sel, key) => { document.querySelectorAll(sel).forEach(el => { if(t[key]) el.textContent = t[key]; }); };
+  const setText = (el, key) => { if (el && t[key]) el.textContent = t[key]; };
+
+  // Nav labels
+  const navLabels = document.querySelectorAll('.nav-label');
+  const navKeys = ['nav_home','nav_income','nav_ai','nav_tax','nav_more'];
+  navLabels.forEach((el, i) => { if (navKeys[i] && t[navKeys[i]]) el.textContent = t[navKeys[i]]; });
+
+  // Greeting
+  set('home-greeting', 'greeting');
+  
+  // Settings screen
+  const settingsTitle = document.querySelector('#s-settings .sec-title');
+  if (settingsTitle) settingsTitle.textContent = t.settings;
+
+  // Section titles in settings
+  const sectTitles = document.querySelectorAll('#s-settings .s-sect-title');
+  const sectKeys = ['profile','security','subscription','notifications','backup'];
+  // Map emojis to keys
+  sectTitles.forEach(el => {
+    const txt = el.textContent;
+    if (txt.includes('👤')) el.textContent = '👤 ' + t.profile;
+    else if (txt.includes('🔐')) el.textContent = '🔐 ' + t.security;
+    else if (txt.includes('💸')) el.textContent = '💸 ' + t.subscription;
+    else if (txt.includes('🔔')) el.textContent = '🔔 ' + t.notifications;
+    else if (txt.includes('☁️')) el.textContent = '☁️ ' + t.backup;
+  });
+
+  // Settings rows
+  const sNames = document.querySelectorAll('#s-settings .s-name');
+  sNames.forEach(el => {
+    const txt = el.textContent.trim();
+    if (txt === 'Language' || txt === t.language) el.textContent = t.language;
+    else if (txt === 'Primary Hustle' || txt === t.primary_hustle) el.textContent = t.primary_hustle;
+    else if (txt === 'App PIN' || txt === t.app_pin) el.textContent = t.app_pin;
+    else if (txt === 'Biometric Lock' || txt === t.biometric) el.textContent = t.biometric;
+  });
+
+  // Income screen
+  const incomeTitle = document.querySelector('#s-income .sec-title');
+  if (incomeTitle) incomeTitle.textContent = t.income_log;
+  const incomeSub = document.querySelector('#s-income .sec-sub');
+  if (incomeSub) incomeSub.textContent = t.every_rupee;
+  const logBtn = document.querySelector('#s-income .btn-primary');
+  if (logBtn) logBtn.textContent = t.log_btn;
+
+  // AI screen
+  const aiTitle = document.querySelector('#s-ai .sec-title');
+  if (aiTitle) aiTitle.textContent = t.ai_title;
+  const aiInput = document.getElementById('ai-inp');
+  if (aiInput) aiInput.placeholder = t.ai_placeholder;
+
+  // Tax screen
+  const taxTitle = document.querySelector('#s-tax .sec-title');
+  if (taxTitle) taxTitle.textContent = t.tax_title;
+
+  // Goals screen
+  const goalsTitle = document.querySelector('#s-goals .sec-title');
+  if (goalsTitle) goalsTitle.textContent = t.goals_title;
+
+  // More screen
+  const moreTitle = document.querySelector('#s-more .sec-title');
+  if (moreTitle) moreTitle.textContent = t.all_features;
+
+  // Header page label (current screen)
+  // Don't change - it updates dynamically
+
+  // Home screen metric labels
+  document.querySelectorAll('.mc-label').forEach(el => {
+    const txt = el.textContent.trim();
+    if (txt === 'THIS MONTH' || txt === t.this_month) el.textContent = t.this_month;
+    else if (txt === 'NET INCOME' || txt === t.net_income) el.textContent = t.net_income;
+    else if (txt === 'TAX RESERVED' || txt === t.tax_reserved) el.textContent = t.tax_reserved;
+    else if (txt === 'EMERGENCY FUND' || txt === t.emergency_fund) el.textContent = t.emergency_fund;
+  });
+
+  // Store active language
+  localStorage.setItem('ss_lang', lang);
+  
+  // Update page label for settings
+  const pageLabel = document.getElementById('page-label');
+  if (pageLabel && pageLabel.textContent.includes('Setting')) {
+    pageLabel.textContent = t.settings;
+  }
 }
 
 // ── SERVICE WORKER ──

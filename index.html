@@ -394,7 +394,7 @@ body{
 .onboard-slide {
   position:absolute;inset:0;display:flex;flex-direction:column;
   align-items:center;justify-content:center;padding:40px 28px;
-  opacity:0;transform:translateX(40px);transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
+  opacity:0;transform:translateX(40px);transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
   pointer-events:none;
 }
 .onboard-slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
@@ -2476,11 +2476,15 @@ const obLabels = ['Get Started','Next →','Create Profile →'];
 
 function obNext() {
   if (obSlide < 2) {
-    document.getElementById(obSlides[obSlide]).classList.add('exit');
-    setTimeout(() => document.getElementById(obSlides[obSlide]).classList.remove('active','exit'), 350);
+    const current = document.getElementById(obSlides[obSlide]);
+    current.classList.add('exit');
     obSlide++;
     const next = document.getElementById(obSlides[obSlide]);
-    setTimeout(() => next.classList.add('active'), 50);
+    // Wait for exit animation to complete before showing next slide
+    setTimeout(() => {
+      current.classList.remove('active', 'exit');
+      setTimeout(() => next.classList.add('active'), 50);
+    }, 480);
     // Update dots
     document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === obSlide));
     document.getElementById('ob-next-btn').textContent = obLabels[obSlide];
@@ -2488,8 +2492,12 @@ function obNext() {
   } else {
     // Last slide → go to profile
     localStorage.setItem('ss_onboarded','1');
-    hide('onboard-screen');
-    show('profile-screen');
+    const lastSlide = document.getElementById(obSlides[obSlide]);
+    lastSlide.classList.add('exit');
+    setTimeout(() => {
+      hide('onboard-screen');
+      show('profile-screen');
+    }, 480);
   }
 }
 

@@ -1039,7 +1039,7 @@ body{
       <div style="background:linear-gradient(135deg,rgba(201,255,71,0.08),rgba(123,92,255,0.08));border:1px solid rgba(201,255,71,0.18);border-radius:16px;padding:18px;margin-bottom:14px;">
         <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:5px;">Upgrade to Pro+</div>
         <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:12px;">Tax engine, AI forecasting, income verification, invoice builder & Foundation access.</div>
-        <button class="btn btn-full" onclick="alert('Pro+ coming soon! You will be notified when billing goes live. 🚀')">Get Pro+ · ₹49/month</button>
+        <button class="btn btn-full" onclick="window.open('https://app.sakredfire.ca/pro','_blank')">Get Pro · ₹49/month</button>
         <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Cancel anytime · UPI Autopay · 7-day trial</div>
       </div>
 
@@ -3473,7 +3473,7 @@ function startProTrial() {
     <div style="background:var(--surf);border-radius:20px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border2);">
       <div style="text-align:center;margin-bottom:20px;">
         <div style="font-size:40px;margin-bottom:10px;">🔐</div>
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Subscribe to Pro</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Upgrade to Pro</div>
         <div style="font-size:13px;color:var(--text2);line-height:1.6;">Complete payment on our secure website.<br>You will receive an unlock code instantly.</div>
       </div>
 
@@ -3513,19 +3513,9 @@ function startProTrial() {
 }
 
 function openPaymentSite() {
-  // Track that user clicked — store their intent
   localStorage.setItem('ss_upgrade_interest', JSON.stringify({ plan:'pro', at: new Date().toISOString() }));
-  // Open payment website in browser
+  document.getElementById('pay-modal')?.remove();
   window.open('https://app.sakredfire.ca/pro', '_blank');
-  // Show instruction
-  const tip = document.getElementById('pay-modal')?.querySelector('.tip-msg');
-  if (!tip) {
-    const msg = document.createElement('div');
-    msg.style.cssText = 'position:fixed;bottom:120px;left:50%;transform:translateX(-50%);background:var(--surf2);border:1px solid var(--border2);color:var(--text2);padding:12px 20px;border-radius:12px;font-size:12px;z-index:9999;text-align:center;max-width:300px;line-height:1.6;';
-    msg.innerHTML = '✅ Payment page opened!<br>After paying, copy your code and come back here to activate.';
-    document.body.appendChild(msg);
-    setTimeout(() => msg.remove(), 5000);
-  }
 }
 
 function activateCode() {

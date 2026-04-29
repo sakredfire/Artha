@@ -3464,65 +3464,117 @@ function handleUpgrade(plan) {
 
 function startProTrial() {
   document.getElementById('upgrade-modal')?.remove();
-  // v1.0: simulate trial start (no payment yet)
-  // v1.1: open Razorpay checkout → on success → activate trial
-  // For now: show payment coming soon + start simulated trial for demo
-  const payModal = document.createElement('div');
-  payModal.id = 'pay-modal';
-  payModal.style.cssText = 'position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;';
-  payModal.innerHTML = `
+  // Open external payment page — Google Play policy requires payments outside the app
+  // Users pay on sakredfire.ca/pro, get a unlock code, enter it here
+  const modal = document.createElement('div');
+  modal.id = 'pay-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;';
+  modal.innerHTML = `
     <div style="background:var(--surf);border-radius:20px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border2);">
       <div style="text-align:center;margin-bottom:20px;">
-        <div style="font-size:36px;margin-bottom:10px;">💳</div>
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;">Start Your Free Trial</div>
-        <div style="font-size:12px;color:var(--text3);line-height:1.6;">Add your UPI ID or card to start the 7-day free trial.<br>You will NOT be charged today. Cancel anytime before day 7.</div>
+        <div style="font-size:40px;margin-bottom:10px;">🔐</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Subscribe to Pro</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;">Complete payment on our secure website.<br>You will receive an unlock code instantly.</div>
       </div>
-      <div style="background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span>Pro plan</span><span style="font-family:'Space Mono',monospace;">₹49/month</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;color:var(--teal);"><span>7-day free trial</span><span>-₹49</span></div>
-        <div style="border-top:1px solid var(--border);margin:8px 0;"></div>
-        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;"><span>Due today</span><span style="color:var(--lime);">₹0</span></div>
-        <div style="font-size:10px;color:var(--text3);margin-top:6px;">₹49 charged on day 8 if not cancelled</div>
+
+      <div style="background:var(--lime-d);border:1px solid rgba(203,255,71,0.2);border-radius:14px;padding:16px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:13px;font-weight:600;">Pro Plan</span>
+          <span style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--lime);">₹49<span style="font-size:11px;color:var(--text3)">/mo</span></span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6;">
+          ✓ 10 AI questions/day &nbsp;·&nbsp; ✓ 10 receipt scans<br>
+          ✓ 5 PDF exports/month &nbsp;·&nbsp; ✓ 7-day free trial
+        </div>
       </div>
-      <div style="margin-bottom:12px;">
-        <label style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:6px;">UPI ID</label>
-        <input id="upi-input" placeholder="yourname@upi" style="width:100%;background:var(--surf2);border:1.5px solid var(--border2);border-radius:10px;padding:11px 13px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--lime)'" onblur="this.style.borderColor='var(--border2)'">
-      </div>
-      <button onclick="activateTrial()" style="width:100%;padding:14px;background:var(--lime);border:none;border-radius:12px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;">
-        Activate Free Trial →
+
+      <button onclick="openPaymentSite()" style="width:100%;padding:14px;background:var(--lime);border:none;border-radius:12px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;">
+        Subscribe on Website →
       </button>
-      <button onclick="document.getElementById('pay-modal').remove()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Cancel</button>
-      <div style="text-align:center;margin-top:10px;font-size:10px;color:var(--text3);">🔒 Secured by Razorpay · DPDP compliant · No hidden charges</div>
+
+      <div style="background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Already subscribed? Enter your code:</div>
+        <div style="display:flex;gap:8px;">
+          <input id="unlock-code-input" placeholder="e.g. SS-PRO-XXXXX" maxlength="14"
+            style="flex:1;background:var(--surf3);border:1.5px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'Space Mono',monospace;outline:none;letter-spacing:0.05em;text-transform:uppercase;"
+            onfocus="this.style.borderColor='var(--lime)'"
+            onblur="this.style.borderColor='var(--border2)'"
+            oninput="this.value=this.value.toUpperCase()">
+          <button onclick="activateCode()" style="padding:10px 16px;background:var(--surf3);border:1.5px solid var(--lime);border-radius:10px;color:var(--lime);font-size:13px;font-weight:700;cursor:pointer;">Apply</button>
+        </div>
+        <div id="code-error" style="font-size:11px;color:var(--pink);margin-top:6px;display:none;">Invalid code. Please check and try again.</div>
+      </div>
+
+      <button onclick="document.getElementById('pay-modal').remove()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Maybe later</button>
+      <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text3);">🔒 Secured by Razorpay · DPDP 2023 · Cancel anytime</div>
     </div>`;
-  payModal.addEventListener('click', e => { if(e.target===payModal) payModal.remove(); });
-  document.body.appendChild(payModal);
+  modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
+  document.body.appendChild(modal);
 }
 
-function activateTrial() {
-  const upi = document.getElementById('upi-input')?.value?.trim();
-  if (!upi || !upi.includes('@')) {
-    document.getElementById('upi-input').style.borderColor = 'var(--pink)';
-    setTimeout(() => document.getElementById('upi-input').style.borderColor='var(--border2)', 1500);
+function openPaymentSite() {
+  // Track that user clicked — store their intent
+  localStorage.setItem('ss_upgrade_interest', JSON.stringify({ plan:'pro', at: new Date().toISOString() }));
+  // Open payment website in browser
+  window.open('https://sakredfire.ca/pro', '_blank');
+  // Show instruction
+  const tip = document.getElementById('pay-modal')?.querySelector('.tip-msg');
+  if (!tip) {
+    const msg = document.createElement('div');
+    msg.style.cssText = 'position:fixed;bottom:120px;left:50%;transform:translateX(-50%);background:var(--surf2);border:1px solid var(--border2);color:var(--text2);padding:12px 20px;border-radius:12px;font-size:12px;z-index:9999;text-align:center;max-width:300px;line-height:1.6;';
+    msg.innerHTML = '✅ Payment page opened!<br>After paying, copy your code and come back here to activate.';
+    document.body.appendChild(msg);
+    setTimeout(() => msg.remove(), 5000);
+  }
+}
+
+function activateCode() {
+  const input = document.getElementById('unlock-code-input');
+  const code = input?.value?.trim().toUpperCase();
+  const errorEl = document.getElementById('code-error');
+
+  if (!code || code.length < 8) {
+    errorEl.style.display = 'block';
+    errorEl.textContent = 'Please enter a valid unlock code.';
     return;
   }
-  // v1.0: store trial locally — v1.1: verify via Razorpay mandate
-  const trial = { started: Date.now(), upi, plan: 'pro' };
-  localStorage.setItem('ss_trial', JSON.stringify(trial));
-  localStorage.setItem('ss_tier', 'pro');
-  localStorage.setItem('ss_tier_token', 'pro_trial_' + Date.now());
-  localStorage.setItem('ss_upgrade_interest', JSON.stringify({ plan:'pro', upi, at: new Date().toISOString() }));
-  document.getElementById('pay-modal')?.remove();
 
-  // Update UI
+  // v1.0: validate code format SS-PRO-XXXXX
+  // v1.1: validate against server/KV database
+  const isValidFormat = /^SS-(PRO|TRIAL)-[A-Z0-9]{5,8}$/.test(code);
+
+  if (!isValidFormat) {
+    errorEl.style.display = 'block';
+    errorEl.textContent = 'Invalid code format. Codes look like: SS-PRO-AB123';
+    return;
+  }
+
+  // Check if trial code
+  const isTrial = code.startsWith('SS-TRIAL-');
+
+  // Activate
+  const trial = isTrial ? { started: Date.now(), code, plan: 'pro' } : null;
+  if (trial) localStorage.setItem('ss_trial', JSON.stringify(trial));
+  localStorage.setItem('ss_tier', 'pro');
+  localStorage.setItem('ss_tier_token', 'pro_' + code);
+  localStorage.setItem('ss_activated_code', code);
+
+  document.getElementById('pay-modal')?.remove();
   loadProfileIntoApp();
   updateAIUsageBadge();
 
-  // Show success
   const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:14px 24px;border-radius:14px;font-size:13px;font-weight:700;z-index:9999;text-align:center;max-width:320px;';
-  toast.innerHTML = '🎉 Pro trial activated! 7 days free.<br><span style="font-weight:400;font-size:11px;">Cancel anytime in Settings before day 7</span>';
+  toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:14px 24px;border-radius:14px;font-size:13px;font-weight:700;z-index:9999;text-align:center;max-width:320px;line-height:1.6;';
+  toast.innerHTML = isTrial
+    ? '🎉 Pro Trial activated! 7 days free.<br><span style="font-weight:400;font-size:11px;">Cancel anytime in Settings before day 7</span>'
+    : '🎉 Pro activated! Welcome to SideStack Pro.';
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 5000);
+}
+
+function activateTrial() {
+  // Legacy — now uses activateCode()
+  activateCode();
 }
 
 function notifyProPlus() {

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SideStack Pro — Upgrade</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --surf: #0F0F1E;
+  --surf2: #13131F;
+  --surf3: #1A1A2E;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.12);
+  --text: #EEEEF8;
+  --text2: #A0A0B8;
+  --text3: #606078;
+  --lime: #CBFF47;
+  --lime-d: rgba(203,255,71,0.1);
+  --purple: #7C5CFF;
+  --teal: #00D4AA;
+  --pink: #FF4D8B;
+  --orange: #FF6B35;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND ── */
+.bg-glow {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+.bg-glow::before {
+  content:''; position:absolute; top:-200px; left:50%; transform:translateX(-50%);
+  width:600px; height:600px; border-radius:50%;
+  background: radial-gradient(circle, rgba(203,255,71,0.06) 0%, transparent 70%);
+}
+.bg-glow::after {
+  content:''; position:absolute; bottom:-100px; right:-100px;
+  width:400px; height:400px; border-radius:50%;
+  background: radial-gradient(circle, rgba(124,92,255,0.08) 0%, transparent 70%);
+}
+
+/* ── LANG SELECTOR ── */
+.lang-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8,8,16,0.9); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo-sm {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px;
+}
+.logo-icon {
+  width: 28px; height: 28px; background: var(--lime); border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; color: #000;
+}
+.lang-pills {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.lang-pill {
+  padding: 4px 10px; border-radius: 100px;
+  background: var(--surf2); border: 1px solid var(--border);
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  transition: all 0.15s; color: var(--text2);
+}
+.lang-pill.active {
+  background: var(--lime-d); border-color: rgba(203,255,71,0.4); color: var(--lime);
+}
+.lang-pill:hover { border-color: var(--border2); color: var(--text); }
+
+/* ── MAIN ── */
+.container {
+  position: relative; z-index: 1;
+  max-width: 480px; margin: 0 auto; padding: 32px 20px 60px;
+}
+
+/* ── HERO ── */
+.hero { text-align: center; margin-bottom: 32px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--lime-d); border: 1px solid rgba(203,255,71,0.25);
+  border-radius: 100px; padding: 5px 14px; font-size: 12px;
+  font-weight: 600; color: var(--lime); margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+  line-height: 1.1; margin-bottom: 10px;
+}
+.hero h1 span { color: var(--lime); }
+.hero p { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+/* ── PLAN CARD ── */
+.plan-card {
+  background: var(--surf); border: 1.5px solid rgba(203,255,71,0.25);
+  border-radius: 20px; padding: 24px; margin-bottom: 16px;
+  position: relative; overflow: hidden;
+}
+.plan-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, var(--lime), transparent);
+}
+.plan-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+}
+.plan-name {
+  font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+}
+.plan-price {
+  text-align: right;
+}
+.plan-price .amount {
+  font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700; color: var(--lime);
+}
+.plan-price .period { font-size: 12px; color: var(--text3); }
+.plan-price .trial-badge {
+  display: inline-block; background: rgba(0,212,170,0.15); color: var(--teal);
+  border-radius: 100px; padding: 2px 8px; font-size: 10px; font-weight: 700;
+  margin-top: 2px;
+}
+
+.features-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;
+}
+.feature-item {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--surf2); border-radius: 10px; padding: 9px 10px;
+  font-size: 12px; color: var(--text2);
+}
+.feature-item .fi { font-size: 16px; flex-shrink: 0; }
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+.trial-breakdown {
+  background: var(--lime-d); border-radius: 12px; padding: 14px; margin-bottom: 20px;
+}
+.trial-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; margin-bottom: 6px;
+}
+.trial-row:last-child { margin-bottom: 0; font-weight: 700; font-size: 14px; }
+.trial-row .due { color: var(--lime); font-family: 'Space Mono', monospace; }
+.trial-note { font-size: 10px; color: var(--text3); margin-top: 8px; text-align: center; }
+
+/* ── CTA BUTTON ── */
+.cta-btn {
+  width: 100%; padding: 16px; background: var(--lime); border: none;
+  border-radius: 14px; color: #000; font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: all 0.15s; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.cta-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(203,255,71,0.3); }
+.cta-btn:active { transform: translateY(0); }
+
+/* ── CODE SECTION ── */
+.code-section {
+  background: var(--surf); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 20px; margin-bottom: 16px;
+}
+.code-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text3); margin-bottom: 12px;
+}
+.code-input-row { display: flex; gap: 8px; }
+.code-input {
+  flex: 1; background: var(--surf2); border: 1.5px solid var(--border2);
+  border-radius: 10px; padding: 12px 14px; color: var(--text);
+  font-family: 'Space Mono', monospace; font-size: 14px; outline: none;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  transition: border-color 0.15s;
+}
+.code-input:focus { border-color: var(--lime); }
+.code-input::placeholder { color: var(--text3); text-transform: none; letter-spacing: 0; }
+.apply-btn {
+  padding: 12px 18px; background: var(--surf2); border: 1.5px solid var(--lime);
+  border-radius: 10px; color: var(--lime); font-weight: 700; font-size: 13px; cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+}
+.apply-btn:hover { background: var(--lime-d); }
+.code-error { font-size: 11px; color: var(--pink); margin-top: 8px; display: none; }
+.code-success { font-size: 11px; color: var(--teal); margin-top: 8px; display: none; }
+
+/* ── TRUST BADGES ── */
+.trust-row {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  flex-wrap: wrap; margin: 16px 0;
+}
+.trust-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--text3);
+}
+
+/* ── COMING SOON ── */
+.coming-card {
+  background: var(--surf2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px; margin-bottom: 16px; opacity: 0.65;
+}
+.coming-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+}
+.coming-badge {
+  font-size: 10px; background: var(--surf3); color: var(--text3);
+  padding: 2px 8px; border-radius: 100px; font-weight: 600;
+}
+
+/* ── FAQ ── */
+.faq { margin-top: 32px; }
+.faq-title {
+  font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+  margin-bottom: 16px; text-align: center;
+}
+.faq-item {
+  background: var(--surf); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer;
+}
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; font-weight: 600;
+}
+.faq-a {
+  font-size: 12px; color: var(--text2); line-height: 1.6;
+  margin-top: 10px; display: none;
+}
+.faq-item.open .faq-a { display: block; }
+.faq-item.open .faq-chevron { transform: rotate(180deg); }
+.faq-chevron { transition: transform 0.2s; color: var(--text3); }
+
+/* ── SUCCESS STATE ── */
+.success-screen {
+  display: none; text-align: center; padding: 40px 0;
+}
+.success-screen.show { display: block; }
+.success-icon { font-size: 64px; margin-bottom: 16px; }
+.success-code {
+  background: var(--surf); border: 2px dashed var(--lime);
+  border-radius: 14px; padding: 20px; margin: 20px 0;
+  font-family: 'Space Mono', monospace; font-size: 24px;
+  font-weight: 700; color: var(--lime); letter-spacing: 0.1em;
+  cursor: pointer; transition: background 0.15s;
+}
+.success-code:hover { background: var(--lime-d); }
+.copy-hint { font-size: 12px; color: var(--text3); margin-top: 6px; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.container > * { animation: fadeUp 0.4s ease both; }
+.container > *:nth-child(1) { animation-delay: 0.05s; }
+.container > *:nth-child(2) { animation-delay: 0.1s; }
+.container > *:nth-child(3) { animation-delay: 0.15s; }
+.container > *:nth-child(4) { animation-delay: 0.2s; }
+.container > *:nth-child(5) { animation-delay: 0.25s; }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<!-- Language Bar -->
+<div class="lang-bar">
+  <div class="logo-sm">
+    <div class="logo-icon">S₹</div>
+    SideStack
+  </div>
+  <div class="lang-pills">
+    <div class="lang-pill active" onclick="setLang('en')">EN</div>
+    <div class="lang-pill" onclick="setLang('hi')">हिं</div>
+    <div class="lang-pill" onclick="setLang('ta')">தமி</div>
+    <div class="lang-pill" onclick="setLang('te')">తెలు</div>
+    <div class="lang-pill" onclick="setLang('mr')">मरा</div>
+    <div class="lang-pill" onclick="setLang('kn')">ಕನ್ನ</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">⚡ <span data-t="badge">7-Day Free Trial</span></div>
+    <h1><span data-t="h1a">Unlock</span> <span>SideStack Pro</span></h1>
+    <p data-t="subtitle">10 AI questions a day, unlimited receipt scans, income proof PDFs — everything your hustle needs.</p>
+  </div>
+
+  <!-- Plan Card -->
+  <div class="plan-card">
+    <div class="plan-header">
+      <div>
+        <div class="plan-name">Pro</div>
+        <div style="font-size:12px;color:var(--text3)" data-t="plan-sub">Everything you need</div>
+      </div>
+      <div class="plan-price">
+        <div class="amount">₹49</div>
+        <div class="period" data-t="per-month">/month</div>
+        <div class="trial-badge" data-t="trial-label">7 days FREE</div>
+      </div>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-item"><span class="fi">🤖</span><span data-t="f1">10 AI/day</span></div>
+      <div class="feature-item"><span class="fi">📷</span><span data-t="f2">10 Scans/day</span></div>
+      <div class="feature-item"><span class="fi">📄</span><span data-t="f3">5 PDFs/month</span></div>
+      <div class="feature-item"><span class="fi">📊</span><span data-t="f4">Tax Engine</span></div>
+      <div class="feature-item"><span class="fi">🏛️</span><span data-t="f5">Govt Schemes</span></div>
+      <div class="feature-item"><span class="fi">🔒</span><span data-t="f6">100% Private</span></div>
+    </div>
+
+    <div class="trial-breakdown">
+      <div class="trial-row"><span data-t="today-charge">Due today</span><span class="due">₹0</span></div>
+      <div class="trial-row"><span data-t="after-trial">After 7 days</span><span style="color:var(--text2);font-family:'Space Mono',monospace">₹49/mo</span></div>
+      <div class="trial-note" data-t="cancel-note">Cancel anytime before day 7 — no charge</div>
+    </div>
+
+    <button class="cta-btn" onclick="startPayment()">
+      <span>💳</span> <span data-t="cta-btn">Start Free Trial — ₹0 Today</span>
+    </button>
+
+    <div class="trust-row" style="margin-top:14px;">
+      <div class="trust-item">🔒 <span data-t="t1">Razorpay Secured</span></div>
+      <div class="trust-item">🇮🇳 <span data-t="t2">UPI / Card</span></div>
+      <div class="trust-item">✓ <span data-t="t3">DPDP Compliant</span></div>
+    </div>
+  </div>
+
+  <!-- Have a code? -->
+  <div class="code-section">
+    <div class="code-label" data-t="have-code">Already have an unlock code?</div>
+    <div class="code-input-row">
+      <input class="code-input" id="code-input" placeholder="SS-PRO-XXXXX" maxlength="14"
+        oninput="this.value=this.value.toUpperCase()">
+      <button class="apply-btn" onclick="applyCode()" data-t="apply">Apply</button>
+    </div>
+    <div class="code-error" id="code-error" data-t="code-err">Invalid code. Please check and try again.</div>
+    <div class="code-success" id="code-success" data-t="code-ok">✓ Code verified! Open SideStack app to activate.</div>
+  </div>
+
+  <!-- Pro+ Coming Soon -->
+  <div class="coming-card">
+    <div class="coming-header">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;">⚡ Pro+ <span class="coming-badge" data-t="coming-soon">Coming Soon</span></div>
+        <div style="font-size:12px;color:var(--text3);margin-top:3px;" data-t="proplus-desc">50 AI/day with Claude Sonnet · Unlimited everything · ₹149/mo</div>
+      </div>
+      <button onclick="notifyProPlus(this)" style="padding:6px 14px;background:transparent;border:1px solid var(--border2);border-radius:100px;font-size:11px;font-weight:600;color:var(--text3);cursor:pointer;" data-t="notify-me">🔔 Notify me</button>
+    </div>
+  </div>
+
+  <!-- Trust -->
+  <div class="trust-row">
+    <div class="trust-item">🔒 <span data-t="tt1">Bank-grade security</span></div>
+    <div class="trust-item">↩ <span data-t="tt2">Cancel anytime</span></div>
+    <div class="trust-item">📱 <span data-t="tt3">Works on all devices</span></div>
+  </div>
+
+  <!-- Success Screen -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">🎉</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:8px;" data-t="success-title">You're Pro now!</h2>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;" data-t="success-sub">Copy this code and enter it in the SideStack app to activate your plan.</p>
+    <div class="success-code" id="success-code" onclick="copyCode()">SS-PRO-XXXXXX</div>
+    <div class="copy-hint" data-t="tap-copy">Tap to copy</div>
+    <button onclick="openApp()" style="margin-top:20px;width:100%;padding:14px;background:var(--lime);border:none;border-radius:12px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;" data-t="open-app">Open SideStack App →</button>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <div class="faq-title" data-t="faq-title">Frequently Asked Questions</div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span data-t="q1">Will I be charged immediately?</span><span class="faq-chevron">▾</span></div>
+      <div class="faq-a" data-t="a1">No. The 7-day trial is completely free. Your card/UPI is saved but only charged on day 8 if you don't cancel.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span data-t="q2">How do I cancel the trial?</span><span class="faq-chevron">▾</span></div>
+      <div class="faq-a" data-t="a2">Open SideStack app → More → Settings → scroll down to Cancel Trial. Your plan reverts to Free instantly. No charge, no hassle.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span data-t="q3">What payment methods are accepted?</span><span class="faq-chevron">▾</span></div>
+      <div class="faq-a" data-t="a3">UPI (GPay, PhonePe, Paytm), all major debit/credit cards, and net banking. All payments secured by Razorpay.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span data-t="q4">Is my financial data safe?</span><span class="faq-chevron">▾</span></div>
+      <div class="faq-a" data-t="a4">100%. SideStack stores all your income and financial data on your device only. Nothing is sent to our servers. DPDP 2023 compliant.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q"><span data-t="q5">Can I upgrade to Pro+ later?</span><span class="faq-chevron">▾</span></div>
+      <div class="faq-a" data-t="a5">Yes! Pro+ (₹149/month) with Claude Sonnet AI and unlimited everything is coming soon. Tap "Notify me" above to be first in line.</div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ══ TRANSLATIONS ══
+const T = {
+  en: {
+    badge:'7-Day Free Trial', h1a:'Unlock', subtitle:'10 AI questions a day, unlimited receipt scans, income proof PDFs — everything your hustle needs.',
+    'plan-sub':'Everything you need', 'per-month':'/month', 'trial-label':'7 days FREE',
+    f1:'10 AI/day', f2:'10 Scans/day', f3:'5 PDFs/month', f4:'Tax Engine', f5:'Govt Schemes', f6:'100% Private',
+    'today-charge':'Due today', 'after-trial':'After 7 days', 'cancel-note':'Cancel anytime before day 7 — no charge',
+    'cta-btn':'Start Free Trial — ₹0 Today',
+    t1:'Razorpay Secured', t2:'UPI / Card', t3:'DPDP Compliant',
+    'have-code':'Already have an unlock code?', apply:'Apply',
+    'code-err':'Invalid code. Please check and try again.',
+    'code-ok':'✓ Code verified! Open SideStack app to activate.',
+    'coming-soon':'Coming Soon', 'proplus-desc':'50 AI/day with Claude Sonnet · Unlimited everything · ₹149/mo', 'notify-me':'🔔 Notify me',
+    tt1:'Bank-grade security', tt2:'Cancel anytime', tt3:'Works on all devices',
+    'success-title':"You're Pro now!", 'success-sub':'Copy this code and enter it in the SideStack app to activate your plan.',
+    'tap-copy':'Tap to copy', 'open-app':'Open SideStack App →',
+    'faq-title':'Frequently Asked Questions',
+    q1:'Will I be charged immediately?', a1:'No. The 7-day trial is completely free. Your card/UPI is saved but only charged on day 8 if you don\'t cancel.',
+    q2:'How do I cancel the trial?', a2:'Open SideStack app → More → Settings → scroll down to Cancel Trial. Your plan reverts to Free instantly.',
+    q3:'What payment methods are accepted?', a3:'UPI (GPay, PhonePe, Paytm), all major debit/credit cards, and net banking. All payments secured by Razorpay.',
+    q4:'Is my financial data safe?', a4:'100%. SideStack stores all your income data on your device only. Nothing is sent to our servers. DPDP 2023 compliant.',
+    q5:'Can I upgrade to Pro+ later?', a5:'Yes! Pro+ (₹149/month) with Claude Sonnet AI is coming soon. Tap "Notify me" above to be first in line.',
+  },
+  hi: {
+    badge:'7 दिन मुफ्त ट्रायल', h1a:'अनलॉक करें', subtitle:'प्रतिदिन 10 AI सवाल, रसीद स्कैन, आय प्रमाण PDF — आपकी कमाई के लिए सब कुछ।',
+    'plan-sub':'सब कुछ जो चाहिए', 'per-month':'/माह', 'trial-label':'7 दिन मुफ्त',
+    f1:'10 AI/दिन', f2:'10 स्कैन/दिन', f3:'5 PDF/माह', f4:'टैक्स इंजन', f5:'सरकारी योजनाएं', f6:'100% निजी',
+    'today-charge':'आज देय', 'after-trial':'7 दिन बाद', 'cancel-note':'दिन 7 से पहले कैंसिल करें — कोई शुल्क नहीं',
+    'cta-btn':'मुफ्त ट्रायल शुरू करें — ₹0 आज',
+    t1:'Razorpay सुरक्षित', t2:'UPI / कार्ड', t3:'DPDP अनुपालन',
+    'have-code':'पहले से अनलॉक कोड है?', apply:'लगाएं',
+    'code-err':'अमान्य कोड। कृपया जांचें और पुनः प्रयास करें।',
+    'code-ok':'✓ कोड सत्यापित! SideStack ऐप में एक्टिवेट करें।',
+    'coming-soon':'जल्द आ रहा है', 'proplus-desc':'50 AI/दिन · सब कुछ असीमित · ₹149/माह', 'notify-me':'🔔 सूचित करें',
+    tt1:'बैंक-स्तरीय सुरक्षा', tt2:'कभी भी रद्द करें', tt3:'सभी डिवाइस पर',
+    'success-title':'आप Pro हो गए!', 'success-sub':'यह कोड कॉपी करें और SideStack ऐप में डालें।',
+    'tap-copy':'कॉपी करने के लिए टैप करें', 'open-app':'SideStack ऐप खोलें →',
+    'faq-title':'अक्सर पूछे जाने वाले प्रश्न',
+    q1:'क्या मुझसे तुरंत चार्ज किया जाएगा?', a1:'नहीं। 7 दिन का ट्रायल पूरी तरह मुफ्त है। दिन 8 पर ही चार्ज होगा।',
+    q2:'ट्रायल कैसे रद्द करें?', a2:'SideStack ऐप → More → Settings → Cancel Trial। तुरंत Free प्लान पर वापस।',
+    q3:'कौन से भुगतान स्वीकार हैं?', a3:'UPI (GPay, PhonePe, Paytm), सभी डेबिट/क्रेडिट कार्ड। Razorpay द्वारा सुरक्षित।',
+    q4:'क्या मेरा डेटा सुरक्षित है?', a4:'100%। SideStack आपका सारा डेटा आपके डिवाइस पर ही रखता है।',
+    q5:'Pro+ में अपग्रेड हो सकता हूं?', a5:'हां! Pro+ (₹149/माह) जल्द आ रहा है। ऊपर "सूचित करें" टैप करें।',
+  },
+  ta: {
+    badge:'7 நாள் இலவச சோதனை', h1a:'திறக்கவும்', subtitle:'தினமும் 10 AI கேள்விகள், ரசீது ஸ்கேன், வருமான ஆவணங்கள் — உங்கள் உழைப்புக்கு தேவையான அனைத்தும்।',
+    'plan-sub':'தேவையான அனைத்தும்', 'per-month':'/மாதம்', 'trial-label':'7 நாள் இலவசம்',
+    f1:'10 AI/நாள்', f2:'10 ஸ்கேன்/நாள்', f3:'5 PDF/மாதம்', f4:'வரி இயந்திரம்', f5:'அரசு திட்டங்கள்', f6:'100% தனிப்பட்ட',
+    'today-charge':'இன்று செலுத்த வேண்டியது', 'after-trial':'7 நாட்களுக்கு பிறகு', 'cancel-note':'7 நாட்களுக்கு முன் ரத்து செய்யுங்கள்',
+    'cta-btn':'இலவச சோதனை தொடங்கு — ₹0 இன்று',
+    t1:'Razorpay பாதுகாப்பு', t2:'UPI / கார்டு', t3:'DPDP இணக்கம்',
+    'have-code':'ஏற்கனவே கோட் உள்ளதா?', apply:'பயன்படுத்து',
+    'code-err':'தவறான கோட். மீண்டும் முயற்சிக்கவும்.',
+    'code-ok':'✓ கோட் சரிபார்க்கப்பட்டது! SideStack ஆப்பில் செயல்படுத்தவும்.',
+    'coming-soon':'விரைவில் வருகிறது', 'proplus-desc':'50 AI/நாள் · அனைத்தும் வரம்பற்றது · ₹149/மாதம்', 'notify-me':'🔔 அறிவிக்கவும்',
+    tt1:'வங்கி அளவிலான பாதுகாப்பு', tt2:'எந்த நேரத்திலும் ரத்து செய்', tt3:'எல்லா சாதனங்களிலும்',
+    'success-title':'நீங்கள் Pro ஆனீர்கள்!', 'success-sub':'இந்த கோட்டை நகலெடுத்து SideStack ஆப்பில் உள்ளிடவும்.',
+    'tap-copy':'நகலெடுக்க தட்டவும்', 'open-app':'SideStack ஆப்பை திற →',
+    'faq-title':'அடிக்கடி கேட்கப்படும் கேள்விகள்',
+    q1:'உடனே கட்டணம் வசூலிக்கப்படுமா?', a1:'இல்லை. 7 நாள் சோதனை முற்றிலும் இலவசம். 8வது நாளில் மட்டுமே கட்டணம்.',
+    q2:'சோதனையை எப்படி ரத்து செய்வது?', a2:'SideStack → More → Settings → Cancel Trial. உடனே Free திட்டத்திற்கு திரும்பும்.',
+    q3:'என்ன கட்டண முறைகள் ஏற்றுக்கொள்ளப்படுகின்றன?', a3:'UPI (GPay, PhonePe, Paytm), அனைத்து டெபிட்/கிரெடிட் கார்டுகள். Razorpay பாதுகாப்பு.',
+    q4:'என் தரவு பாதுகாப்பாக உள்ளதா?', a4:'100%. SideStack உங்கள் தரவை உங்கள் சாதனத்தில் மட்டுமே சேமிக்கிறது.',
+    q5:'பின்னர் Pro+ க்கு மேம்படுத்தலாமா?', a5:'ஆம்! Pro+ (₹149/மாதம்) விரைவில் வருகிறது. மேலே "அறிவிக்கவும்" தட்டவும்.',
+  },
+  te: {
+    badge:'7 రోజుల ఉచిత ట్రయల్', h1a:'అన్‌లాక్ చేయండి', subtitle:'రోజుకు 10 AI ప్రశ్నలు, రసీదు స్కాన్, ఆదాయ నిరూపణ — మీ పని కోసం అన్నీ.',
+    'plan-sub':'అవసరమైనదంతా', 'per-month':'/నెల', 'trial-label':'7 రోజులు ఉచితం',
+    f1:'10 AI/రోజు', f2:'10 స్కాన్/రోజు', f3:'5 PDF/నెల', f4:'పన్ను ఇంజిన్', f5:'ప్రభుత్వ పథకాలు', f6:'100% ప్రైవేట్',
+    'today-charge':'ఈరోజు చెల్లింపు', 'after-trial':'7 రోజుల తర్వాత', 'cancel-note':'రోజు 7 కంటే ముందు రద్దు చేయండి',
+    'cta-btn':'ఉచిత ట్రయల్ ప్రారంభించండి — ₹0 ఈరోజు',
+    t1:'Razorpay భద్రత', t2:'UPI / కార్డు', t3:'DPDP అనుపాలన',
+    'have-code':'ఇప్పటికే కోడ్ ఉందా?', apply:'వర్తింపజేయి',
+    'code-err':'చెల్లని కోడ్. దయచేసి తనిఖీ చేసి మళ్ళీ ప్రయత్నించండి.',
+    'code-ok':'✓ కోడ్ ధృవీకరించబడింది! SideStack యాప్‌లో యాక్టివేట్ చేయండి.',
+    'coming-soon':'త్వరలో వస్తుంది', 'proplus-desc':'50 AI/రోజు · అపరిమిత అన్నీ · ₹149/నెల', 'notify-me':'🔔 తెలియజేయి',
+    tt1:'బ్యాంక్ స్థాయి భద్రత', tt2:'ఎప్పుడైనా రద్దు చేయండి', tt3:'అన్ని పరికరాలపై',
+    'success-title':'మీరు Pro అయ్యారు!', 'success-sub':'ఈ కోడ్‌ను కాపీ చేసి SideStack యాప్‌లో నమోదు చేయండి.',
+    'tap-copy':'కాపీ చేయడానికి నొక్కండి', 'open-app':'SideStack యాప్ తెరవండి →',
+    'faq-title':'తరచుగా అడిగే ప్రశ్నలు',
+    q1:'నాకు వెంటనే చార్జ్ చేయబడుతుందా?', a1:'లేదు. 7 రోజుల ట్రయల్ పూర్తిగా ఉచితం. 8వ రోజున మాత్రమే చార్జ్ అవుతుంది.',
+    q2:'ట్రయల్‌ని ఎలా రద్దు చేయాలి?', a2:'SideStack → More → Settings → Cancel Trial. వెంటనే Free ప్లాన్‌కు తిరిగి వస్తుంది.',
+    q3:'ఏ చెల్లింపు పద్ధతులు స్వీకరించబడతాయి?', a3:'UPI (GPay, PhonePe, Paytm), అన్ని డెబిట్/క్రెడిట్ కార్డులు. Razorpay రక్షణ.',
+    q4:'నా డేటా సురక్షితంగా ఉందా?', a4:'100%. SideStack మీ డేటాను మీ పరికరంలో మాత్రమే నిల్వ చేస్తుంది.',
+    q5:'తర్వాత Pro+ కి అప్‌గ్రేడ్ చేయవచ్చా?', a5:'అవును! Pro+ (₹149/నెల) త్వరలో వస్తుంది. పైన "తెలియజేయి" నొక్కండి.',
+  },
+  mr: {
+    badge:'७ दिवस मोफत ट्रायल', h1a:'अनलॉक करा', subtitle:'दररोज १० AI प्रश्न, पावती स्कॅन, उत्पन्न पुरावा — तुमच्या कामासाठी सर्व काही.',
+    'plan-sub':'सर्व काही जे हवे', 'per-month':'/महिना', 'trial-label':'७ दिवस मोफत',
+    f1:'१० AI/दिवस', f2:'१० स्कॅन/दिवस', f3:'५ PDF/महिना', f4:'कर इंजिन', f5:'सरकारी योजना', f6:'१००% खाजगी',
+    'today-charge':'आज देय', 'after-trial':'७ दिवसांनंतर', 'cancel-note':'७ व्या दिवसापूर्वी रद्द करा',
+    'cta-btn':'मोफत ट्रायल सुरू करा — ₹० आज',
+    t1:'Razorpay सुरक्षित', t2:'UPI / कार्ड', t3:'DPDP अनुपालन',
+    'have-code':'आधीच अनलॉक कोड आहे?', apply:'लागू करा',
+    'code-err':'अवैध कोड. कृपया तपासा आणि पुन्हा प्रयत्न करा.',
+    'code-ok':'✓ कोड सत्यापित! SideStack अॅपमध्ये सक्रिय करा.',
+    'coming-soon':'लवकरच येत आहे', 'proplus-desc':'५० AI/दिवस · सर्व अमर्याद · ₹१४९/महिना', 'notify-me':'🔔 सूचित करा',
+    tt1:'बँक-दर्जाची सुरक्षा', tt2:'केव्हाही रद्द करा', tt3:'सर्व डिव्हाइसवर',
+    'success-title':'तुम्ही Pro झालात!', 'success-sub':'हा कोड कॉपी करा आणि SideStack अॅपमध्ये टाका.',
+    'tap-copy':'कॉपी करण्यासाठी टॅप करा', 'open-app':'SideStack अॅप उघडा →',
+    'faq-title':'वारंवार विचारले जाणारे प्रश्न',
+    q1:'मला लगेच चार्ज केले जाईल का?', a1:'नाही. ७ दिवसांचा ट्रायल पूर्णपणे मोफत आहे. ८ व्या दिवशीच चार्ज होतो.',
+    q2:'ट्रायल कसे रद्द करावे?', a2:'SideStack → More → Settings → Cancel Trial. लगेच Free प्लानवर परत.',
+    q3:'कोणते पेमेंट पद्धती स्वीकारल्या जातात?', a3:'UPI (GPay, PhonePe, Paytm), सर्व डेबिट/क्रेडिट कार्ड. Razorpay सुरक्षा.',
+    q4:'माझा डेटा सुरक्षित आहे का?', a4:'१००%. SideStack तुमचा सर्व डेटा फक्त तुमच्या डिव्हाइसवर ठेवतो.',
+    q5:'नंतर Pro+ वर अपग्रेड करता येईल का?', a5:'हो! Pro+ (₹१४९/महिना) लवकरच येत आहे. वर "सूचित करा" टॅप करा.',
+  },
+  kn: {
+    badge:'7 ದಿನ ಉಚಿತ ಟ್ರಯಲ್', h1a:'ಅನ್‌ಲಾಕ್ ಮಾಡಿ', subtitle:'ದಿನಕ್ಕೆ 10 AI ಪ್ರಶ್ನೆಗಳು, ರಶೀದಿ ಸ್ಕ್ಯಾನ್, ಆದಾಯ ಪುರಾವೆ — ನಿಮ್ಮ ದುಡಿಮೆಗೆ ಎಲ್ಲವೂ.',
+    'plan-sub':'ಅಗತ್ಯವಿರುವ ಎಲ್ಲವೂ', 'per-month':'/ತಿಂಗಳು', 'trial-label':'7 ದಿನ ಉಚಿತ',
+    f1:'10 AI/ದಿನ', f2:'10 ಸ್ಕ್ಯಾನ್/ದಿನ', f3:'5 PDF/ತಿಂಗಳು', f4:'ತೆರಿಗೆ ಎಂಜಿನ್', f5:'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು', f6:'100% ಖಾಸಗಿ',
+    'today-charge':'ಇಂದು ಪಾವತಿ', 'after-trial':'7 ದಿನಗಳ ನಂತರ', 'cancel-note':'7ನೇ ದಿನಕ್ಕಿಂತ ಮೊದಲು ರದ್ದು ಮಾಡಿ',
+    'cta-btn':'ಉಚಿತ ಟ್ರಯಲ್ ಪ್ರಾರಂಭಿಸಿ — ₹0 ಇಂದು',
+    t1:'Razorpay ಸುರಕ್ಷಿತ', t2:'UPI / ಕಾರ್ಡ್', t3:'DPDP ಅನುಪಾಲನ',
+    'have-code':'ಈಗಾಗಲೇ ಕೋಡ್ ಇದೆಯೇ?', apply:'ಅನ್ವಯಿಸಿ',
+    'code-err':'ಅಮಾನ್ಯ ಕೋಡ್. ದಯವಿಟ್ಟು ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+    'code-ok':'✓ ಕೋಡ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ! SideStack ಅಪ್‌ನಲ್ಲಿ ಸಕ್ರಿಯಗೊಳಿಸಿ.',
+    'coming-soon':'ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ', 'proplus-desc':'50 AI/ದಿನ · ಎಲ್ಲವೂ ಅಪರಿಮಿತ · ₹149/ತಿಂಗಳು', 'notify-me':'🔔 ತಿಳಿಸಿ',
+    tt1:'ಬ್ಯಾಂಕ್ ಮಟ್ಟದ ಸುರಕ್ಷತೆ', tt2:'ಯಾವಾಗ ಬೇಕಾದರೂ ರದ್ದು', tt3:'ಎಲ್ಲ ಸಾಧನಗಳಲ್ಲಿ',
+    'success-title':'ನೀವು Pro ಆದಿರಿ!', 'success-sub':'ಈ ಕೋಡ್ ಅನ್ನು ನಕಲಿಸಿ SideStack ಅಪ್‌ನಲ್ಲಿ ನಮೂದಿಸಿ.',
+    'tap-copy':'ನಕಲಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ', 'open-app':'SideStack ಅಪ್ ತೆರೆಯಿರಿ →',
+    'faq-title':'ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು',
+    q1:'ನನಗೆ ತಕ್ಷಣ ಚಾರ್ಜ್ ಮಾಡಲಾಗುತ್ತದೆಯೇ?', a1:'ಇಲ್ಲ. 7 ದಿನದ ಟ್ರಯಲ್ ಸಂಪೂರ್ಣ ಉಚಿತ. 8ನೇ ದಿನ ಮಾತ್ರ ಚಾರ್ಜ್.',
+    q2:'ಟ್ರಯಲ್ ಹೇಗೆ ರದ್ದು ಮಾಡುವುದು?', a2:'SideStack → More → Settings → Cancel Trial. ತಕ್ಷಣ Free ಪ್ಲಾನ್‌ಗೆ ಮರಳುತ್ತದೆ.',
+    q3:'ಯಾವ ಪಾವತಿ ವಿಧಾನಗಳನ್ನು ಸ್ವೀಕರಿಸಲಾಗುತ್ತದೆ?', a3:'UPI (GPay, PhonePe, Paytm), ಎಲ್ಲ ಡೆಬಿಟ್/ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್‌ಗಳು.',
+    q4:'ನನ್ನ ಡೇಟಾ ಸುರಕ್ಷಿತವಾಗಿದೆಯೇ?', a4:'100%. SideStack ನಿಮ್ಮ ಡೇಟಾವನ್ನು ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಮಾತ್ರ ಸಂಗ್ರಹಿಸುತ್ತದೆ.',
+    q5:'ನಂತರ Pro+ ಗೆ ಅಪ್‌ಗ್ರೇಡ್ ಮಾಡಬಹುದೇ?', a5:'ಹೌದು! Pro+ (₹149/ತಿಂಗಳು) ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ. ಮೇಲೆ "ತಿಳಿಸಿ" ಟ್ಯಾಪ್ ಮಾಡಿ.',
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = T[lang] || T.en;
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.documentElement.lang = lang;
+}
+
+function toggleFaq(el) {
+  el.classList.toggle('open');
+}
+
+// ── PAYMENT ──
+function startPayment() {
+  // v1.0: show payment coming soon
+  // v1.1: open Razorpay checkout here
+  const t = T[currentLang] || T.en;
+  showComingSoon();
+}
+
+function showComingSoon() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;';
+  overlay.innerHTML = `
+    <div style="background:var(--surf);border-radius:20px;padding:32px;width:100%;max-width:380px;text-align:center;border:1px solid var(--border2);">
+      <div style="font-size:48px;margin-bottom:16px;">🚀</div>
+      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Payment Coming Soon!</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;">
+        We are setting up Razorpay UPI payments.<br>
+        Enter your email below to be notified the moment it goes live — you will get first access.
+      </div>
+      <input id="notify-email" type="email" placeholder="your@email.com"
+        style="width:100%;background:var(--surf2);border:1.5px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-size:14px;outline:none;margin-bottom:10px;"
+        onfocus="this.style.borderColor='var(--lime)'" onblur="this.style.borderColor='var(--border2)'">
+      <button onclick="saveEmail()" style="width:100%;padding:13px;background:var(--lime);border:none;border-radius:11px;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">
+        Notify Me →
+      </button>
+      <button onclick="this.closest('div').parentElement.remove()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Close</button>
+    </div>`;
+  overlay.addEventListener('click', e => { if(e.target===overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+function saveEmail() {
+  const email = document.getElementById('notify-email')?.value?.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('notify-email').style.borderColor = 'var(--pink)';
+    return;
+  }
+  // Store locally
+  const interested = JSON.parse(localStorage.getItem('ss_pro_waitlist') || '[]');
+  interested.push({ email, at: new Date().toISOString(), lang: currentLang });
+  localStorage.setItem('ss_pro_waitlist', JSON.stringify(interested));
+
+  document.querySelector('[onclick="saveEmail()"]').closest('div').parentElement.innerHTML = `
+    <div style="background:var(--surf);border-radius:20px;padding:32px;width:100%;max-width:380px;text-align:center;border:1px solid rgba(203,255,71,0.3);">
+      <div style="font-size:48px;margin-bottom:16px;">✅</div>
+      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;color:var(--lime);">You are on the list!</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;">We will email <strong>${email}</strong> the moment payments go live. You get first access and a special early-adopter discount.</div>
+      <button onclick="this.closest('div').parentElement.remove()" style="width:100%;padding:13px;background:var(--surf2);border:1px solid var(--border2);border-radius:11px;color:var(--text);font-size:14px;cursor:pointer;">Close</button>
+    </div>`;
+}
+
+function applyCode() {
+  const input = document.getElementById('code-input');
+  const code = input?.value?.trim().toUpperCase();
+  const errorEl = document.getElementById('code-error');
+  const successEl = document.getElementById('code-success');
+
+  errorEl.style.display = 'none';
+  successEl.style.display = 'none';
+
+  if (!code || code.length < 8) {
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const isValid = /^SS-(PRO|TRIAL)-[A-Z0-9]{5,8}$/.test(code);
+  if (!isValid) {
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  // Store verified code for app to pick up
+  localStorage.setItem('ss_verified_code', code);
+  localStorage.setItem('ss_verified_at', new Date().toISOString());
+  successEl.style.display = 'block';
+  input.style.borderColor = 'var(--teal)';
+}
+
+function notifyProPlus(btn) {
+  localStorage.setItem('ss_proplus_notify', new Date().toISOString());
+  btn.textContent = '✓ Done!';
+  btn.style.color = 'var(--teal)';
+  btn.style.borderColor = 'var(--teal)';
+  setTimeout(() => {
+    btn.textContent = '🔔 Notify me';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 3000);
+}
+
+function copyCode() {
+  const code = document.getElementById('success-code')?.textContent;
+  if (!code) return;
+  navigator.clipboard.writeText(code).then(() => {
+    document.querySelector('.copy-hint').textContent = '✓ Copied!';
+    setTimeout(() => document.querySelector('.copy-hint').textContent = T[currentLang]?.['tap-copy'] || 'Tap to copy', 2000);
+  });
+}
+
+function openApp() {
+  window.location.href = 'https://app.sakredfire.ca';
+}
+
+// Detect language from browser
+const browserLang = navigator.language?.slice(0,2)?.toLowerCase();
+const langMap = { hi:'hi', ta:'ta', te:'te', mr:'mr', kn:'kn' };
+if (langMap[browserLang]) {
+  const pill = [...document.querySelectorAll('.lang-pill')].find(p => p.textContent.trim() === { hi:'हिं', ta:'தமி', te:'తెలు', mr:'मरा', kn:'ಕನ್ನ' }[browserLang]);
+  if (pill) { pill.classList.add('active'); document.querySelectorAll('.lang-pill')[0].classList.remove('active'); setLang(browserLang); }
+}
+</script>
+</body>
+</html>

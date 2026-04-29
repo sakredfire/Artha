@@ -3516,7 +3516,7 @@ function openPaymentSite() {
   // Track that user clicked — store their intent
   localStorage.setItem('ss_upgrade_interest', JSON.stringify({ plan:'pro', at: new Date().toISOString() }));
   // Open payment website in browser
-  window.open('https://sakredfire.ca/pro', '_blank');
+  window.open('https://app.sakredfire.ca/pro', '_blank');
   // Show instruction
   const tip = document.getElementById('pay-modal')?.querySelector('.tip-msg');
   if (!tip) {

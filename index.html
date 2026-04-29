@@ -1038,8 +1038,8 @@ body{
       <!-- Pro upgrade -->
       <div style="background:linear-gradient(135deg,rgba(201,255,71,0.08),rgba(123,92,255,0.08));border:1px solid rgba(201,255,71,0.18);border-radius:16px;padding:18px;margin-bottom:14px;">
         <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:5px;">Upgrade to Pro+</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:12px;">Tax engine, AI forecasting, income verification, invoice builder & Foundation access.</div>
-        <button class="btn btn-full" onclick="window.open('https://app.sakredfire.ca/pro','_blank')">Get Pro · ₹49/month</button>
+        <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:12px;">Remove limits · More AI · Priority features</div>
+        <button class="btn btn-full" onclick="window.open('https://app.sakredfire.ca/pro','_blank')">Unlock Pro →</button>
         <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Cancel anytime · UPI Autopay · 7-day trial</div>
       </div>
 
@@ -2406,7 +2406,7 @@ function unlockApp() {
   }
   // Update subscription display
   const tier = getTier();
-  const tierNames = { free: 'Free Plan', pro: 'Pro · ₹49/mo', proplus: 'Pro+ · ₹149/mo' };
+  const tierNames = { free: 'Free Plan', pro: 'Pro Plan', proplus: 'Pro+ Plan' };
   const trialDays = trialDaysLeft();
   const tierDescs = {
     free: '3 AI/day · 3 scans/day · 1 PDF/mo',
@@ -3417,25 +3417,25 @@ function showUpgradePrompt(type) {
       <div style="background:var(--lime-d);border:1.5px solid rgba(203,255,71,0.35);border-radius:16px;padding:18px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
           <div>
-            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--lime);">Pro</div>
+            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--lime);">Pro Plan</div>
             <div style="font-size:11px;color:var(--text3);">Everything you need to hustle smarter</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--lime);">₹49<span style="font-size:12px;color:var(--text3)">/mo</span></div>
-            <div style="font-size:10px;color:var(--teal);font-weight:600;">7-day free trial</div>
+            <div style="font-size:11px;color:var(--teal);font-weight:600;">7-day free trial</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px;">No limits during trial</div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
-          <div style="font-size:11px;color:var(--text2);">✓ 10 AI questions/day</div>
-          <div style="font-size:11px;color:var(--text2);">✓ 10 receipt scans/day</div>
-          <div style="font-size:11px;color:var(--text2);">✓ 5 PDF exports/month</div>
+          <div style="font-size:11px;color:var(--text2);">✓ More AI questions/day</div>
+          <div style="font-size:11px;color:var(--text2);">✓ More receipt scans</div>
+          <div style="font-size:11px;color:var(--text2);">✓ More PDF exports</div>
           <div style="font-size:11px;color:var(--text2);">✓ Unlimited income entries</div>
         </div>
         <button onclick="startProTrial()" style="width:100%;padding:13px;background:var(--lime);border:none;border-radius:11px;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
-          Start 7-Day Free Trial →
+          See Plans &amp; Pricing →
         </button>
         <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text3);">
-          Card required · Cancel before day 7 to avoid ₹49/mo charge · UPI Autopay
+          Cancel anytime · Secure payment · No hidden charges
         </div>
       </div>
       <!-- Pro+ coming soon -->
@@ -3473,7 +3473,7 @@ function startProTrial() {
     <div style="background:var(--surf);border-radius:20px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border2);">
       <div style="text-align:center;margin-bottom:20px;">
         <div style="font-size:40px;margin-bottom:10px;">🔐</div>
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Upgrade to Pro</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Get More from SideStack</div>
         <div style="font-size:13px;color:var(--text2);line-height:1.6;">Complete payment on our secure website.<br>You will receive an unlock code instantly.</div>
       </div>
 

@@ -891,15 +891,7 @@ body{
         <div class="chip purple" style="cursor:pointer;" onclick="showScreen('voice')">🎙️ Voice</div>
       </div>
 
-      <div class="entry-list">
-        <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">💻</div><div class="entry-info"><div class="entry-name">Upwork — Logo Design</div><div class="entry-meta">Freelance · Apr 19 · A+ client</div></div><div class="entry-amt pos">+₹8,000</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(123,92,255,0.1)">📚</div><div class="entry-info"><div class="entry-name">Physics Tutoring</div><div class="entry-meta">Teaching · Apr 18</div></div><div class="entry-amt pos">+₹1,200</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(59,158,255,0.1)">🎥</div><div class="entry-info"><div class="entry-name">YouTube AdSense</div><div class="entry-meta">Content · Apr 15 · 42K views</div></div><div class="entry-amt pos">+₹2,400</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">🛵</div><div class="entry-info"><div class="entry-name">Swiggy Weekend</div><div class="entry-meta">Gig · Apr 13–14 · 18 orders</div></div><div class="entry-amt pos">+₹850</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">💻</div><div class="entry-info"><div class="entry-name">Fiverr — Branding Kit</div><div class="entry-meta">Freelance · Apr 10</div></div><div class="entry-amt pos">+₹14,500</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(0,212,170,0.1)">🎵</div><div class="entry-info"><div class="entry-name">Spotify Royalties</div><div class="entry-meta">Content · Apr 5</div></div><div class="entry-amt pos">+₹550</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(255,77,139,0.1)">🛒</div><div class="entry-info"><div class="entry-name">Canva Pro</div><div class="entry-meta">Expense · Apr 14</div></div><div class="entry-amt neg">−₹999</div></div>
-      </div>
+      <div class="entry-list" id="income-entries-list"></div>
 
       <!-- Source breakdown -->
       <div class="card" style="margin-top:14px;">
@@ -1327,8 +1319,7 @@ body{
         <div class="mc orange"><div class="mc-label">Outstanding</div><div class="mc-val orange" style="font-size:18px;">₹4,800</div></div>
       </div>
 
-      <div class="entry-list">
-        <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-043 · GlobalTech</div><div class="entry-meta">₹16,500 · Apr 19</div></div><div class="chip teal">Paid</div></div>
+      <div class="entry-list" id="invoices-list"        <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-043 · GlobalTech</div><div class="entry-meta">₹16,500 · Apr 19</div></div><div class="chip teal">Paid</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-042 · Priya Sharma</div><div class="entry-meta">₹4,800 · Apr 10</div></div><div class="chip orange">Overdue</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(255,77,139,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-041 · Client X</div><div class="entry-meta">₹2,800 · 3 weeks unpaid</div></div><div class="chip" style="background:rgba(255,77,139,0.1);color:var(--pink);border-color:rgba(255,77,139,0.2);">Chase</div></div>
         <div class="entry"><div class="entry-ico" style="background:rgba(123,92,255,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-040 · Meera Foods</div><div class="entry-meta">₹4,200 · Apr 5</div></div><div class="chip blue">Sent</div></div>
@@ -1794,6 +1785,7 @@ function showScreen(id) {
   if (id === 'rental') rmRefreshStats();
   if (id === 'goals') renderGoals();
   if (id === 'invoices') renderInvoices();
+  if (id === 'income') renderIncomeEntries();
   if (id === 'ai') updateAIUsageBadge();
 }
 
@@ -2218,17 +2210,25 @@ function rmTab(id) {
 }
 
 function rmAddEntry() {
-  const sourceType = document.getElementById('rm-source-type').value;
   const amount = parseFloat(document.getElementById('rm-amount').value);
-  const month = document.getElementById('rm-month').value;
-  const desc = document.getElementById('rm-desc').value;
-  if (!amount || isNaN(amount)) { alert('Enter a valid amount.'); return; }
-  rmEntries.unshift({ sourceType, amount, month, desc, id: Date.now() });
+  const source = selectedRMSource || 'Rental';
+  const note = document.getElementById('rm-note').value.trim();
+  if (!amount || isNaN(amount)) {
+    document.getElementById('rm-amount').style.borderColor = 'var(--pink)';
+    setTimeout(() => document.getElementById('rm-amount').style.borderColor = '', 1500);
+    return;
+  }
+  const today = new Date().toISOString().split('T')[0];
+  const rmEntries = JSON.parse(localStorage.getItem('rmEntries') || '[]');
+  rmEntries.unshift({ id: Date.now(), amount, source, note, date: today });
   localStorage.setItem('rmEntries', JSON.stringify(rmEntries));
+  const incomeEntries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  incomeEntries.unshift({ id: Date.now()+1, amount, category: source, desc: note || source + ' income', date: today });
+  localStorage.setItem('incomeEntries', JSON.stringify(incomeEntries));
   document.getElementById('rm-amount').value = '';
-  document.getElementById('rm-desc').value = '';
+  if (document.getElementById('rm-note')) document.getElementById('rm-note').value = '';
   rmRefreshStats();
-  rmRenderEntries();
+  renderIncomeEntries();
 }
 
 function rmRefreshStats() {
@@ -2379,19 +2379,7 @@ function getProfile() {
 function unlockApp() {
   ['splash-screen','onboard-screen','profile-screen','pin-setup-screen','pin-lock-screen']
     .forEach(id => hide(id));
-  if (!localStorage.getItem('incomeEntries')) {
-    localStorage.setItem('incomeEntries', JSON.stringify([
-      {id:1,client:'GlobalTech Solutions',amount:15000,category:'Freelance',desc:'Upwork — Logo Design',date:'2026-04-19'},
-      {id:2,client:'Priya Sharma',amount:1200,category:'Teaching',desc:'Physics Tutoring',date:'2026-04-18'},
-      {id:3,client:'Swiggy',amount:850,category:'Delivery',desc:'Swiggy Weekend',date:'2026-04-14'},
-    ]));
-  }
-  if (!localStorage.getItem('moods')) {
-    localStorage.setItem('moods', JSON.stringify([
-      {date:'2026-04-20',mood:'😊'},{date:'2026-04-21',mood:'😊'},
-      {date:'2026-04-22',mood:'😐'},{date:'2026-04-23',mood:'😊'}
-    ]));
-  }
+  // No demo data seeding - app starts clean for real users
   loadProfileIntoApp();
   renderIncomeEntries();
   updateAIUsageBadge();
@@ -2983,9 +2971,19 @@ function shareReferral() {
   if (navigator.share) navigator.share({title:'SideStack',text}); else navigator.clipboard.writeText(text).then(()=>alert('Copied!'));
 }
 function logMoodConfirm(btn) {
-  if (!document.querySelector('.mood-opt.sel')) { alert('Select a mood first ☝️'); return; }
-  btn.textContent='✓ Mood Logged!'; btn.style.background='var(--teal)';
-  setTimeout(()=>{ btn.textContent="✓ Log Today's Mood"; btn.style.background=''; }, 2500);
+  const sel = document.querySelector('.mood-opt.sel');
+  if (!sel) { alert('Select a mood first'); return; }
+  const spans = sel.querySelectorAll('span');
+  const emoji = spans[0]?.textContent || '😊';
+  const today = new Date().toISOString().split('T')[0];
+  const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+  const filtered = moods.filter(function(m) { return m.date !== today; });
+  filtered.push({ date: today, mood: emoji });
+  localStorage.setItem('moods', JSON.stringify(filtered));
+  updateMoodDisplay();
+  btn.textContent = 'Mood Logged!';
+  btn.style.background = 'var(--teal)';
+  setTimeout(function() { btn.textContent = 'Log Today Mood'; btn.style.background = ''; }, 2500);
 }
 function confirmVoiceEntry(btn) {
   const amt = document.getElementById('voice-amount')?.value;

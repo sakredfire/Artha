@@ -329,8 +329,8 @@ body {
     </button>
 
     <div class="trust-row" style="margin-top:14px;">
-      <div class="trust-item">🔒 <span data-t="t1">Razorpay Secured</span></div>
-      <div class="trust-item">🇮🇳 <span data-t="t2">UPI / Card</span></div>
+      <div class="trust-item">🔒 <span data-t="t1">Stripe Secured</span></div>
+      <div class="trust-item">💳 <span data-t="t2">Card / Google Pay</span></div>
       <div class="trust-item">✓ <span data-t="t3">DPDP Compliant</span></div>
     </div>
   </div>
@@ -391,7 +391,7 @@ body {
 
     <div class="faq-item" onclick="toggleFaq(this)">
       <div class="faq-q"><span data-t="q3">What payment methods are accepted?</span><span class="faq-chevron">▾</span></div>
-      <div class="faq-a" data-t="a3">UPI (GPay, PhonePe, Paytm), all major debit/credit cards, and net banking. All payments secured by Razorpay.</div>
+      <div class="faq-a" data-t="a3">UPI (GPay, PhonePe, Paytm), all major debit/credit cards, and net banking. All payments secured by Stripe.</div>
     </div>
 
     <div class="faq-item" onclick="toggleFaq(this)">
@@ -416,7 +416,7 @@ const T = {
     f1:'10 AI/day', f2:'10 Scans/day', f3:'5 PDFs/month', f4:'Tax Engine', f5:'Govt Schemes', f6:'100% Private',
     'today-charge':'Due today', 'after-trial':'After 7 days', 'cancel-note':'Cancel anytime before day 7 — no charge',
     'cta-btn':'Start Free Trial — ₹0 Today',
-    t1:'Razorpay Secured', t2:'UPI / Card', t3:'DPDP Compliant',
+    t1:'Stripe Secured', t2:'Card / Google Pay', t3:'DPDP Compliant',
     'have-code':'Already have an unlock code?', apply:'Apply',
     'code-err':'Invalid code. Please check and try again.',
     'code-ok':'✓ Code verified! Open SideStack app to activate.',
@@ -427,7 +427,7 @@ const T = {
     'faq-title':'Frequently Asked Questions',
     q1:'Will I be charged immediately?', a1:'No. The 7-day trial is completely free. Your card/UPI is saved but only charged on day 8 if you don\'t cancel.',
     q2:'How do I cancel the trial?', a2:'Open SideStack app → More → Settings → scroll down to Cancel Trial. Your plan reverts to Free instantly.',
-    q3:'What payment methods are accepted?', a3:'UPI (GPay, PhonePe, Paytm), all major debit/credit cards, and net banking. All payments secured by Razorpay.',
+    q3:'What payment methods are accepted?', a3:'UPI (GPay, PhonePe, Paytm), all major debit/credit cards, and net banking. All payments secured by Stripe.',
     q4:'Is my financial data safe?', a4:'100%. SideStack stores all your income data on your device only. Nothing is sent to our servers. DPDP 2023 compliant.',
     q5:'Can I upgrade to Pro+ later?', a5:'Yes! Pro+ (₹149/month) with Claude Sonnet AI is coming soon. Tap "Notify me" above to be first in line.',
   },
@@ -437,7 +437,7 @@ const T = {
     f1:'10 AI/दिन', f2:'10 स्कैन/दिन', f3:'5 PDF/माह', f4:'टैक्स इंजन', f5:'सरकारी योजनाएं', f6:'100% निजी',
     'today-charge':'आज देय', 'after-trial':'7 दिन बाद', 'cancel-note':'दिन 7 से पहले कैंसिल करें — कोई शुल्क नहीं',
     'cta-btn':'मुफ्त ट्रायल शुरू करें — ₹0 आज',
-    t1:'Razorpay सुरक्षित', t2:'UPI / कार्ड', t3:'DPDP अनुपालन',
+    t1:'Stripe सुरक्षित', t2:'UPI / कार्ड', t3:'DPDP अनुपालन',
     'have-code':'पहले से अनलॉक कोड है?', apply:'लगाएं',
     'code-err':'अमान्य कोड। कृपया जांचें और पुनः प्रयास करें।',
     'code-ok':'✓ कोड सत्यापित! SideStack ऐप में एक्टिवेट करें।',
@@ -448,7 +448,7 @@ const T = {
     'faq-title':'अक्सर पूछे जाने वाले प्रश्न',
     q1:'क्या मुझसे तुरंत चार्ज किया जाएगा?', a1:'नहीं। 7 दिन का ट्रायल पूरी तरह मुफ्त है। दिन 8 पर ही चार्ज होगा।',
     q2:'ट्रायल कैसे रद्द करें?', a2:'SideStack ऐप → More → Settings → Cancel Trial। तुरंत Free प्लान पर वापस।',
-    q3:'कौन से भुगतान स्वीकार हैं?', a3:'UPI (GPay, PhonePe, Paytm), सभी डेबिट/क्रेडिट कार्ड। Razorpay द्वारा सुरक्षित।',
+    q3:'कौन से भुगतान स्वीकार हैं?', a3:'UPI (GPay, PhonePe, Paytm), सभी डेबिट/क्रेडिट कार्ड। Stripe द्वारा सुरक्षित।',
     q4:'क्या मेरा डेटा सुरक्षित है?', a4:'100%। SideStack आपका सारा डेटा आपके डिवाइस पर ही रखता है।',
     q5:'Pro+ में अपग्रेड हो सकता हूं?', a5:'हां! Pro+ (₹149/माह) जल्द आ रहा है। ऊपर "सूचित करें" टैप करें।',
   },
@@ -458,7 +458,7 @@ const T = {
     f1:'10 AI/நாள்', f2:'10 ஸ்கேன்/நாள்', f3:'5 PDF/மாதம்', f4:'வரி இயந்திரம்', f5:'அரசு திட்டங்கள்', f6:'100% தனிப்பட்ட',
     'today-charge':'இன்று செலுத்த வேண்டியது', 'after-trial':'7 நாட்களுக்கு பிறகு', 'cancel-note':'7 நாட்களுக்கு முன் ரத்து செய்யுங்கள்',
     'cta-btn':'இலவச சோதனை தொடங்கு — ₹0 இன்று',
-    t1:'Razorpay பாதுகாப்பு', t2:'UPI / கார்டு', t3:'DPDP இணக்கம்',
+    t1:'Stripe பாதுகாப்பு', t2:'UPI / கார்டு', t3:'DPDP இணக்கம்',
     'have-code':'ஏற்கனவே கோட் உள்ளதா?', apply:'பயன்படுத்து',
     'code-err':'தவறான கோட். மீண்டும் முயற்சிக்கவும்.',
     'code-ok':'✓ கோட் சரிபார்க்கப்பட்டது! SideStack ஆப்பில் செயல்படுத்தவும்.',
@@ -469,7 +469,7 @@ const T = {
     'faq-title':'அடிக்கடி கேட்கப்படும் கேள்விகள்',
     q1:'உடனே கட்டணம் வசூலிக்கப்படுமா?', a1:'இல்லை. 7 நாள் சோதனை முற்றிலும் இலவசம். 8வது நாளில் மட்டுமே கட்டணம்.',
     q2:'சோதனையை எப்படி ரத்து செய்வது?', a2:'SideStack → More → Settings → Cancel Trial. உடனே Free திட்டத்திற்கு திரும்பும்.',
-    q3:'என்ன கட்டண முறைகள் ஏற்றுக்கொள்ளப்படுகின்றன?', a3:'UPI (GPay, PhonePe, Paytm), அனைத்து டெபிட்/கிரெடிட் கார்டுகள். Razorpay பாதுகாப்பு.',
+    q3:'என்ன கட்டண முறைகள் ஏற்றுக்கொள்ளப்படுகின்றன?', a3:'UPI (GPay, PhonePe, Paytm), அனைத்து டெபிட்/கிரெடிட் கார்டுகள். Stripe பாதுகாப்பு.',
     q4:'என் தரவு பாதுகாப்பாக உள்ளதா?', a4:'100%. SideStack உங்கள் தரவை உங்கள் சாதனத்தில் மட்டுமே சேமிக்கிறது.',
     q5:'பின்னர் Pro+ க்கு மேம்படுத்தலாமா?', a5:'ஆம்! Pro+ (₹149/மாதம்) விரைவில் வருகிறது. மேலே "அறிவிக்கவும்" தட்டவும்.',
   },
@@ -479,7 +479,7 @@ const T = {
     f1:'10 AI/రోజు', f2:'10 స్కాన్/రోజు', f3:'5 PDF/నెల', f4:'పన్ను ఇంజిన్', f5:'ప్రభుత్వ పథకాలు', f6:'100% ప్రైవేట్',
     'today-charge':'ఈరోజు చెల్లింపు', 'after-trial':'7 రోజుల తర్వాత', 'cancel-note':'రోజు 7 కంటే ముందు రద్దు చేయండి',
     'cta-btn':'ఉచిత ట్రయల్ ప్రారంభించండి — ₹0 ఈరోజు',
-    t1:'Razorpay భద్రత', t2:'UPI / కార్డు', t3:'DPDP అనుపాలన',
+    t1:'Stripe భద్రత', t2:'UPI / కార్డు', t3:'DPDP అనుపాలన',
     'have-code':'ఇప్పటికే కోడ్ ఉందా?', apply:'వర్తింపజేయి',
     'code-err':'చెల్లని కోడ్. దయచేసి తనిఖీ చేసి మళ్ళీ ప్రయత్నించండి.',
     'code-ok':'✓ కోడ్ ధృవీకరించబడింది! SideStack యాప్‌లో యాక్టివేట్ చేయండి.',
@@ -490,7 +490,7 @@ const T = {
     'faq-title':'తరచుగా అడిగే ప్రశ్నలు',
     q1:'నాకు వెంటనే చార్జ్ చేయబడుతుందా?', a1:'లేదు. 7 రోజుల ట్రయల్ పూర్తిగా ఉచితం. 8వ రోజున మాత్రమే చార్జ్ అవుతుంది.',
     q2:'ట్రయల్‌ని ఎలా రద్దు చేయాలి?', a2:'SideStack → More → Settings → Cancel Trial. వెంటనే Free ప్లాన్‌కు తిరిగి వస్తుంది.',
-    q3:'ఏ చెల్లింపు పద్ధతులు స్వీకరించబడతాయి?', a3:'UPI (GPay, PhonePe, Paytm), అన్ని డెబిట్/క్రెడిట్ కార్డులు. Razorpay రక్షణ.',
+    q3:'ఏ చెల్లింపు పద్ధతులు స్వీకరించబడతాయి?', a3:'UPI (GPay, PhonePe, Paytm), అన్ని డెబిట్/క్రెడిట్ కార్డులు. Stripe రక్షణ.',
     q4:'నా డేటా సురక్షితంగా ఉందా?', a4:'100%. SideStack మీ డేటాను మీ పరికరంలో మాత్రమే నిల్వ చేస్తుంది.',
     q5:'తర్వాత Pro+ కి అప్‌గ్రేడ్ చేయవచ్చా?', a5:'అవును! Pro+ (₹149/నెల) త్వరలో వస్తుంది. పైన "తెలియజేయి" నొక్కండి.',
   },
@@ -500,7 +500,7 @@ const T = {
     f1:'१० AI/दिवस', f2:'१० स्कॅन/दिवस', f3:'५ PDF/महिना', f4:'कर इंजिन', f5:'सरकारी योजना', f6:'१००% खाजगी',
     'today-charge':'आज देय', 'after-trial':'७ दिवसांनंतर', 'cancel-note':'७ व्या दिवसापूर्वी रद्द करा',
     'cta-btn':'मोफत ट्रायल सुरू करा — ₹० आज',
-    t1:'Razorpay सुरक्षित', t2:'UPI / कार्ड', t3:'DPDP अनुपालन',
+    t1:'Stripe सुरक्षित', t2:'UPI / कार्ड', t3:'DPDP अनुपालन',
     'have-code':'आधीच अनलॉक कोड आहे?', apply:'लागू करा',
     'code-err':'अवैध कोड. कृपया तपासा आणि पुन्हा प्रयत्न करा.',
     'code-ok':'✓ कोड सत्यापित! SideStack अॅपमध्ये सक्रिय करा.',
@@ -511,7 +511,7 @@ const T = {
     'faq-title':'वारंवार विचारले जाणारे प्रश्न',
     q1:'मला लगेच चार्ज केले जाईल का?', a1:'नाही. ७ दिवसांचा ट्रायल पूर्णपणे मोफत आहे. ८ व्या दिवशीच चार्ज होतो.',
     q2:'ट्रायल कसे रद्द करावे?', a2:'SideStack → More → Settings → Cancel Trial. लगेच Free प्लानवर परत.',
-    q3:'कोणते पेमेंट पद्धती स्वीकारल्या जातात?', a3:'UPI (GPay, PhonePe, Paytm), सर्व डेबिट/क्रेडिट कार्ड. Razorpay सुरक्षा.',
+    q3:'कोणते पेमेंट पद्धती स्वीकारल्या जातात?', a3:'UPI (GPay, PhonePe, Paytm), सर्व डेबिट/क्रेडिट कार्ड. Stripe सुरक्षा.',
     q4:'माझा डेटा सुरक्षित आहे का?', a4:'१००%. SideStack तुमचा सर्व डेटा फक्त तुमच्या डिव्हाइसवर ठेवतो.',
     q5:'नंतर Pro+ वर अपग्रेड करता येईल का?', a5:'हो! Pro+ (₹१४९/महिना) लवकरच येत आहे. वर "सूचित करा" टॅप करा.',
   },
@@ -521,7 +521,7 @@ const T = {
     f1:'10 AI/ದಿನ', f2:'10 ಸ್ಕ್ಯಾನ್/ದಿನ', f3:'5 PDF/ತಿಂಗಳು', f4:'ತೆರಿಗೆ ಎಂಜಿನ್', f5:'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು', f6:'100% ಖಾಸಗಿ',
     'today-charge':'ಇಂದು ಪಾವತಿ', 'after-trial':'7 ದಿನಗಳ ನಂತರ', 'cancel-note':'7ನೇ ದಿನಕ್ಕಿಂತ ಮೊದಲು ರದ್ದು ಮಾಡಿ',
     'cta-btn':'ಉಚಿತ ಟ್ರಯಲ್ ಪ್ರಾರಂಭಿಸಿ — ₹0 ಇಂದು',
-    t1:'Razorpay ಸುರಕ್ಷಿತ', t2:'UPI / ಕಾರ್ಡ್', t3:'DPDP ಅನುಪಾಲನ',
+    t1:'Stripe ಸುರಕ್ಷಿತ', t2:'UPI / ಕಾರ್ಡ್', t3:'DPDP ಅನುಪಾಲನ',
     'have-code':'ಈಗಾಗಲೇ ಕೋಡ್ ಇದೆಯೇ?', apply:'ಅನ್ವಯಿಸಿ',
     'code-err':'ಅಮಾನ್ಯ ಕೋಡ್. ದಯವಿಟ್ಟು ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
     'code-ok':'✓ ಕೋಡ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ! SideStack ಅಪ್‌ನಲ್ಲಿ ಸಕ್ರಿಯಗೊಳಿಸಿ.',
@@ -559,7 +559,7 @@ function toggleFaq(el) {
 // ── PAYMENT ──
 function startPayment() {
   // v1.0: show payment coming soon
-  // v1.1: open Razorpay checkout here
+  // v1.1: open Stripe checkout here
   const t = T[currentLang] || T.en;
   showComingSoon();
 }
@@ -572,7 +572,7 @@ function showComingSoon() {
       <div style="font-size:48px;margin-bottom:16px;">🚀</div>
       <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Payment Coming Soon!</div>
       <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;">
-        We are setting up Razorpay UPI payments.<br>
+        We are setting up Stripe UPI payments.<br>
         Enter your email below to be notified the moment it goes live — you will get first access.
       </div>
       <input id="notify-email" type="email" placeholder="your@email.com"

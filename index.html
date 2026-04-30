@@ -2390,7 +2390,7 @@ function unlockApp() {
     trialRow.style.display = inTrial ? 'flex' : 'none';
     const dLeft = trialDaysLeft();
     const descEl = document.getElementById('cancel-trial-desc');
-    if (descEl && inTrial) descEl.textContent = dLeft + ' day' + (dLeft===1?'':'s') + ' left · Cancel to avoid ₹49/mo charge';
+    if (descEl && inTrial) descEl.textContent = dLeft + ' day' + (dLeft===1?'':'s') + ' left · Cancel anytime before trial ends';
   }
   // Update subscription display
   const tier = getTier();
@@ -2398,7 +2398,7 @@ function unlockApp() {
   const trialDays = trialDaysLeft();
   const tierDescs = {
     free: '3 AI/day · 3 scans/day · 1 PDF/mo',
-    pro: trialDays > 0 ? `Free trial · ${trialDays} day${trialDays===1?'':'s'} left · then ₹49/mo` : '10 AI/day · 10 scans/day · 5 PDFs/mo',
+    pro: trialDays > 0 ? `Free trial · ${trialDays} day${trialDays===1?'':'s'} left · auto-renews after trial` : '10 AI/day · 10 scans/day · 5 PDFs/mo',
     proplus: '50 AI/day · Unlimited scans & PDFs'
   };
   const tierChips = { free: 'Upgrade', pro: 'Active', proplus: 'Active ⚡' };
@@ -3371,7 +3371,7 @@ function getRemainingText(type) {
 function showUpgradePrompt(type) {
   const tier = getTier();
   const nextTier = tier === 'free' ? 'Pro' : 'Pro+';
-  const nextPrice = tier === 'free' ? '₹49' : '₹149';
+  // Pricing shown on external website only
   const messages = {
     ai: {
       title: "AI limit reached",
@@ -3429,7 +3429,7 @@ function showUpgradePrompt(type) {
           <div style="font-size:11px;color:var(--text2);">✓ More PDF exports</div>
           <div style="font-size:11px;color:var(--text2);">✓ Unlimited income entries</div>
         </div>
-        <button onclick="startProTrial()" style="width:100%;padding:13px;background:var(--lime);border:none;border-radius:11px;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
+        <button onclick="window.open('https://app.sakredfire.ca/pro','_blank')" style="width:100%;padding:13px;background:var(--lime);border:none;border-radius:11px;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
           See Plans &amp; Pricing →
         </button>
         <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text3);">
@@ -3443,7 +3443,7 @@ function showUpgradePrompt(type) {
             <div style="font-size:13px;font-weight:700;">⚡ Pro+ <span style="font-size:10px;background:var(--surf3);color:var(--text3);padding:2px 8px;border-radius:100px;font-weight:400;">Coming Soon</span></div>
             <div style="font-size:11px;color:var(--text3);margin-top:3px;">50 AI/day · Claude Sonnet · Unlimited everything</div>
           </div>
-          <div style="font-size:13px;font-weight:700;color:var(--text3);">₹149/mo</div>
+          <div style="font-size:11px;color:var(--text3);">Coming soon</div>
         </div>
         <button onclick="notifyProPlus()" style="width:100%;margin-top:10px;padding:9px;background:transparent;border:1px solid var(--border2);border-radius:10px;color:var(--text3);font-size:12px;cursor:pointer;">
           🔔 Notify me when available
@@ -3478,7 +3478,7 @@ function startProTrial() {
       <div style="background:var(--lime-d);border:1px solid rgba(203,255,71,0.2);border-radius:14px;padding:16px;margin-bottom:16px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <span style="font-size:13px;font-weight:600;">Pro Plan</span>
-          <span style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--lime);">₹49<span style="font-size:11px;color:var(--text3)">/mo</span></span>
+          <span style="font-size:13px;font-weight:600;color:var(--lime);">Plans available</span>
         </div>
         <div style="font-size:11px;color:var(--text3);line-height:1.6;">
           ✓ 10 AI questions/day &nbsp;·&nbsp; ✓ 10 receipt scans<br>
@@ -3504,7 +3504,7 @@ function startProTrial() {
       </div>
 
       <button onclick="document.getElementById('pay-modal').remove()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Maybe later</button>
-      <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text3);">🔒 Secured by Razorpay · DPDP 2023 · Cancel anytime</div>
+      <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text3);">🔒 Secure payment · DPDP 2023 · Cancel anytime</div>
     </div>`;
   modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
   document.body.appendChild(modal);

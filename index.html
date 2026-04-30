@@ -92,6 +92,7 @@ body{
   display:flex;align-items:stretch;
   background:var(--surf);border-top:1px solid var(--border);
   padding-bottom:max(8px,env(safe-area-inset-bottom));
+  min-height:64px;
   flex-shrink:0;z-index:50;
 }
 .nav-item{
@@ -2378,11 +2379,12 @@ function getProfile() {
 
 function unlockApp() {
   ['splash-screen','onboard-screen','profile-screen','pin-setup-screen','pin-lock-screen']
-    .forEach(id => hide(id));
+    .forEach(id => { try { hide(id); } catch(e) {} });
+  showScreen('home');
   // No demo data seeding - app starts clean for real users
-  loadProfileIntoApp();
-  renderIncomeEntries();
-  updateAIUsageBadge();
+  try { loadProfileIntoApp(); } catch(e) { console.error('loadProfile error:', e); }
+  try { renderIncomeEntries(); } catch(e) { console.error('renderIncome error:', e); }
+  try { updateAIUsageBadge(); } catch(e) {}
   // Show cancel trial row if in trial
   const trialRow = document.getElementById('cancel-trial-row');
   if (trialRow) {

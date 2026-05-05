@@ -1,74 +1,95 @@
-// SideStack Service Worker v5.0 — India Launch
-const CACHE_NAME = 'sidestack-v5';
-const OFFLINE_URL = '/';
+// Artha Service Worker v4.0
+const CACHE_NAME = 'artha-v5';
+const OFFLINE_URL = '/Sidestack/';
 
+// Files to cache immediately on install
 const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
+  '/Sidestack/',
+  '/Sidestack/index.html',
+  '/Sidestack/manifest.json',
+  '/Sidestack/icon-192.png',
+  '/Sidestack/icon-512.png',
 ];
 
+// ── INSTALL: cache core assets ──
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache =>
-      cache.addAll(PRECACHE_URLS).catch(() => {})
-    )
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(PRECACHE_URLS).catch(() => {
+        // Silently fail on individual files - app still works
+      });
+    })
   );
+  // Activate immediately without waiting
   self.skipWaiting();
 });
 
+// ── ACTIVATE: clean old caches ──
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames
+          .filter(name => name !== CACHE_NAME)
+          .map(name => caches.delete(name))
+      );
+    })
   );
+  // Take control of all clients immediately
   self.clients.claim();
 });
 
+// ── FETCH: cache-first for app shell, network-first for fonts ──
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-  if (!event.request.url.startsWith('http')) return;
-
   const url = new URL(event.request.url);
 
-  if (
-    url.hostname === 'fonts.googleapis.com' ||
-    url.hostname === 'fonts.gstatic.com' ||
-    url.hostname === 'cdn.jsdelivr.net' ||
-    url.hostname === 'cdnjs.cloudflare.com'
-  ) {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
+
+  // Skip chrome-extension and other non-http requests
+  if (!event.request.url.startsWith('http')) return;
+
+  // Network-first for Google Fonts (always fresh)
+  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
     event.respondWith(
       fetch(event.request).catch(() => caches.match(event.request))
     );
     return;
   }
 
+  // Cache-first for everything else (app shell, assets)
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
+
+      // Not in cache — fetch from network and cache it
       return fetch(event.request).then(response => {
-        if (!response || response.status !== 200 || response.type === 'opaque') return response;
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        // Only cache valid responses
+        if (!response || response.status !== 200 || response.type === 'opaque') {
+          return response;
+        }
+
+        const toCache = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, toCache);
+        });
+
         return response;
-      }).catch(() =>
-        caches.match(OFFLINE_URL) || new Response(
-          `<html><body style="background:#080810;color:#CBFF47;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;">
-            <div><div style="font-size:56px">S₹</div><h2 style="margin:12px 0">You're offline</h2>
-            <p style="color:#5A5A70;font-size:13px">Open SideStack when connected.</p></div>
-          </body></html>`,
+      }).catch(() => {
+        // Offline fallback: return cached index.html
+        return caches.match(OFFLINE_URL) || new Response(
+          '<html><body style="background:#080810;color:#C9FF47;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;"><div><div style="font-size:48px">📵</div><h2>You\'re offline</h2><p style="color:#9494B0;margin-top:8px">Open Artha when connected to sync your data.</p></div></body></html>',
           { headers: { 'Content-Type': 'text/html' } }
-        )
-      );
+        );
+      });
     })
   );
 });
 
+// ── BACKGROUND SYNC (future: sync income logs when back online) ──
 self.addEventListener('sync', event => {
   if (event.tag === 'sync-income') {
-    console.log('[SideStack SW] Background sync triggered');
+    // Placeholder for future background sync
+    console.log('Artha: Background sync triggered');
   }
 });

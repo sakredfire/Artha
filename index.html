@@ -56,7 +56,7 @@ body{
 }
 
 /* ── APP SHELL ── */
-.app{display:flex;flex-direction:column;width:100%;height:100svh;height:100dvh;height:100vh;max-width:480px;margin:0 auto;position:relative;}
+.app{display:flex;flex-direction:column;width:100%;height:100svh;height:100dvh;height:100vh;max-width:480px;margin:0 auto;position:relative;overflow:hidden;}
 
 /* ── HEADER ── */
 .header{
@@ -84,13 +84,21 @@ body{
 .scroll-area::-webkit-scrollbar{display:none;}
 
 /* ── SCREENS ── */
-.screen{display:none;padding:16px 16px 80px 16px;}
+.screen{display:none;padding:16px;padding-bottom:90px;}
 .screen.active{display:block;animation:fadeIn 0.25s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── BOTTOM NAV ── */
-.bottom-nav{display:flex;align-items:center;background:var(--surf);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom,0px);height:64px;flex-shrink:0;z-index:50;}
-
+.bottom-nav{
+  display:flex;align-items:center;
+  background:var(--surf);border-top:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  height:64px;
+  position:fixed;bottom:0;left:0;right:0;
+  z-index:200;
+  max-width:480px;margin:0 auto;
+}
+.scroll-area{padding-bottom:80px !important;}
 .nav-item{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:3px;padding:10px 4px 8px;border:none;background:none;cursor:pointer;

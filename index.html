@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>SideStack — India's Side Hustle OS</title>
+<title>Artha — India's Side Hustle OS</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#080810">
@@ -13,7 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 /* ══════════════════════════════════════════
-   SIDESTACK v5.0 — INDIA LAUNCH EDITION
+   ARTHA v5.0 — INDIA LAUNCH EDITION
    Full merge: index + merged + rental + receipt
 ══════════════════════════════════════════ */
 :root {
@@ -674,8 +674,8 @@ body{
     </div>
 
     <div class="consent-block">
-      <strong>🔒 Your data stays on your phone.</strong> SideStack stores all information locally using device storage. No account needed. No data is uploaded unless you opt into cloud backup.<br><br>
-      By continuing you agree to our <a href="https://sidestack.in/privacy" target="_blank">Privacy Policy</a> and <a href="https://sidestack.in/terms" target="_blank">Terms of Use</a>.
+      <strong>🔒 Your data stays on your phone.</strong> Artha stores all information locally using device storage. No account needed. No data is uploaded unless you opt into cloud backup.<br><br>
+      By continuing you agree to our <a href="https://artha.in/privacy" target="_blank">Privacy Policy</a> and <a href="https://artha.in/terms" target="_blank">Terms of Use</a>.
     </div>
 
     <button class="btn-lime" onclick="saveProfile()">Continue → Set PIN</button>
@@ -1012,7 +1012,7 @@ body{
 
     <!-- ════ SCREEN: MORE ════ -->
     <div class="screen" id="s-more">
-      <div class="sec-head"><div><div class="sec-title">All Features</div><div class="sec-sub">SideStack v5.0 · India Launch</div></div><span class="chip lime">20 Tools</span></div>
+      <div class="sec-head"><div><div class="sec-title">All Features</div><div class="sec-sub">Artha v5.0 · India Launch</div></div><span class="chip lime">20 Tools</span></div>
 
       <div class="more-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
         <div class="more-item" onclick="showScreen('goals')"><div class="more-item-ico">🎯</div><div class="more-item-label">Goals & Streaks</div></div>
@@ -1206,7 +1206,7 @@ body{
           <tr><td>Mar 2026</td><td>₹34,100</td><td>₹28,000</td></tr>
           <tr style="font-weight:700;background:#f5f5fc;"><td>Total</td><td>₹93,700</td><td>₹77,000</td></tr>
         </table>
-        <div class="ivr-sig">🔏 Code: SS-2026-0419-AK-7F4D<br>verify.sidestack.in to confirm authenticity</div>
+        <div class="ivr-sig">🔏 Code: SS-2026-0419-AK-7F4D<br>verify.artha.in to confirm authenticity</div>
       </div>
     </div>
 
@@ -1451,8 +1451,8 @@ body{
       </div>
 
       <div style="background:rgba(59,158,255,0.07);border:1px solid rgba(59,158,255,0.15);border-radius:13px;padding:14px;margin-top:6px;font-size:11.5px;color:var(--text2);line-height:1.6;">
-        <strong style="color:var(--blue);">📜 DPDP Act 2023</strong><br>SideStack is built ahead of the May 2027 full compliance deadline.<br><br>
-        Grievance Officer: <strong style="color:var(--text)">privacy@sidestack.in</strong>
+        <strong style="color:var(--blue);">📜 DPDP Act 2023</strong><br>Artha is built ahead of the May 2027 full compliance deadline.<br><br>
+        Grievance Officer: <strong style="color:var(--text)">privacy@artha.in</strong>
       </div>
     </div>
 
@@ -1530,7 +1530,7 @@ body{
       </div>
 
       <div style="text-align:center;padding:20px 0;font-size:11px;color:var(--text3);">
-        SideStack v5.0 · <a href="https://sidestack.in/privacy" style="color:var(--text3);">Privacy Policy</a> · <a href="https://sidestack.in/terms" style="color:var(--text3);">Terms</a>
+        Artha v5.0 · <a href="https://artha.in/privacy" style="color:var(--text3);">Privacy Policy</a> · <a href="https://artha.in/terms" style="color:var(--text3);">Terms</a>
       </div>
     </div>
 
@@ -1734,7 +1734,7 @@ body{
 
 <script>
 // ══════════════════════════════════════════
-// SIDESTACK v5.0 — INDIA LAUNCH
+// ARTHA v5.0 — INDIA LAUNCH
 // ══════════════════════════════════════════
 
 const { jsPDF } = window.jspdf;
@@ -1757,7 +1757,7 @@ const screenMap = {
   invoices:   { nav: null, label: 'Invoices' },
   community:  { nav: null, label: 'Leaderboard' },
   tips:       { nav: null, label: 'Hustle Tips' },
-  foundation: { nav: null, label: 'SideStack Foundation' },
+  foundation: { nav: null, label: 'Artha Foundation' },
   privacy:    { nav: null, label: 'Privacy Dashboard' },
   settings:   { nav: null, label: 'Settings' },
   receipt:    { nav: null, label: 'Receipt Scanner' },
@@ -1800,7 +1800,7 @@ let aiChatHistory = [];
 let aiTyping = false;
 
 function buildStacksContext() {
-  const profile = (() => { try { return JSON.parse(localStorage.getItem('ss_profile') || 'null'); } catch { return null; } })();
+  const profile = (() => { try { return JSON.parse(localStorage.getItem('ar_profile') || 'null'); } catch { return null; } })();
   const entries = (() => { try { return JSON.parse(localStorage.getItem('incomeEntries') || '[]'); } catch { return []; } })();
   const expenses = (() => { try { return JSON.parse(localStorage.getItem('expenses') || '[]'); } catch { return []; } })();
   const moods = (() => { try { return JSON.parse(localStorage.getItem('moods') || '[]'); } catch { return []; } })();
@@ -1809,7 +1809,7 @@ function buildStacksContext() {
   const byClient = {};
   entries.forEach(e => { if (e.client) byClient[e.client] = (byClient[e.client]||0) + (parseFloat(e.amount)||0); });
   const recentMoods = moods.slice(-7).map(m => m.mood).join(' ');
-  return `You are Stacks, an AI financial co-pilot in SideStack — India's Side Hustle OS. Be friendly, direct, and knowledgeable about Indian gig finance (GST, ITR, advance tax, UPI, PAN, Aadhaar, PM-SVANidhi, e-Shram).
+  return `You are Stacks, an AI financial co-pilot in Artha — India's Side Hustle OS. Be friendly, direct, and knowledgeable about Indian gig finance (GST, ITR, advance tax, UPI, PAN, Aadhaar, PM-SVANidhi, e-Shram).
 
 USER: ${profile?.name||'Hustler'} · ${profile?.city||'India'} · ${profile?.hustle||'Freelance'}
 INCOME: ₹${totalIncome.toLocaleString('en-IN')} total · ₹${totalExpenses.toLocaleString('en-IN')} expenses · Net: ₹${(totalIncome-totalExpenses).toLocaleString('en-IN')}
@@ -1842,7 +1842,7 @@ async function sendAI() {
   msgs.scrollTop = msgs.scrollHeight;
   try {
     const WORKER_URL = 'https://stacks-ai.mihir86-mp.workers.dev/ai';
-    const tierToken = localStorage.getItem('ss_tier_token') || '';
+    const tierToken = localStorage.getItem('ar_tier_token') || '';
     const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2006,7 +2006,7 @@ function generateVerificationPDF() {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(22);
   doc.setTextColor(203, 255, 71);
-  doc.text('SideStack Income Verification', 20, 30);
+  doc.text('Artha Income Verification', 20, 30);
   doc.setFontSize(11);
   doc.setTextColor(160, 160, 184);
   doc.text('India\'s Side Hustle OS · v5.0', 20, 40);
@@ -2046,9 +2046,9 @@ function generateVerificationPDF() {
   y += 20;
   doc.setFontSize(10);
   doc.setTextColor(90, 90, 112);
-  doc.text('This document is generated from on-device data by SideStack.', 20, y);
-  doc.text('For queries: support@sidestack.in', 20, y + 7);
-  doc.save('SideStack_Income_Verification.pdf');
+  doc.text('This document is generated from on-device data by Artha.', 20, y);
+  doc.text('For queries: support@artha.in', 20, y + 7);
+  doc.save('Artha_Income_Verification.pdf');
   localStorage.setItem('lastPdfDate', new Date().toLocaleString('en-IN'));
   const el = document.getElementById('last-pdf-date');
   if (el) el.textContent = new Date().toLocaleString('en-IN');
@@ -2294,7 +2294,7 @@ function rmPreviewReport() {
     <div style="margin-top:10px;font-weight:600;">Income Summary (Last 6 Months)</div>
     <div style="margin-top:4px;">Total: <strong style="color:var(--lime)">₹${total6m.toLocaleString('en-IN')}</strong></div>
     <div>Monthly Average: <strong style="color:var(--lime)">₹${avg.toLocaleString('en-IN')}</strong></div>
-    <div style="margin-top:8px;font-size:10px;color:var(--text3);">Generated by SideStack v5.0 · India's Side Hustle OS</div>`;
+    <div style="margin-top:8px;font-size:10px;color:var(--text3);">Generated by Artha v5.0 · India's Side Hustle OS</div>`;
   document.getElementById('rm-preview-card').style.display = 'block';
 }
 
@@ -2312,7 +2312,7 @@ function rmDownloadPDF() {
   doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(203,255,71);
   doc.text('Income Verification Report', 20, 28);
   doc.setFontSize(10); doc.setTextColor(90,90,112);
-  doc.text('SideStack v5.0 · India\'s Side Hustle OS', 20, 37);
+  doc.text('Artha v5.0 · India\'s Side Hustle OS', 20, 37);
   doc.setDrawColor(203,255,71); doc.line(20,42,190,42);
   doc.setFontSize(11); doc.setTextColor(238,238,248);
   doc.text('Applicant: ' + name, 20, 54);
@@ -2336,9 +2336,9 @@ function rmDownloadPDF() {
   doc.setTextColor(238,238,248);
   doc.text('Monthly Average:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+avg.toLocaleString('en-IN'), 150, y);
   y += 20; doc.setFontSize(9); doc.setTextColor(90,90,112);
-  doc.text('This document is self-generated from on-device data using SideStack.', 20, y);
+  doc.text('This document is self-generated from on-device data using Artha.', 20, y);
   doc.text('For verification, please also provide bank statements and ITR.', 20, y+7);
-  doc.save('SideStack_Income_Proof_' + name.replace(/ /g,'_') + '.pdf');
+  doc.save('Artha_Income_Proof_' + name.replace(/ /g,'_') + '.pdf');
 }
 
 // ══════════════════════════════════════════
@@ -2357,8 +2357,8 @@ let pinLockAttempts = 0;
 // ── SPLASH → ROUTE ──
 function initApp() {
   const profile = getProfile();
-  const pin = localStorage.getItem('ss_pin');
-  const hasOnboarded = localStorage.getItem('ss_onboarded');
+  const pin = localStorage.getItem('ar_pin');
+  const hasOnboarded = localStorage.getItem('ar_onboarded');
 
   // After splash animation ends (2.4s), route user
   setTimeout(() => {
@@ -2378,7 +2378,7 @@ function show(id) { document.getElementById(id).classList.remove('hidden'); }
 function hide(id) { document.getElementById(id).classList.add('hidden'); }
 
 function getProfile() {
-  try { return JSON.parse(localStorage.getItem('ss_profile') || 'null'); } catch { return null; }
+  try { return JSON.parse(localStorage.getItem('ar_profile') || 'null'); } catch { return null; }
 }
 
 function unlockApp() {
@@ -2419,7 +2419,7 @@ function unlockApp() {
     document.getElementById('subscription-row').style.background = 'rgba(203,255,71,0.04)';
   }
   // Apply saved language
-  const savedLang = localStorage.getItem('ss_lang') || 'EN';
+  const savedLang = localStorage.getItem('ar_lang') || 'EN';
   if (savedLang !== 'EN') applyTranslations(savedLang);
   const langEl = document.getElementById('set-lang');
   if (langEl) {
@@ -2457,7 +2457,7 @@ function loadProfileIntoApp() {
   // PIN status
   const pinStatus = document.getElementById('set-pin-status');
   const pinBtn = document.getElementById('set-pin-btn');
-  if (localStorage.getItem('ss_pin')) {
+  if (localStorage.getItem('ar_pin')) {
     if (pinStatus) pinStatus.textContent = '✓ Active — 6-digit PIN';
     if (pinBtn) pinBtn.textContent = 'Change';
   }
@@ -2485,7 +2485,7 @@ function obNext() {
     if (obSlide > 0) document.getElementById('ob-skip-btn').style.display = 'none';
   } else {
     // Last slide → go to profile
-    localStorage.setItem('ss_onboarded','1');
+    localStorage.setItem('ar_onboarded','1');
     const lastSlide = document.getElementById(obSlides[obSlide]);
     lastSlide.classList.add('exit');
     setTimeout(() => {
@@ -2496,7 +2496,7 @@ function obNext() {
 }
 
 function obSkip() {
-  localStorage.setItem('ss_onboarded','1');
+  localStorage.setItem('ar_onboarded','1');
   hide('onboard-screen');
   show('profile-screen');
 }
@@ -2528,13 +2528,13 @@ function saveProfile() {
     avatar: AVATARS[avatarIdx],
     createdAt: new Date().toISOString()
   };
-  localStorage.setItem('ss_profile', JSON.stringify(profile));
+  localStorage.setItem('ar_profile', JSON.stringify(profile));
   hide('profile-screen');
   show('pin-setup-screen');
 }
 
 function skipProfile() {
-  localStorage.setItem('ss_profile', JSON.stringify({ name: 'Hustler', city: '', hustle: 'Freelance', avatar: '🦁', createdAt: new Date().toISOString() }));
+  localStorage.setItem('ar_profile', JSON.stringify({ name: 'Hustler', city: '', hustle: 'Freelance', avatar: '🦁', createdAt: new Date().toISOString() }));
   hide('profile-screen');
   show('pin-setup-screen');
 }
@@ -2565,7 +2565,7 @@ function pinSetupKey(digit) {
     if (pinSetupEntry.length === 6) {
       setTimeout(() => {
         if (pinSetupEntry === pinSetupOriginal) {
-          localStorage.setItem('ss_pin', btoa(pinSetupEntry)); // base64 obfuscation
+          localStorage.setItem('ar_pin', btoa(pinSetupEntry)); // base64 obfuscation
           document.getElementById('pin-setup-msg').textContent = '✓ PIN saved!';
           setTimeout(() => { hide('pin-setup-screen'); unlockApp(); }, 700);
         } else {
@@ -2610,7 +2610,7 @@ function pinLockKey(digit) {
   updatePinDots('pl', pinLockEntry.length);
   if (pinLockEntry.length === 6) {
     setTimeout(() => {
-      const stored = atob(localStorage.getItem('ss_pin') || '');
+      const stored = atob(localStorage.getItem('ar_pin') || '');
       if (pinLockEntry === stored) {
         hide('pin-lock-screen');
         unlockApp();
@@ -2650,7 +2650,7 @@ async function tryBiometric() {
       return;
     }
     // Use credential stored at PIN setup time
-    const credId = localStorage.getItem('ss_bio_cred');
+    const credId = localStorage.getItem('ar_bio_cred');
     if (!credId) {
       document.getElementById('pin-lock-msg').textContent = 'Biometric not registered. Use PIN first.';
       return;
@@ -2684,15 +2684,15 @@ async function registerBiometric() {
     const credential = await navigator.credentials.create({
       publicKey: {
         challenge: crypto.getRandomValues(new Uint8Array(32)),
-        rp: { name: 'SideStack', id: location.hostname || 'localhost' },
-        user: { id: userId, name: p?.name || 'user', displayName: p?.name || 'SideStack User' },
+        rp: { name: 'Artha', id: location.hostname || 'localhost' },
+        user: { id: userId, name: p?.name || 'user', displayName: p?.name || 'Artha User' },
         pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
         authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
         timeout: 30000,
       }
     });
     if (credential) {
-      localStorage.setItem('ss_bio_cred', bufferToBase64(credential.rawId));
+      localStorage.setItem('ar_bio_cred', bufferToBase64(credential.rawId));
       return true;
     }
   } catch (e) { return false; }
@@ -2713,7 +2713,7 @@ async function toggleBiometric(el) {
   if (el.classList.contains('on')) {
     // Turning OFF
     el.classList.remove('on');
-    localStorage.removeItem('ss_bio_cred');
+    localStorage.removeItem('ar_bio_cred');
   } else {
     // Turning ON — register biometric
     const ok = await registerBiometric();
@@ -2727,7 +2727,7 @@ async function toggleBiometric(el) {
 
 function forgotPIN() {
   if (confirm('This will clear your PIN and open the app. Your income data is safe. Continue?')) {
-    localStorage.removeItem('ss_pin');
+    localStorage.removeItem('ar_pin');
     hide('pin-lock-screen');
     unlockApp();
   }
@@ -2769,12 +2769,12 @@ function exportData() {
     moods: JSON.parse(localStorage.getItem('moods') || '[]'),
     rmEntries: JSON.parse(localStorage.getItem('rmEntries') || '[]'),
     exportedAt: new Date().toISOString(),
-    note: 'Exported from SideStack v5.0 — India\'s Side Hustle OS'
+    note: 'Exported from Artha v5.0 — India\'s Side Hustle OS'
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = 'SideStack_MyData.json'; a.click();
+  a.href = url; a.download = 'Artha_MyData.json'; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -2785,9 +2785,9 @@ function cancelTrial() {
 
 You will NOT be charged. Your account reverts to Free.`);
   if (!confirmed) return;
-  localStorage.removeItem('ss_trial');
-  localStorage.setItem('ss_tier', 'free');
-  localStorage.removeItem('ss_tier_token');
+  localStorage.removeItem('ar_trial');
+  localStorage.setItem('ar_tier', 'free');
+  localStorage.removeItem('ar_tier_token');
   loadProfileIntoApp();
   updateAIUsageBadge();
   document.getElementById('cancel-trial-row').style.display = 'none';
@@ -2800,7 +2800,7 @@ function confirmDeleteAccount() {
   if (!confirmed) return;
   const confirmed2 = confirm('Are you sure? All income records, expenses, goals, and settings will be erased.');
   if (!confirmed2) return;
-  ['ss_profile','ss_pin','ss_onboarded','incomeEntries','expenses','moods','rmEntries','lastPdfDate'].forEach(k => localStorage.removeItem(k));
+  ['ar_profile','ar_pin','ar_onboarded','incomeEntries','expenses','moods','rmEntries','lastPdfDate'].forEach(k => localStorage.removeItem(k));
   location.reload();
 }
 
@@ -2858,7 +2858,7 @@ function exportITR() {
   if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
   incrementUsage('pdfs');
   const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
-  const profile = (() => { try { return JSON.parse(localStorage.getItem('ss_profile')||'{}'); } catch { return {}; } })();
+  const profile = (() => { try { return JSON.parse(localStorage.getItem('ar_profile')||'{}'); } catch { return {}; } })();
   const total = entries.reduce((s,e) => s+(parseFloat(e.amount)||0), 0);
   const deduction = Math.round(total * 0.5);
   const taxable = total - deduction;
@@ -2869,7 +2869,7 @@ function exportITR() {
   doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor(203,255,71);
   doc.text('ITR-1 Income Summary', 20, 28);
   doc.setFontSize(10); doc.setTextColor(90,90,112);
-  doc.text('SideStack v5.0 · FY 2025-26 · Generated: '+new Date().toLocaleDateString('en-IN'), 20, 37);
+  doc.text('Artha v5.0 · FY 2025-26 · Generated: '+new Date().toLocaleDateString('en-IN'), 20, 37);
   doc.setDrawColor(203,255,71); doc.line(20,42,190,42);
   doc.setFontSize(11); doc.setTextColor(238,238,248);
   doc.text('Taxpayer: '+(profile.name||'User'), 20, 54);
@@ -2883,12 +2883,12 @@ function exportITR() {
   doc.setTextColor(238,238,248); doc.text('Gross:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+total.toLocaleString('en-IN'), 150, y); y+=9;
   doc.setTextColor(238,238,248); doc.text('Sec 44ADA (50%):', 25, y); doc.setTextColor(124,92,255); doc.text('-₹'+deduction.toLocaleString('en-IN'), 150, y); y+=9;
   doc.setTextColor(238,238,248); doc.text('Taxable:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+taxable.toLocaleString('en-IN'), 150, y);
-  doc.save('SideStack_ITR1_FY2025-26.pdf');
+  doc.save('Artha_ITR1_FY2025-26.pdf');
 }
 
 // ══ PROFILE EDIT ══
 function showProfileEdit() {
-  const p = (() => { try { return JSON.parse(localStorage.getItem('ss_profile')||'{}'); } catch { return {}; } })();
+  const p = (() => { try { return JSON.parse(localStorage.getItem('ar_profile')||'{}'); } catch { return {}; } })();
   const nameEl = document.getElementById('p-name'), cityEl = document.getElementById('p-city');
   if (nameEl) nameEl.value = p.name||'';
   if (cityEl) cityEl.value = p.city||'';
@@ -2906,8 +2906,8 @@ function saveProfileEdit() {
   const name = document.getElementById('p-name').value.trim();
   const city = document.getElementById('p-city').value.trim();
   if (!name) { document.getElementById('p-name').style.borderColor='var(--pink)'; setTimeout(()=>document.getElementById('p-name').style.borderColor='',1500); return; }
-  const existing = (() => { try { return JSON.parse(localStorage.getItem('ss_profile')||'{}'); } catch { return {}; } })();
-  localStorage.setItem('ss_profile', JSON.stringify({...existing, name, city, hustle:selectedHustle}));
+  const existing = (() => { try { return JSON.parse(localStorage.getItem('ar_profile')||'{}'); } catch { return {}; } })();
+  localStorage.setItem('ar_profile', JSON.stringify({...existing, name, city, hustle:selectedHustle}));
   hide('profile-screen');
   loadProfileIntoApp();
   const btn = document.querySelector('#profile-screen .btn-lime');
@@ -2921,15 +2921,15 @@ function showNewGoalModal() {
   const name = prompt('Goal name? (e.g. "Buy Laptop")'); if (!name) return;
   const target = prompt('Target amount (₹)?'); if (!target||isNaN(parseFloat(target))) return;
   const deadline = prompt('Deadline? (e.g. "Jun 2026")')||'No deadline';
-  const goals = JSON.parse(localStorage.getItem('ss_goals')||'[]');
+  const goals = JSON.parse(localStorage.getItem('ar_goals')||'[]');
   goals.push({id:Date.now(),name,target:parseFloat(target),current:0,deadline,emoji:'🎯'});
-  localStorage.setItem('ss_goals', JSON.stringify(goals));
+  localStorage.setItem('ar_goals', JSON.stringify(goals));
   renderGoals();
 }
 function renderGoals() {
   const container = document.getElementById('goals-list');
   if (!container) return;
-  const goals = JSON.parse(localStorage.getItem('ss_goals')||'[]');
+  const goals = JSON.parse(localStorage.getItem('ar_goals')||'[]');
   if (!goals.length) return;
   container.innerHTML = goals.map(g => {
     const pct = Math.min(100, Math.round((g.current/g.target)*100));
@@ -2943,26 +2943,26 @@ function showNewInvoiceModal() {
   const client = prompt('Client name?'); if (!client) return;
   const amount = prompt('Amount (₹)?'); if (!amount||isNaN(parseFloat(amount))) return;
   const desc = prompt('Description?')||'Services';
-  const invoices = JSON.parse(localStorage.getItem('ss_invoices')||'[]');
+  const invoices = JSON.parse(localStorage.getItem('ar_invoices')||'[]');
   const num = 'INV-'+String(invoices.length+44).padStart(3,'0');
   invoices.unshift({id:Date.now(),num,client,amount:parseFloat(amount),desc,status:'Sent',date:new Date().toLocaleDateString('en-IN',{month:'short',day:'numeric'})});
-  localStorage.setItem('ss_invoices', JSON.stringify(invoices));
+  localStorage.setItem('ar_invoices', JSON.stringify(invoices));
   renderInvoices();
 }
 function renderInvoices() {
   const list = document.getElementById('invoices-list');
   if (!list) return;
-  const invoices = JSON.parse(localStorage.getItem('ss_invoices')||'[]');
+  const invoices = JSON.parse(localStorage.getItem('ar_invoices')||'[]');
   if (!invoices.length) return;
   const sc = {Paid:'var(--teal)',Overdue:'var(--orange)',Sent:'var(--blue)',Chase:'var(--pink)'};
   list.innerHTML = invoices.map(inv => `<div class="entry" onclick="cycleInvoiceStatus(${inv.id})"><div class="entry-ico" style="background:var(--surf3)">📄</div><div class="entry-info"><div class="entry-name">${inv.num} · ${inv.client}</div><div class="entry-meta">₹${inv.amount.toLocaleString('en-IN')} · ${inv.date}</div></div><span style="background:rgba(0,0,0,0.3);color:${sc[inv.status]||'var(--text2)'};padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700">${inv.status}</span></div>`).join('');
 }
 function cycleInvoiceStatus(id) {
-  const invoices = JSON.parse(localStorage.getItem('ss_invoices')||'[]');
+  const invoices = JSON.parse(localStorage.getItem('ar_invoices')||'[]');
   const st = ['Sent','Paid','Overdue','Chase'];
   const inv = invoices.find(i => i.id===id); if (!inv) return;
   inv.status = st[(st.indexOf(inv.status)+1)%st.length];
-  localStorage.setItem('ss_invoices', JSON.stringify(invoices));
+  localStorage.setItem('ar_invoices', JSON.stringify(invoices));
   renderInvoices();
 }
 
@@ -2973,8 +2973,8 @@ function copyReferral(btn) {
 }
 function shareReferral() {
   const code = document.getElementById('referral-code')?.textContent||'HUSTLE-USER';
-  const text = `Join me on SideStack! Use code: ${code} 🚀 https://app.sakredfire.ca`;
-  if (navigator.share) navigator.share({title:'SideStack',text}); else navigator.clipboard.writeText(text).then(()=>alert('Copied!'));
+  const text = `Join me on Artha! Use code: ${code} 🚀 https://app.sakredfire.ca`;
+  if (navigator.share) navigator.share({title:'Artha',text}); else navigator.clipboard.writeText(text).then(()=>alert('Copied!'));
 }
 function logMoodConfirm(btn) {
   const sel = document.querySelector('.mood-opt.sel');
@@ -3003,7 +3003,7 @@ function confirmVoiceEntry(btn) {
   setTimeout(()=>{ btn.textContent='✓ Confirm'; btn.style.background=''; }, 2000);
 }
 function shareTip(btn) {
-  const tip = btn.closest('.tip-post')?.querySelector('p')?.textContent||'Check out SideStack!';
+  const tip = btn.closest('.tip-post')?.querySelector('p')?.textContent||'Check out Artha!';
   const text = `💡 Hustle Tip: "${tip.slice(0,100)}..." — https://app.sakredfire.ca`;
   if (navigator.share) navigator.share({title:'Hustle Tip',text}); else navigator.clipboard.writeText(text).then(()=>{ btn.textContent='✓ Copied!'; setTimeout(()=>btn.textContent='+ Share',2000); });
 }
@@ -3021,7 +3021,7 @@ const LANGUAGES = [
 ];
 
 function showLanguagePicker() {
-  const current = localStorage.getItem('ss_lang') || 'EN';
+  const current = localStorage.getItem('ar_lang') || 'EN';
   const options = LANGUAGES.map(l =>
     `<div onclick="setLanguage('${l.code}')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surf2);border:1.5px solid ${l.code===current?'var(--lime)':'var(--border)'};border-radius:13px;margin-bottom:8px;cursor:pointer;">
       <div>
@@ -3055,7 +3055,7 @@ function setLanguage(code) {
   document.getElementById('lang-modal')?.remove();
   
   // Save preference
-  localStorage.setItem('ss_lang', code);
+  localStorage.setItem('ar_lang', code);
   
   // Show toast then apply
   const toast = document.createElement('div');
@@ -3077,7 +3077,7 @@ function setLanguage(code) {
 
 
 // ══════════════════════════════════════════
-// TRANSLATION SYSTEM — SideStack v5.0
+// TRANSLATION SYSTEM — Artha v5.0
 // Supported: EN, HI, TA, TE, MR, KN
 // ══════════════════════════════════════════
 
@@ -3290,7 +3290,7 @@ function applyTranslations(lang) {
   });
 
   // Store active language
-  localStorage.setItem('ss_lang', lang);
+  localStorage.setItem('ar_lang', lang);
   
   // Update page label for settings
   const pageLabel = document.getElementById('page-label');
@@ -3312,7 +3312,7 @@ const LIMITS = {
 
 // Trial state helpers
 function getTrialState() {
-  try { return JSON.parse(localStorage.getItem('ss_trial') || 'null'); } catch { return null; }
+  try { return JSON.parse(localStorage.getItem('ar_trial') || 'null'); } catch { return null; }
 }
 function isInTrial() {
   const t = getTrialState();
@@ -3329,7 +3329,7 @@ function trialDaysLeft() {
 function getTier() {
   // If in active trial, treat as Pro
   if (isInTrial()) return 'pro';
-  const t = localStorage.getItem('ss_tier') || 'free';
+  const t = localStorage.getItem('ar_tier') || 'free';
   return ['free','pro','proplus'].includes(t) ? t : 'free';
 }
 function isPro() { return getTier() !== 'free'; }
@@ -3345,12 +3345,12 @@ function getMonthKey() {
 }
 
 function getUsage(type) {
-  const key = type === 'pdfs' ? 'ss_usage_pdf_' + getMonthKey() : 'ss_usage_' + type + '_' + getTodayKey();
+  const key = type === 'pdfs' ? 'ar_usage_pdf_' + getMonthKey() : 'ar_usage_' + type + '_' + getTodayKey();
   return parseInt(localStorage.getItem(key) || '0');
 }
 
 function incrementUsage(type) {
-  const key = type === 'pdfs' ? 'ss_usage_pdf_' + getMonthKey() : 'ss_usage_' + type + '_' + getTodayKey();
+  const key = type === 'pdfs' ? 'ar_usage_pdf_' + getMonthKey() : 'ar_usage_' + type + '_' + getTodayKey();
   const current = parseInt(localStorage.getItem(key) || '0');
   localStorage.setItem(key, String(current + 1));
 }
@@ -3477,7 +3477,7 @@ function startProTrial() {
     <div style="background:var(--surf);border-radius:20px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border2);">
       <div style="text-align:center;margin-bottom:20px;">
         <div style="font-size:40px;margin-bottom:10px;">🔐</div>
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Get More from SideStack</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Get More from Artha</div>
         <div style="font-size:13px;color:var(--text2);line-height:1.6;">Complete payment on our secure website.<br>You will receive an unlock code instantly.</div>
       </div>
 
@@ -3499,7 +3499,7 @@ function startProTrial() {
       <div style="background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:12px;">
         <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Already subscribed? Enter your code:</div>
         <div style="display:flex;gap:8px;">
-          <input id="unlock-code-input" placeholder="e.g. SS-PRO-XXXXX" maxlength="14"
+          <input id="unlock-code-input" placeholder="e.g. AR-PRO-XXXXX" maxlength="14"
             style="flex:1;background:var(--surf3);border:1.5px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'Space Mono',monospace;outline:none;letter-spacing:0.05em;text-transform:uppercase;"
             onfocus="this.style.borderColor='var(--lime)'"
             onblur="this.style.borderColor='var(--border2)'"
@@ -3517,7 +3517,7 @@ function startProTrial() {
 }
 
 function openPaymentSite() {
-  localStorage.setItem('ss_upgrade_interest', JSON.stringify({ plan:'pro', at: new Date().toISOString() }));
+  localStorage.setItem('ar_upgrade_interest', JSON.stringify({ plan:'pro', at: new Date().toISOString() }));
   document.getElementById('pay-modal')?.remove();
   window.open('https://app.sakredfire.ca/pro', '_blank');
 }
@@ -3533,25 +3533,25 @@ function activateCode() {
     return;
   }
 
-  // v1.0: validate code format SS-PRO-XXXXX
+  // v1.0: validate code format AR-PRO-XXXXX
   // v1.1: validate against server/KV database
-  const isValidFormat = /^SS-(PRO|TRIAL)-[A-Z0-9]{5,8}$/.test(code);
+  const isValidFormat = /^AR-(PRO|TRIAL)-[A-Z0-9]{5,8}$/.test(code);
 
   if (!isValidFormat) {
     errorEl.style.display = 'block';
-    errorEl.textContent = 'Invalid code format. Codes look like: SS-PRO-AB123';
+    errorEl.textContent = 'Invalid code format. Codes look like: AR-PRO-AB123';
     return;
   }
 
   // Check if trial code
-  const isTrial = code.startsWith('SS-TRIAL-');
+  const isTrial = code.startsWith('AR-TRIAL-');
 
   // Activate
   const trial = isTrial ? { started: Date.now(), code, plan: 'pro' } : null;
-  if (trial) localStorage.setItem('ss_trial', JSON.stringify(trial));
-  localStorage.setItem('ss_tier', 'pro');
-  localStorage.setItem('ss_tier_token', 'pro_' + code);
-  localStorage.setItem('ss_activated_code', code);
+  if (trial) localStorage.setItem('ar_trial', JSON.stringify(trial));
+  localStorage.setItem('ar_tier', 'pro');
+  localStorage.setItem('ar_tier_token', 'ar_pro_' + code);
+  localStorage.setItem('ar_activated_code', code);
 
   document.getElementById('pay-modal')?.remove();
   loadProfileIntoApp();
@@ -3561,7 +3561,7 @@ function activateCode() {
   toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:14px 24px;border-radius:14px;font-size:13px;font-weight:700;z-index:9999;text-align:center;max-width:320px;line-height:1.6;';
   toast.innerHTML = isTrial
     ? '🎉 Pro Trial activated! 7 days free.<br><span style="font-weight:400;font-size:11px;">Cancel anytime in Settings before day 7</span>'
-    : '🎉 Pro activated! Welcome to SideStack Pro.';
+    : '🎉 Pro activated! Welcome to Artha Pro.';
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 5000);
 }
@@ -3573,7 +3573,7 @@ function activateTrial() {
 
 function notifyProPlus() {
   document.getElementById('upgrade-modal')?.remove();
-  localStorage.setItem('ss_proplus_notify', new Date().toISOString());
+  localStorage.setItem('ar_proplus_notify', new Date().toISOString());
   const toast = document.createElement('div');
   toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--surf2);border:1px solid var(--purple);color:var(--purple);padding:12px 20px;border-radius:100px;font-size:13px;font-weight:600;z-index:9999;white-space:nowrap;';
   toast.textContent = '⚡ You will be first to know when Pro+ launches!';

@@ -1,7 +1,7 @@
 {
-  "name": "SideStack - India's Side Hustle OS",
-  "short_name": "SideStack",
-  "description": "Track side income, taxes, invoices, and get AI insights — 100% private, on-device.",
+  "name": "Artha - India's Side Hustle OS",
+  "short_name": "Artha",
+  "description": "Track side income, taxes, invoices, and get AI insights \u2014 100% private, on-device. Built for India's gig workers.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,11 +9,29 @@
   "theme_color": "#080810",
   "orientation": "portrait-primary",
   "lang": "en",
-  "categories": ["finance", "productivity"],
+  "categories": [
+    "finance",
+    "productivity"
+  ],
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "screenshots": [],
   "shortcuts": [
@@ -22,14 +40,24 @@
       "short_name": "Log",
       "description": "Quickly log new income",
       "url": "/?action=log",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Tax Engine",
       "short_name": "Tax",
       "description": "View tax estimates",
       "url": "/?action=tax",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

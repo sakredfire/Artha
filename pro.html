@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>SideStack Pro — Upgrade</title>
+<title>Artha Pro — Upgrade</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -274,7 +274,7 @@ body {
 <div class="lang-bar">
   <div class="logo-sm">
     <div class="logo-icon">S₹</div>
-    SideStack
+    Artha
   </div>
   <div class="lang-pills">
     <div class="lang-pill active" onclick="setLang('en')">EN</div>
@@ -291,7 +291,7 @@ body {
   <!-- Hero -->
   <div class="hero">
     <div class="hero-badge">⚡ <span data-t="badge">7-Day Free Trial</span></div>
-    <h1><span data-t="h1a">Unlock</span> <span>SideStack Pro</span></h1>
+    <h1><span data-t="h1a">Unlock</span> <span>Artha Pro</span></h1>
     <p data-t="subtitle">10 AI questions a day, unlimited receipt scans, income proof PDFs — everything your hustle needs.</p>
   </div>
 
@@ -339,12 +339,12 @@ body {
   <div class="code-section">
     <div class="code-label" data-t="have-code">Already have an unlock code?</div>
     <div class="code-input-row">
-      <input class="code-input" id="code-input" placeholder="SS-PRO-XXXXX" maxlength="14"
+      <input class="code-input" id="code-input" placeholder="AR-PRO-XXXXX" maxlength="14"
         oninput="this.value=this.value.toUpperCase()">
       <button class="apply-btn" onclick="applyCode()" data-t="apply">Apply</button>
     </div>
     <div class="code-error" id="code-error" data-t="code-err">Invalid code. Please check and try again.</div>
-    <div class="code-success" id="code-success" data-t="code-ok">✓ Code verified! Open SideStack app to activate.</div>
+    <div class="code-success" id="code-success" data-t="code-ok">✓ Code verified! Open Artha app to activate.</div>
   </div>
 
   <!-- Pro+ Coming Soon -->
@@ -369,10 +369,10 @@ body {
   <div class="success-screen" id="success-screen">
     <div class="success-icon">🎉</div>
     <h2 style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:8px;" data-t="success-title">You're Pro now!</h2>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;" data-t="success-sub">Copy this code and enter it in the SideStack app to activate your plan.</p>
-    <div class="success-code" id="success-code" onclick="copyCode()">SS-PRO-XXXXXX</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;" data-t="success-sub">Copy this code and enter it in the Artha app to activate your plan.</p>
+    <div class="success-code" id="success-code" onclick="copyCode()">AR-PRO-XXXXXX</div>
     <div class="copy-hint" data-t="tap-copy">Tap to copy</div>
-    <button onclick="openApp()" style="margin-top:20px;width:100%;padding:14px;background:var(--lime);border:none;border-radius:12px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;" data-t="open-app">Open SideStack App →</button>
+    <button onclick="openApp()" style="margin-top:20px;width:100%;padding:14px;background:var(--lime);border:none;border-radius:12px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;" data-t="open-app">Open Artha App →</button>
   </div>
 
   <!-- FAQ -->
@@ -386,7 +386,7 @@ body {
 
     <div class="faq-item" onclick="toggleFaq(this)">
       <div class="faq-q"><span data-t="q2">How do I cancel the trial?</span><span class="faq-chevron">▾</span></div>
-      <div class="faq-a" data-t="a2">Open SideStack app → More → Settings → scroll down to Cancel Trial. Your plan reverts to Free instantly. No charge, no hassle.</div>
+      <div class="faq-a" data-t="a2">Open Artha app → More → Settings → scroll down to Cancel Trial. Your plan reverts to Free instantly. No charge, no hassle.</div>
     </div>
 
     <div class="faq-item" onclick="toggleFaq(this)">
@@ -396,7 +396,7 @@ body {
 
     <div class="faq-item" onclick="toggleFaq(this)">
       <div class="faq-q"><span data-t="q4">Is my financial data safe?</span><span class="faq-chevron">▾</span></div>
-      <div class="faq-a" data-t="a4">100%. SideStack stores all your income and financial data on your device only. Nothing is sent to our servers. DPDP 2023 compliant.</div>
+      <div class="faq-a" data-t="a4">100%. Artha stores all your income and financial data on your device only. Nothing is sent to our servers. DPDP 2023 compliant.</div>
     </div>
 
     <div class="faq-item" onclick="toggleFaq(this)">
@@ -419,16 +419,16 @@ const T = {
     t1:'Stripe Secured', t2:'Card / Google Pay', t3:'DPDP Compliant',
     'have-code':'Already have an unlock code?', apply:'Apply',
     'code-err':'Invalid code. Please check and try again.',
-    'code-ok':'✓ Code verified! Open SideStack app to activate.',
+    'code-ok':'✓ Code verified! Open Artha app to activate.',
     'coming-soon':'Coming Soon', 'proplus-desc':'50 AI/day with Claude Sonnet · Unlimited everything · ₹149/mo', 'notify-me':'🔔 Notify me',
     tt1:'Bank-grade security', tt2:'Cancel anytime', tt3:'Works on all devices',
-    'success-title':"You're Pro now!", 'success-sub':'Copy this code and enter it in the SideStack app to activate your plan.',
-    'tap-copy':'Tap to copy', 'open-app':'Open SideStack App →',
+    'success-title':"You're Pro now!", 'success-sub':'Copy this code and enter it in the Artha app to activate your plan.',
+    'tap-copy':'Tap to copy', 'open-app':'Open Artha App →',
     'faq-title':'Frequently Asked Questions',
     q1:'Will I be charged immediately?', a1:'No. The 7-day trial is completely free. Your card/UPI is saved but only charged on day 8 if you don\'t cancel.',
-    q2:'How do I cancel the trial?', a2:'Open SideStack app → More → Settings → scroll down to Cancel Trial. Your plan reverts to Free instantly.',
+    q2:'How do I cancel the trial?', a2:'Open Artha app → More → Settings → scroll down to Cancel Trial. Your plan reverts to Free instantly.',
     q3:'What payment methods are accepted?', a3:'UPI (GPay, PhonePe, Paytm), all major debit/credit cards, and net banking. All payments secured by Stripe.',
-    q4:'Is my financial data safe?', a4:'100%. SideStack stores all your income data on your device only. Nothing is sent to our servers. DPDP 2023 compliant.',
+    q4:'Is my financial data safe?', a4:'100%. Artha stores all your income data on your device only. Nothing is sent to our servers. DPDP 2023 compliant.',
     q5:'Can I upgrade to Pro+ later?', a5:'Yes! Pro+ (₹149/month) with Claude Sonnet AI is coming soon. Tap "Notify me" above to be first in line.',
   },
   hi: {
@@ -440,16 +440,16 @@ const T = {
     t1:'Stripe सुरक्षित', t2:'UPI / कार्ड', t3:'DPDP अनुपालन',
     'have-code':'पहले से अनलॉक कोड है?', apply:'लगाएं',
     'code-err':'अमान्य कोड। कृपया जांचें और पुनः प्रयास करें।',
-    'code-ok':'✓ कोड सत्यापित! SideStack ऐप में एक्टिवेट करें।',
+    'code-ok':'✓ कोड सत्यापित! Artha ऐप में एक्टिवेट करें।',
     'coming-soon':'जल्द आ रहा है', 'proplus-desc':'50 AI/दिन · सब कुछ असीमित · ₹149/माह', 'notify-me':'🔔 सूचित करें',
     tt1:'बैंक-स्तरीय सुरक्षा', tt2:'कभी भी रद्द करें', tt3:'सभी डिवाइस पर',
-    'success-title':'आप Pro हो गए!', 'success-sub':'यह कोड कॉपी करें और SideStack ऐप में डालें।',
-    'tap-copy':'कॉपी करने के लिए टैप करें', 'open-app':'SideStack ऐप खोलें →',
+    'success-title':'आप Pro हो गए!', 'success-sub':'यह कोड कॉपी करें और Artha ऐप में डालें।',
+    'tap-copy':'कॉपी करने के लिए टैप करें', 'open-app':'Artha ऐप खोलें →',
     'faq-title':'अक्सर पूछे जाने वाले प्रश्न',
     q1:'क्या मुझसे तुरंत चार्ज किया जाएगा?', a1:'नहीं। 7 दिन का ट्रायल पूरी तरह मुफ्त है। दिन 8 पर ही चार्ज होगा।',
-    q2:'ट्रायल कैसे रद्द करें?', a2:'SideStack ऐप → More → Settings → Cancel Trial। तुरंत Free प्लान पर वापस।',
+    q2:'ट्रायल कैसे रद्द करें?', a2:'Artha ऐप → More → Settings → Cancel Trial। तुरंत Free प्लान पर वापस।',
     q3:'कौन से भुगतान स्वीकार हैं?', a3:'UPI (GPay, PhonePe, Paytm), सभी डेबिट/क्रेडिट कार्ड। Stripe द्वारा सुरक्षित।',
-    q4:'क्या मेरा डेटा सुरक्षित है?', a4:'100%। SideStack आपका सारा डेटा आपके डिवाइस पर ही रखता है।',
+    q4:'क्या मेरा डेटा सुरक्षित है?', a4:'100%। Artha आपका सारा डेटा आपके डिवाइस पर ही रखता है।',
     q5:'Pro+ में अपग्रेड हो सकता हूं?', a5:'हां! Pro+ (₹149/माह) जल्द आ रहा है। ऊपर "सूचित करें" टैप करें।',
   },
   ta: {
@@ -461,16 +461,16 @@ const T = {
     t1:'Stripe பாதுகாப்பு', t2:'UPI / கார்டு', t3:'DPDP இணக்கம்',
     'have-code':'ஏற்கனவே கோட் உள்ளதா?', apply:'பயன்படுத்து',
     'code-err':'தவறான கோட். மீண்டும் முயற்சிக்கவும்.',
-    'code-ok':'✓ கோட் சரிபார்க்கப்பட்டது! SideStack ஆப்பில் செயல்படுத்தவும்.',
+    'code-ok':'✓ கோட் சரிபார்க்கப்பட்டது! Artha ஆப்பில் செயல்படுத்தவும்.',
     'coming-soon':'விரைவில் வருகிறது', 'proplus-desc':'50 AI/நாள் · அனைத்தும் வரம்பற்றது · ₹149/மாதம்', 'notify-me':'🔔 அறிவிக்கவும்',
     tt1:'வங்கி அளவிலான பாதுகாப்பு', tt2:'எந்த நேரத்திலும் ரத்து செய்', tt3:'எல்லா சாதனங்களிலும்',
-    'success-title':'நீங்கள் Pro ஆனீர்கள்!', 'success-sub':'இந்த கோட்டை நகலெடுத்து SideStack ஆப்பில் உள்ளிடவும்.',
-    'tap-copy':'நகலெடுக்க தட்டவும்', 'open-app':'SideStack ஆப்பை திற →',
+    'success-title':'நீங்கள் Pro ஆனீர்கள்!', 'success-sub':'இந்த கோட்டை நகலெடுத்து Artha ஆப்பில் உள்ளிடவும்.',
+    'tap-copy':'நகலெடுக்க தட்டவும்', 'open-app':'Artha ஆப்பை திற →',
     'faq-title':'அடிக்கடி கேட்கப்படும் கேள்விகள்',
     q1:'உடனே கட்டணம் வசூலிக்கப்படுமா?', a1:'இல்லை. 7 நாள் சோதனை முற்றிலும் இலவசம். 8வது நாளில் மட்டுமே கட்டணம்.',
-    q2:'சோதனையை எப்படி ரத்து செய்வது?', a2:'SideStack → More → Settings → Cancel Trial. உடனே Free திட்டத்திற்கு திரும்பும்.',
+    q2:'சோதனையை எப்படி ரத்து செய்வது?', a2:'Artha → More → Settings → Cancel Trial. உடனே Free திட்டத்திற்கு திரும்பும்.',
     q3:'என்ன கட்டண முறைகள் ஏற்றுக்கொள்ளப்படுகின்றன?', a3:'UPI (GPay, PhonePe, Paytm), அனைத்து டெபிட்/கிரெடிட் கார்டுகள். Stripe பாதுகாப்பு.',
-    q4:'என் தரவு பாதுகாப்பாக உள்ளதா?', a4:'100%. SideStack உங்கள் தரவை உங்கள் சாதனத்தில் மட்டுமே சேமிக்கிறது.',
+    q4:'என் தரவு பாதுகாப்பாக உள்ளதா?', a4:'100%. Artha உங்கள் தரவை உங்கள் சாதனத்தில் மட்டுமே சேமிக்கிறது.',
     q5:'பின்னர் Pro+ க்கு மேம்படுத்தலாமா?', a5:'ஆம்! Pro+ (₹149/மாதம்) விரைவில் வருகிறது. மேலே "அறிவிக்கவும்" தட்டவும்.',
   },
   te: {
@@ -482,16 +482,16 @@ const T = {
     t1:'Stripe భద్రత', t2:'UPI / కార్డు', t3:'DPDP అనుపాలన',
     'have-code':'ఇప్పటికే కోడ్ ఉందా?', apply:'వర్తింపజేయి',
     'code-err':'చెల్లని కోడ్. దయచేసి తనిఖీ చేసి మళ్ళీ ప్రయత్నించండి.',
-    'code-ok':'✓ కోడ్ ధృవీకరించబడింది! SideStack యాప్‌లో యాక్టివేట్ చేయండి.',
+    'code-ok':'✓ కోడ్ ధృవీకరించబడింది! Artha యాప్‌లో యాక్టివేట్ చేయండి.',
     'coming-soon':'త్వరలో వస్తుంది', 'proplus-desc':'50 AI/రోజు · అపరిమిత అన్నీ · ₹149/నెల', 'notify-me':'🔔 తెలియజేయి',
     tt1:'బ్యాంక్ స్థాయి భద్రత', tt2:'ఎప్పుడైనా రద్దు చేయండి', tt3:'అన్ని పరికరాలపై',
-    'success-title':'మీరు Pro అయ్యారు!', 'success-sub':'ఈ కోడ్‌ను కాపీ చేసి SideStack యాప్‌లో నమోదు చేయండి.',
-    'tap-copy':'కాపీ చేయడానికి నొక్కండి', 'open-app':'SideStack యాప్ తెరవండి →',
+    'success-title':'మీరు Pro అయ్యారు!', 'success-sub':'ఈ కోడ్‌ను కాపీ చేసి Artha యాప్‌లో నమోదు చేయండి.',
+    'tap-copy':'కాపీ చేయడానికి నొక్కండి', 'open-app':'Artha యాప్ తెరవండి →',
     'faq-title':'తరచుగా అడిగే ప్రశ్నలు',
     q1:'నాకు వెంటనే చార్జ్ చేయబడుతుందా?', a1:'లేదు. 7 రోజుల ట్రయల్ పూర్తిగా ఉచితం. 8వ రోజున మాత్రమే చార్జ్ అవుతుంది.',
-    q2:'ట్రయల్‌ని ఎలా రద్దు చేయాలి?', a2:'SideStack → More → Settings → Cancel Trial. వెంటనే Free ప్లాన్‌కు తిరిగి వస్తుంది.',
+    q2:'ట్రయల్‌ని ఎలా రద్దు చేయాలి?', a2:'Artha → More → Settings → Cancel Trial. వెంటనే Free ప్లాన్‌కు తిరిగి వస్తుంది.',
     q3:'ఏ చెల్లింపు పద్ధతులు స్వీకరించబడతాయి?', a3:'UPI (GPay, PhonePe, Paytm), అన్ని డెబిట్/క్రెడిట్ కార్డులు. Stripe రక్షణ.',
-    q4:'నా డేటా సురక్షితంగా ఉందా?', a4:'100%. SideStack మీ డేటాను మీ పరికరంలో మాత్రమే నిల్వ చేస్తుంది.',
+    q4:'నా డేటా సురక్షితంగా ఉందా?', a4:'100%. Artha మీ డేటాను మీ పరికరంలో మాత్రమే నిల్వ చేస్తుంది.',
     q5:'తర్వాత Pro+ కి అప్‌గ్రేడ్ చేయవచ్చా?', a5:'అవును! Pro+ (₹149/నెల) త్వరలో వస్తుంది. పైన "తెలియజేయి" నొక్కండి.',
   },
   mr: {
@@ -503,16 +503,16 @@ const T = {
     t1:'Stripe सुरक्षित', t2:'UPI / कार्ड', t3:'DPDP अनुपालन',
     'have-code':'आधीच अनलॉक कोड आहे?', apply:'लागू करा',
     'code-err':'अवैध कोड. कृपया तपासा आणि पुन्हा प्रयत्न करा.',
-    'code-ok':'✓ कोड सत्यापित! SideStack अॅपमध्ये सक्रिय करा.',
+    'code-ok':'✓ कोड सत्यापित! Artha अॅपमध्ये सक्रिय करा.',
     'coming-soon':'लवकरच येत आहे', 'proplus-desc':'५० AI/दिवस · सर्व अमर्याद · ₹१४९/महिना', 'notify-me':'🔔 सूचित करा',
     tt1:'बँक-दर्जाची सुरक्षा', tt2:'केव्हाही रद्द करा', tt3:'सर्व डिव्हाइसवर',
-    'success-title':'तुम्ही Pro झालात!', 'success-sub':'हा कोड कॉपी करा आणि SideStack अॅपमध्ये टाका.',
-    'tap-copy':'कॉपी करण्यासाठी टॅप करा', 'open-app':'SideStack अॅप उघडा →',
+    'success-title':'तुम्ही Pro झालात!', 'success-sub':'हा कोड कॉपी करा आणि Artha अॅपमध्ये टाका.',
+    'tap-copy':'कॉपी करण्यासाठी टॅप करा', 'open-app':'Artha अॅप उघडा →',
     'faq-title':'वारंवार विचारले जाणारे प्रश्न',
     q1:'मला लगेच चार्ज केले जाईल का?', a1:'नाही. ७ दिवसांचा ट्रायल पूर्णपणे मोफत आहे. ८ व्या दिवशीच चार्ज होतो.',
-    q2:'ट्रायल कसे रद्द करावे?', a2:'SideStack → More → Settings → Cancel Trial. लगेच Free प्लानवर परत.',
+    q2:'ट्रायल कसे रद्द करावे?', a2:'Artha → More → Settings → Cancel Trial. लगेच Free प्लानवर परत.',
     q3:'कोणते पेमेंट पद्धती स्वीकारल्या जातात?', a3:'UPI (GPay, PhonePe, Paytm), सर्व डेबिट/क्रेडिट कार्ड. Stripe सुरक्षा.',
-    q4:'माझा डेटा सुरक्षित आहे का?', a4:'१००%. SideStack तुमचा सर्व डेटा फक्त तुमच्या डिव्हाइसवर ठेवतो.',
+    q4:'माझा डेटा सुरक्षित आहे का?', a4:'१००%. Artha तुमचा सर्व डेटा फक्त तुमच्या डिव्हाइसवर ठेवतो.',
     q5:'नंतर Pro+ वर अपग्रेड करता येईल का?', a5:'हो! Pro+ (₹१४९/महिना) लवकरच येत आहे. वर "सूचित करा" टॅप करा.',
   },
   kn: {
@@ -524,16 +524,16 @@ const T = {
     t1:'Stripe ಸುರಕ್ಷಿತ', t2:'UPI / ಕಾರ್ಡ್', t3:'DPDP ಅನುಪಾಲನ',
     'have-code':'ಈಗಾಗಲೇ ಕೋಡ್ ಇದೆಯೇ?', apply:'ಅನ್ವಯಿಸಿ',
     'code-err':'ಅಮಾನ್ಯ ಕೋಡ್. ದಯವಿಟ್ಟು ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
-    'code-ok':'✓ ಕೋಡ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ! SideStack ಅಪ್‌ನಲ್ಲಿ ಸಕ್ರಿಯಗೊಳಿಸಿ.',
+    'code-ok':'✓ ಕೋಡ್ ಪರಿಶೀಲಿಸಲಾಗಿದೆ! Artha ಅಪ್‌ನಲ್ಲಿ ಸಕ್ರಿಯಗೊಳಿಸಿ.',
     'coming-soon':'ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ', 'proplus-desc':'50 AI/ದಿನ · ಎಲ್ಲವೂ ಅಪರಿಮಿತ · ₹149/ತಿಂಗಳು', 'notify-me':'🔔 ತಿಳಿಸಿ',
     tt1:'ಬ್ಯಾಂಕ್ ಮಟ್ಟದ ಸುರಕ್ಷತೆ', tt2:'ಯಾವಾಗ ಬೇಕಾದರೂ ರದ್ದು', tt3:'ಎಲ್ಲ ಸಾಧನಗಳಲ್ಲಿ',
-    'success-title':'ನೀವು Pro ಆದಿರಿ!', 'success-sub':'ಈ ಕೋಡ್ ಅನ್ನು ನಕಲಿಸಿ SideStack ಅಪ್‌ನಲ್ಲಿ ನಮೂದಿಸಿ.',
-    'tap-copy':'ನಕಲಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ', 'open-app':'SideStack ಅಪ್ ತೆರೆಯಿರಿ →',
+    'success-title':'ನೀವು Pro ಆದಿರಿ!', 'success-sub':'ಈ ಕೋಡ್ ಅನ್ನು ನಕಲಿಸಿ Artha ಅಪ್‌ನಲ್ಲಿ ನಮೂದಿಸಿ.',
+    'tap-copy':'ನಕಲಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ', 'open-app':'Artha ಅಪ್ ತೆರೆಯಿರಿ →',
     'faq-title':'ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು',
     q1:'ನನಗೆ ತಕ್ಷಣ ಚಾರ್ಜ್ ಮಾಡಲಾಗುತ್ತದೆಯೇ?', a1:'ಇಲ್ಲ. 7 ದಿನದ ಟ್ರಯಲ್ ಸಂಪೂರ್ಣ ಉಚಿತ. 8ನೇ ದಿನ ಮಾತ್ರ ಚಾರ್ಜ್.',
-    q2:'ಟ್ರಯಲ್ ಹೇಗೆ ರದ್ದು ಮಾಡುವುದು?', a2:'SideStack → More → Settings → Cancel Trial. ತಕ್ಷಣ Free ಪ್ಲಾನ್‌ಗೆ ಮರಳುತ್ತದೆ.',
+    q2:'ಟ್ರಯಲ್ ಹೇಗೆ ರದ್ದು ಮಾಡುವುದು?', a2:'Artha → More → Settings → Cancel Trial. ತಕ್ಷಣ Free ಪ್ಲಾನ್‌ಗೆ ಮರಳುತ್ತದೆ.',
     q3:'ಯಾವ ಪಾವತಿ ವಿಧಾನಗಳನ್ನು ಸ್ವೀಕರಿಸಲಾಗುತ್ತದೆ?', a3:'UPI (GPay, PhonePe, Paytm), ಎಲ್ಲ ಡೆಬಿಟ್/ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್‌ಗಳು.',
-    q4:'ನನ್ನ ಡೇಟಾ ಸುರಕ್ಷಿತವಾಗಿದೆಯೇ?', a4:'100%. SideStack ನಿಮ್ಮ ಡೇಟಾವನ್ನು ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಮಾತ್ರ ಸಂಗ್ರಹಿಸುತ್ತದೆ.',
+    q4:'ನನ್ನ ಡೇಟಾ ಸುರಕ್ಷಿತವಾಗಿದೆಯೇ?', a4:'100%. Artha ನಿಮ್ಮ ಡೇಟಾವನ್ನು ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಮಾತ್ರ ಸಂಗ್ರಹಿಸುತ್ತದೆ.',
     q5:'ನಂತರ Pro+ ಗೆ ಅಪ್‌ಗ್ರೇಡ್ ಮಾಡಬಹುದೇ?', a5:'ಹೌದು! Pro+ (₹149/ತಿಂಗಳು) ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ. ಮೇಲೆ "ತಿಳಿಸಿ" ಟ್ಯಾಪ್ ಮಾಡಿ.',
   }
 };
@@ -594,9 +594,9 @@ function saveEmail() {
     return;
   }
   // Store locally
-  const interested = JSON.parse(localStorage.getItem('ss_pro_waitlist') || '[]');
+  const interested = JSON.parse(localStorage.getItem('ar_pro_waitlist') || '[]');
   interested.push({ email, at: new Date().toISOString(), lang: currentLang });
-  localStorage.setItem('ss_pro_waitlist', JSON.stringify(interested));
+  localStorage.setItem('ar_pro_waitlist', JSON.stringify(interested));
 
   document.querySelector('[onclick="saveEmail()"]').closest('div').parentElement.innerHTML = `
     <div style="background:var(--surf);border-radius:20px;padding:32px;width:100%;max-width:380px;text-align:center;border:1px solid rgba(203,255,71,0.3);">
@@ -621,15 +621,15 @@ function applyCode() {
     return;
   }
 
-  const isValid = /^SS-(PRO|TRIAL)-[A-Z0-9]{5,8}$/.test(code);
+  const isValid = /^AR-(PRO|TRIAL)-[A-Z0-9]{5,8}$/.test(code);
   if (!isValid) {
     errorEl.style.display = 'block';
     return;
   }
 
   // Store verified code for app to pick up
-  localStorage.setItem('ss_verified_code', code);
-  localStorage.setItem('ss_verified_at', new Date().toISOString());
+  localStorage.setItem('ar_verified_code', code);
+  localStorage.setItem('ar_verified_at', new Date().toISOString());
   successEl.style.display = 'block';
   input.style.borderColor = 'var(--teal)';
 }

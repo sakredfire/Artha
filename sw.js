@@ -1,5 +1,5 @@
 // Artha Service Worker v4.0
-const CACHE_NAME = 'artha-v5';
+const CACHE_NAME = 'artha-v6';
 const OFFLINE_URL = '/Sidestack/';
 
 // Files to cache immediately on install

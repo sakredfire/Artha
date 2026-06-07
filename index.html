@@ -867,10 +867,8 @@ body{
       <!-- Source breakdown -->
       <div class="card" style="margin-top:14px;">
         <div class="card-head"><div class="card-title">Income Sources</div></div>
-        <div class="card-body" style="text-align:center;padding:26px 16px;">
-          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Source breakdown unlocks as you log income</div>
+        <div class="card-body" id="home-source-breakdown" style="padding:16px;">
+          <div style="text-align:center;padding:10px 6px;color:var(--text3);font-size:12px;">Log income to see your source breakdown.</div>
         </div>
       </div>
     </div>
@@ -1038,9 +1036,10 @@ body{
 
       <div class="card">
         <div class="card-head"><div class="card-title">Mood Stats</div></div>
-        <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">🔥</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--teal)" id="mood-stat-crushing">0</div><div style="font-size:9px;color:var(--text3)">Crushing</div></div>
-          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😊</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--lime)" id="mood-stat-good">0</div><div style="font-size:9px;color:var(--text3)">Good days</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😊</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--lime)" id="mood-stat-good">0</div><div style="font-size:9px;color:var(--text3)">Good/Great</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😐</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--text2)" id="mood-stat-neutral">0</div><div style="font-size:9px;color:var(--text3)">Neutral</div></div>
           <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😞</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--orange)" id="mood-stat-stress">0</div><div style="font-size:9px;color:var(--text3)">Stress</div></div>
         </div>
       </div>
@@ -2727,7 +2726,34 @@ function renderRealStats() {
   const mc = e => moods.filter(m => m.mood === e).length;
   set('mood-stat-crushing', String(mc('🔥')));
   set('mood-stat-good', String(mc('😊') + mc('😄')));
+  set('mood-stat-neutral', String(mc('😐')));
   set('mood-stat-stress', String(mc('😞')));
+
+  // Income source breakdown (home) — real aggregation, empty state when no data
+  const srcEl = document.getElementById('home-source-breakdown');
+  if (srcEl) {
+    const srcIcons = { Freelance:'💻', Teaching:'📚', Content:'📹', Delivery:'🚗', Design:'🎨', Royalties:'🎵', Rental:'🏠', Other:'⚡' };
+    const byCat = {};
+    entries.forEach(e => { const c = e.category || 'Other'; byCat[c] = (byCat[c] || 0) + (parseFloat(e.amount) || 0); });
+    const rows = Object.entries(byCat).filter(r => r[1] > 0).sort((a, b) => b[1] - a[1]);
+    if (!rows.length) {
+      srcEl.innerHTML = '<div style="text-align:center;padding:10px 6px;color:var(--text3);font-size:12px;">Log income to see your source breakdown.</div>';
+    } else {
+      const max = rows[0][1] || 1;
+      srcEl.innerHTML = rows.map(([cat, amt]) => {
+        const pct = totalIncome > 0 ? Math.round(amt / totalIncome * 100) : 0;
+        const w = Math.max(4, Math.round(amt / max * 100));
+        return '<div style="margin-bottom:12px;">'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:12px;">'
+          + '<span style="color:var(--text);font-weight:600;">' + (srcIcons[cat] || '💰') + ' ' + cat + '</span>'
+          + '<span style="color:var(--text2);">' + fmt(amt) + ' · ' + pct + '%</span>'
+          + '</div>'
+          + '<div style="height:7px;border-radius:6px;background:var(--surf3);overflow:hidden;">'
+          + '<div style="height:100%;width:' + w + '%;border-radius:6px;background:var(--lime);"></div>'
+          + '</div></div>';
+      }).join('');
+    }
+  }
 
   // Home recent income list (real entries, empty state)
   const recent = document.getElementById('home-recent-list');
@@ -2786,6 +2812,10 @@ function exportITR() {
   doc.setTextColor(238,238,248); doc.text('Gross:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+total.toLocaleString('en-IN'), 150, y); y+=9;
   doc.setTextColor(238,238,248); doc.text('Sec 44ADA (50%):', 25, y); doc.setTextColor(124,92,255); doc.text('-₹'+deduction.toLocaleString('en-IN'), 150, y); y+=9;
   doc.setTextColor(238,238,248); doc.text('Taxable:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+taxable.toLocaleString('en-IN'), 150, y);
+  y += 16; doc.setFontSize(8); doc.setTextColor(120,120,140);
+  doc.text('Estimate only. Assumes Sec 44ADA 50% presumptive deduction, which applies', 20, y); y += 5;
+  doc.text('to specified professionals under turnover limits. This is a summary of your', 20, y); y += 5;
+  doc.text('logged entries, not a filed return. Verify with a qualified CA before filing.', 20, y);
   doc.save('Artha_ITR1_FY2025-26.pdf');
 }
 

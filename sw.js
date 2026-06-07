@@ -1,14 +1,14 @@
-// Artha Service Worker v4.0
-const CACHE_NAME = 'artha-v6';
-const OFFLINE_URL = '/Sidestack/';
+// Artha Service Worker v4.1
+const CACHE_NAME = 'artha-v7';
+const OFFLINE_URL = '/';
 
-// Files to cache immediately on install
+// Files to cache immediately on install (root paths — served from app.sakredfire.ca)
 const PRECACHE_URLS = [
-  '/Sidestack/',
-  '/Sidestack/index.html',
-  '/Sidestack/manifest.json',
-  '/Sidestack/icon-192.png',
-  '/Sidestack/icon-512.png',
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png',
 ];
 
 // ── INSTALL: cache core assets ──
@@ -39,48 +39,54 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// ── FETCH: cache-first for app shell, network-first for fonts ──
+// ── FETCH ──
+// Network-first for navigations / HTML / root, so a fresh build is always served
+// (and a returning user or the TWA never gets stuck on a stale cached shell).
+// Cache-first for static assets (icons, manifest, scripts) and fonts.
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
+  const req = event.request;
 
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') return;
+  // Skip non-GET and non-http(s) requests
+  if (req.method !== 'GET') return;
+  if (!req.url.startsWith('http')) return;
 
-  // Skip chrome-extension and other non-http requests
-  if (!event.request.url.startsWith('http')) return;
+  const url = new URL(req.url);
+  const sameOrigin = url.origin === self.location.origin;
+  const isNavigation = req.mode === 'navigate';
+  const isHTML = sameOrigin && (url.pathname === '/' || url.pathname.endsWith('.html'));
 
-  // Network-first for Google Fonts (always fresh)
-  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+  // Network-first for the app shell
+  if (isNavigation || isHTML) {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match(event.request))
+      fetch(req).then(response => {
+        if (response && response.status === 200 && response.type !== 'opaque') {
+          const toCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, toCache));
+        }
+        return response;
+      }).catch(() =>
+        caches.match(req)
+          .then(cached => cached || caches.match(OFFLINE_URL))
+          .then(cached => cached || new Response(
+            '<html><body style="background:#080810;color:#C9FF47;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;"><div><div style="font-size:48px">📵</div><h2>You\'re offline</h2><p style="color:#9494B0;margin-top:8px">Open Artha when connected to sync your data.</p></div></body></html>',
+            { headers: { 'Content-Type': 'text/html' } }
+          ))
+      )
     );
     return;
   }
 
-  // Cache-first for everything else (app shell, assets)
+  // Cache-first for static assets and fonts
   event.respondWith(
-    caches.match(event.request).then(cached => {
+    caches.match(req).then(cached => {
       if (cached) return cached;
-
-      // Not in cache — fetch from network and cache it
-      return fetch(event.request).then(response => {
-        // Only cache valid responses
+      return fetch(req).then(response => {
         if (!response || response.status !== 200 || response.type === 'opaque') {
           return response;
         }
-
         const toCache = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, toCache);
-        });
-
+        caches.open(CACHE_NAME).then(cache => cache.put(req, toCache));
         return response;
-      }).catch(() => {
-        // Offline fallback: return cached index.html
-        return caches.match(OFFLINE_URL) || new Response(
-          '<html><body style="background:#080810;color:#C9FF47;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;"><div><div style="font-size:48px">📵</div><h2>You\'re offline</h2><p style="color:#9494B0;margin-top:8px">Open Artha when connected to sync your data.</p></div></body></html>',
-          { headers: { 'Content-Type': 'text/html' } }
-        );
       });
     })
   );

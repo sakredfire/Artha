@@ -1,7 +1,7 @@
 {
   "name": "Artha - India's Side Hustle OS",
   "short_name": "Artha",
-  "description": "Track side income, taxes, invoices, and get AI insights \u2014 100% private, on-device. Built for India's gig workers.",
+  "description": "Track side income, taxes, and get AI insights. Private by design. Built for India's gig workers.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

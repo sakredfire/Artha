@@ -48,7 +48,7 @@
   <div class="badge">✅ DPDP Act 2023 Compliant</div>
 
   <div class="box green">
-    <strong style="color:#00D4AA;">🔒 The Short Version:</strong> Artha stores all your data <strong>on your device only</strong>. We do not collect, upload, or sell your financial data. No account is required. No servers receive your income information.
+    <strong style="color:#00D4AA;">🔒 The Short Version:</strong> Artha stores all your data <strong>on your device</strong>. We never sell your data or share it with advertisers. No account is required. The only time data leaves your device is when you use Stacks AI — then a brief summary of your figures is sent to our AI provider (Anthropic) to generate a reply, and is not stored afterwards.
   </div>
 
   <div class="box blue" id="data-deletion">
@@ -100,12 +100,12 @@
 
   <h3>2b. Data We Do NOT Collect</h3>
   <ul>
-    <li>We do <strong>not</strong> collect your income data on any server</li>
+    <li>We do <strong>not</strong> store your income data on any server (Stacks AI sends a brief summary to our AI provider to generate replies — see §6 — but nothing is stored afterwards)</li>
     <li>We do <strong>not</strong> store receipt images or OCR text</li>
     <li>We do <strong>not</strong> store voice recordings or audio</li>
     <li>We do <strong>not</strong> collect email addresses (no account required)</li>
     <li>We do <strong>not</strong> use advertising SDKs or tracking pixels</li>
-    <li>We do <strong>not</strong> sell or share data with third parties</li>
+    <li>We do <strong>not</strong> sell your data or share it with advertisers</li>
     <li>We do <strong>not</strong> use analytics platforms (Google Analytics, Firebase, etc.)</li>
   </ul>
 
@@ -118,14 +118,14 @@
     <tr><td>Display your dashboard and income summary</td><td>Income entries, profile</td><td>Performance of service</td></tr>
     <tr><td>Calculate tax estimates</td><td>Income entries (local computation)</td><td>Performance of service</td></tr>
     <tr><td>Generate income verification PDFs</td><td>Profile name, income entries</td><td>User consent (on-demand)</td></tr>
-    <tr><td>AI Co-Pilot (Stacks) insights</td><td>Income entries (on-device only, never sent)</td><td>Performance of service</td></tr>
+    <tr><td>AI Co-Pilot (Stacks) replies</td><td>Your question + a brief income summary, sent to our AI provider (Anthropic) to generate a reply</td><td>User consent (on-demand)</td></tr>
     <tr><td>App lock / PIN verification</td><td>Stored PIN hash</td><td>Security / user consent</td></tr>
     <tr><td>Personalise greeting and referral code</td><td>Profile name, city</td><td>Performance of service</td></tr>
   </table>
 
   <h2 id="storage">4. Where Data Is Stored</h2>
   <div class="box blue">
-    <strong style="color:#3B9EFF;">All user data is stored exclusively in your device's browser localStorage / IndexedDB.</strong> It never leaves your device unless you use the optional "Export My Data" feature (which saves a JSON file to your own device). If you uninstall the app or clear browser data, all Artha data is permanently deleted.
+    <strong style="color:#3B9EFF;">All user data is stored exclusively in your device's browser localStorage / IndexedDB.</strong> Your stored data leaves the device only when (a) you use the optional "Export My Data" feature (saves a JSON file to your own device), or (b) you use Stacks AI, which sends a brief summary of your figures to our AI provider to generate a reply (not stored afterwards — see §6). If you uninstall the app or clear browser data, all Artha data is permanently deleted.
   </div>
   <p>Cloud backup is an <strong>opt-in feature only</strong>. It is disabled by default. If enabled by the user in Settings, data is encrypted before any transmission. This feature is not yet live in v5.0.</p>
 
@@ -144,6 +144,7 @@
     <tr><td>Google Fonts</td><td>Typography (Syne, DM Sans)</td><td>Font file requests only (no user data)</td><td><a href="https://policies.google.com/privacy" target="_blank">Google Privacy</a></td></tr>
     <tr><td>Tesseract.js (CDN)</td><td>OCR engine for receipt scanning</td><td>Script file only (runs locally)</td><td>Open source, no telemetry</td></tr>
     <tr><td>jsPDF (CDN)</td><td>PDF generation</td><td>Script file only (runs locally)</td><td>Open source, no telemetry</td></tr>
+    <tr><td>Artha AI Worker (Cloudflare) → Anthropic (Claude)</td><td>Powers Stacks AI replies · endpoint: artha-ai.mihir86-mp.workers.dev</td><td>Your question + a brief income summary (totals, top clients). Not stored after the reply.</td><td><a href="https://www.anthropic.com/legal/privacy" target="_blank">Anthropic</a> · <a href="https://www.cloudflare.com/privacypolicy/" target="_blank">Cloudflare</a></td></tr>
     <tr><td>GitHub Pages</td><td>App hosting</td><td>Standard server access logs</td><td><a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank">GitHub Privacy</a></td></tr>
   </table>
 

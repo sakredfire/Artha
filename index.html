@@ -770,32 +770,32 @@ body{
     <div class="screen active" id="s-home">
       <div class="greeting">
         <div class="greeting-small" id="home-greeting">Namaste 👋</div>
-        <div class="greeting-big">₹5,500 away from<br><span>your April goal</span></div>
+        <div class="greeting-big">Every rupee,<br><span>tracked.</span></div>
       </div>
 
       <div class="mc-row">
         <div class="mc lime">
           <div class="mc-label">This Month</div>
-          <div class="mc-val lime">₹34,500</div>
-          <div class="mc-change">↑ +23% vs Mar</div>
+          <div class="mc-val lime" id="stat-month">₹0</div>
+          <div class="mc-change" id="stat-month-change">Log your first income</div>
           <div class="mc-ico">💸</div>
         </div>
         <div class="mc purple">
           <div class="mc-label">Net Income</div>
-          <div class="mc-val purple">₹28,200</div>
-          <div class="mc-change">↑ After expenses</div>
+          <div class="mc-val purple" id="stat-net">₹0</div>
+          <div class="mc-change" style="color:var(--text3)">After expenses</div>
           <div class="mc-ico">📊</div>
         </div>
         <div class="mc orange">
           <div class="mc-label">Tax Reserved</div>
-          <div class="mc-val orange">₹4,200</div>
+          <div class="mc-val orange" id="stat-tax">₹0</div>
           <div class="mc-change" style="color:var(--text3)">12% auto</div>
           <div class="mc-ico">🧾</div>
         </div>
         <div class="mc teal">
           <div class="mc-label">Emergency Fund</div>
-          <div class="mc-val teal">₹8,400</div>
-          <div class="mc-change">↑ Growing</div>
+          <div class="mc-val teal" id="stat-emergency">₹0</div>
+          <div class="mc-change" style="color:var(--text3)">Not set up</div>
           <div class="mc-ico">🛡️</div>
         </div>
       </div>
@@ -806,22 +806,10 @@ body{
           <div class="card-title">Weekly Trend</div>
           <div class="card-action">April 2026</div>
         </div>
-        <div class="card-body">
-          <div class="bar-chart">
-            <div class="bbar" style="height:35%;background:rgba(201,255,71,0.3)"></div>
-            <div class="bbar" style="height:50%;background:rgba(201,255,71,0.4)"></div>
-            <div class="bbar" style="height:62%;background:rgba(201,255,71,0.5)"></div>
-            <div class="bbar" style="height:47%;background:rgba(201,255,71,0.4)"></div>
-            <div class="bbar" style="height:76%;background:rgba(201,255,71,0.6)"></div>
-            <div class="bbar" style="height:60%;background:rgba(201,255,71,0.5)"></div>
-            <div class="bbar" style="height:95%;background:var(--lime);box-shadow:0 0 10px rgba(201,255,71,0.4)"></div>
-          </div>
-          <div class="bar-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
-          <div style="margin-top:12px;">
-            <div style="font-size:10.5px;color:var(--text3);margin-bottom:4px;">April Goal</div>
-            <div class="prog-bar"><div class="prog-fill" style="width:86%;background:linear-gradient(90deg,var(--lime),var(--teal))"></div></div>
-            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:3px;"><span>₹34,500</span><span style="color:var(--lime)">86% of ₹40,000</span></div>
-          </div>
+        <div class="card-body" style="text-align:center;padding:26px 16px;">
+          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Trend charts unlock as you log income</div>
         </div>
       </div>
 
@@ -830,28 +818,7 @@ body{
         <div><div class="sec-title">Recent Income</div></div>
         <div class="chip lime" onclick="showScreen('income')" style="cursor:pointer;">View All →</div>
       </div>
-      <div class="entry-list">
-        <div class="entry">
-          <div class="entry-ico" style="background:rgba(201,255,71,0.1)">💻</div>
-          <div class="entry-info"><div class="entry-name">Upwork — Logo Design</div><div class="entry-meta">Freelance · Today</div></div>
-          <div class="entry-amt pos">+₹8,000</div>
-        </div>
-        <div class="entry">
-          <div class="entry-ico" style="background:rgba(123,92,255,0.1)">📚</div>
-          <div class="entry-info"><div class="entry-name">Physics Tutoring</div><div class="entry-meta">Teaching · Yesterday</div></div>
-          <div class="entry-amt pos">+₹1,200</div>
-        </div>
-        <div class="entry">
-          <div class="entry-ico" style="background:rgba(255,107,53,0.1)">🛵</div>
-          <div class="entry-info"><div class="entry-name">Swiggy Weekend</div><div class="entry-meta">Delivery · Apr 17</div></div>
-          <div class="entry-amt pos">+₹850</div>
-        </div>
-        <div class="entry">
-          <div class="entry-ico" style="background:rgba(255,77,139,0.1)">🛒</div>
-          <div class="entry-info"><div class="entry-name">Canva Pro</div><div class="entry-meta">Expense · Apr 14</div></div>
-          <div class="entry-amt neg">−₹999</div>
-        </div>
-      </div>
+      <div class="entry-list" id="home-recent-list"></div>
 
       <!-- AI snippet -->
       <div class="card" style="margin-top:14px;">
@@ -863,8 +830,7 @@ body{
           <div class="card-action" onclick="showScreen('ai')">Open →</div>
         </div>
         <div class="card-body">
-          <div style="font-size:12.5px;color:var(--text2);line-height:1.55;">Your freelance income is up 34% this week 📈. <strong style="color:var(--text)">Group tutoring earns 2× per hour</strong> vs solo — consider converting 2 solo slots next month.</div>
-          <div class="tip-box" style="margin-top:10px;margin-bottom:0;"><strong>Goal check:</strong> Need ₹5,500 in 8 days = ₹688/day. Highly achievable at your pace. 🎯</div>
+          <div style="font-size:12.5px;color:var(--text2);line-height:1.55;">Ask Stacks AI about your income, taxes, and goals — get instant, personalised answers based on your own logged data.</div>
         </div>
       </div>
 
@@ -873,8 +839,8 @@ body{
         <div class="card-body" style="display:flex;align-items:center;gap:12px;">
           <div style="font-size:32px;">😊</div>
           <div style="flex:1;">
-            <div style="font-size:13px;font-weight:600;">Mood logged · Good</div>
-            <div style="font-size:10.5px;color:var(--text3);">14-day streak · Keep it up!</div>
+            <div style="font-size:13px;font-weight:600;" id="home-mood-line">Tap to log today's mood</div>
+            <div style="font-size:10.5px;color:var(--text3);" id="home-streak-line">Start your logging streak today</div>
           </div>
           <div class="chip lime">NEW</div>
         </div>
@@ -886,8 +852,8 @@ body{
       <div class="sec-head"><div><div class="sec-title">Income Log</div><div class="sec-sub">Every rupee tracked</div></div><button class="btn btn-primary" onclick="showLogModal()">+ Log</button></div>
 
       <div class="mc-row">
-        <div class="mc lime"><div class="mc-label">April Total</div><div class="mc-val lime" style="font-size:18px;">₹34,500</div></div>
-        <div class="mc orange"><div class="mc-label">Best Day</div><div class="mc-val orange" style="font-size:18px;">₹11,400</div></div>
+        <div class="mc lime"><div class="mc-label">Total Income</div><div class="mc-val lime" style="font-size:18px;" id="stat-april-total">₹0</div></div>
+        <div class="mc orange"><div class="mc-label">Best Day</div><div class="mc-val orange" style="font-size:18px;" id="stat-best-day">₹0</div></div>
       </div>
 
       <div style="display:flex;gap:8px;margin-bottom:12px;">
@@ -901,23 +867,10 @@ body{
       <!-- Source breakdown -->
       <div class="card" style="margin-top:14px;">
         <div class="card-head"><div class="card-title">Income Sources</div></div>
-        <div class="card-body">
-          <div class="donut-wrap">
-            <svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
-              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--surf3)" stroke-width="11"/>
-              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--lime)" stroke-width="11" stroke-dasharray="95 144" stroke-linecap="round"/>
-              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--purple)" stroke-width="11" stroke-dasharray="52 187" stroke-dashoffset="-95" stroke-linecap="round"/>
-              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--orange)" stroke-width="11" stroke-dasharray="28 211" stroke-dashoffset="-147" stroke-linecap="round"/>
-              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--blue)" stroke-width="11" stroke-dasharray="16 223" stroke-dashoffset="-175" stroke-linecap="round"/>
-            </svg>
-            <div class="donut-val"><div class="d-num">₹34.5K</div><div class="d-sub">total</div></div>
-          </div>
-          <div class="sleg">
-            <div class="sli"><div class="sld" style="background:var(--lime)"></div><div class="sln">Freelance</div><div class="slbw"><div class="slbf" style="width:60%;background:var(--lime)"></div></div><div class="slp" style="color:var(--lime)">60%</div></div>
-            <div class="sli"><div class="sld" style="background:var(--purple)"></div><div class="sln">Teaching</div><div class="slbw"><div class="slbf" style="width:22%;background:var(--purple)"></div></div><div class="slp" style="color:var(--purple)">22%</div></div>
-            <div class="sli"><div class="sld" style="background:var(--orange)"></div><div class="sln">Delivery</div><div class="slbw"><div class="slbf" style="width:11%;background:var(--orange)"></div></div><div class="slp" style="color:var(--orange)">11%</div></div>
-            <div class="sli"><div class="sld" style="background:var(--blue)"></div><div class="sln">YouTube</div><div class="slbw"><div class="slbf" style="width:7%;background:var(--blue)"></div></div><div class="slp" style="color:var(--blue)">7%</div></div>
-          </div>
+        <div class="card-body" style="text-align:center;padding:26px 16px;">
+          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Source breakdown unlocks as you log income</div>
         </div>
       </div>
     </div>
@@ -946,21 +899,19 @@ body{
 
       <div class="card">
         <div class="card-head"><div class="card-title">This Week's Insights</div></div>
-        <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
-          <div class="tip-box"><strong>📈 INCOME PATTERN</strong> — Thursdays–Sundays are your peak. Batch client deliveries to Wednesday → payments hit by weekend.</div>
-          <div style="background:var(--purple-d);border:1px solid rgba(123,92,255,0.18);border-radius:12px;padding:11px;font-size:11.5px;color:var(--text2);">
-            <strong style="color:var(--purple)">🧠 MOOD-MONEY LINK</strong> — Your mood improves on income days. Emergency fund growth = measurable anxiety reduction in your logs.
-          </div>
-          <div class="warn-box"><strong>⚠️ TAX ALERT</strong> — Q2 advance tax due Sept 15. Estimated: ₹8,208. Reserve ₹700/week now to be ready.</div>
+        <div class="card-body" style="text-align:center;padding:26px 16px;">
+          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Ask Stacks AI above for insights on your real data</div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">Income Forecast</div><div class="chip purple">On-device ML</div></div>
-        <div class="card-body">
-          <div class="prog"><div class="prog-row"><span class="prog-key">May 2026</span><span class="prog-val" style="color:var(--lime)">₹41,200</span></div><div class="prog-bar"><div class="prog-fill" style="width:82%;background:var(--lime)"></div></div></div>
-          <div class="prog"><div class="prog-row"><span class="prog-key">June 2026</span><span class="prog-val" style="color:var(--purple)">₹47,800</span></div><div class="prog-bar"><div class="prog-fill" style="width:96%;background:var(--purple)"></div></div></div>
-          <div class="prog"><div class="prog-row"><span class="prog-key">Q2 Total</span><span class="prog-val" style="color:var(--teal)">₹1,23,500</span></div><div class="prog-bar"><div class="prog-fill" style="width:70%;background:var(--teal)"></div></div></div>
+        <div class="card-head"><div class="card-title">Income Forecast</div><div class="chip muted">Coming soon</div></div>
+        <div class="card-body" style="text-align:center;padding:26px 16px;">
+          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Forecasts arrive once you have logged history</div>
         </div>
       </div>
 
@@ -978,32 +929,12 @@ body{
     <div class="screen" id="s-tax">
       <div class="sec-head"><div><div class="sec-title">Tax Engine</div><div class="sec-sub">FY 2025–26 estimate</div></div><div class="chip purple">Old Regime</div></div>
 
-      <div class="mc-row">
-        <div class="mc purple"><div class="mc-label">Tax Owed</div><div class="mc-val purple" style="font-size:18px;">₹18,240</div><div class="mc-change" style="color:var(--text3)">FY 2025–26</div></div>
-        <div class="mc orange"><div class="mc-label">Reserved</div><div class="mc-val orange" style="font-size:18px;">₹14,400</div><div class="mc-change">79% ready</div></div>
-      </div>
-
       <div class="card">
-        <div class="card-head"><div class="card-title">Breakdown</div></div>
-        <div class="card-body">
-          <div class="prog"><div class="prog-row"><span class="prog-key">Gross Income</span><span class="prog-val" style="color:var(--lime)">₹1,95,000</span></div></div>
-          <div class="prog"><div class="prog-row"><span class="prog-key">Sec 44ADA Deduction</span><span class="prog-val" style="color:var(--orange)">−₹50,000</span></div></div>
-          <div class="divider"></div>
-          <div class="prog"><div class="prog-row"><span class="prog-key">Taxable Income</span><span class="prog-val">₹1,45,000</span></div></div>
-          <div class="prog"><div class="prog-row"><span class="prog-key">Tax @ 5% slab</span><span class="prog-val" style="color:var(--purple)">₹18,240</span></div></div>
-          <div class="tip-box"><strong>💡 Artha:</strong> New Tax Regime saves ₹6,200 this year. Switch by July 31.</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-head"><div class="card-title">Advance Tax Schedule</div></div>
-        <div class="card-body">
-          <div class="entry-list">
-            <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">✅</div><div class="entry-info"><div class="entry-name">Q1 · June 15</div><div class="entry-meta">₹2,736 · 15%</div></div><div class="chip lime">Paid</div></div>
-            <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">⏳</div><div class="entry-info"><div class="entry-name">Q2 · Sept 15</div><div class="entry-meta">₹8,208 · 45%</div></div><div class="chip orange">Reserve Now</div></div>
-            <div class="entry"><div class="entry-ico" style="background:rgba(255,255,255,0.04)">📅</div><div class="entry-info"><div class="entry-name">Q3 · Dec 15</div><div class="entry-meta">₹13,680 · 75%</div></div><div class="chip muted">Upcoming</div></div>
-            <div class="entry"><div class="entry-ico" style="background:rgba(255,255,255,0.04)">📅</div><div class="entry-info"><div class="entry-name">Q4 · Mar 15</div><div class="entry-meta">100% total</div></div><div class="chip muted">Upcoming</div></div>
-          </div>
+        <div class="card-head"><div class="card-title">Tax Estimate</div><div class="chip muted">Coming soon</div></div>
+        <div class="card-body" style="text-align:center;padding:26px 16px;">
+          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;">A personalised estimate from your logged income is in the works. You can still export an ITR-1 summary of your real entries below.</div>
         </div>
       </div>
 
@@ -1060,35 +991,14 @@ body{
       <div class="sec-head"><div><div class="sec-title">Goals & Streaks</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="showNewGoalModal()">+ New</button></div>
       <div id="goals-list"></div>
 
-      <div class="goal-card" style="border-color:rgba(201,255,71,0.2);">
-        <div class="goal-head"><div class="goal-emoji">🎯</div><div><div class="goal-name">April Target</div><div class="goal-deadline">8 days left</div></div><div class="chip lime" style="margin-left:auto;">86%</div></div>
-        <div class="goal-amounts"><span style="font-family:'Space Mono',monospace;color:var(--lime);font-weight:700;">₹34,500</span><span style="font-family:'Space Mono',monospace;font-weight:700;">₹40,000</span></div>
-        <div class="prog-bar"><div class="prog-fill" style="width:86%;background:linear-gradient(90deg,var(--lime),var(--teal))"></div></div>
-      </div>
-
-      <div class="goal-card">
-        <div class="goal-head"><div class="goal-emoji">🛡️</div><div><div class="goal-name">Emergency Fund</div><div class="goal-deadline">Target ₹22K by Aug</div></div><div class="chip teal" style="margin-left:auto;">38%</div></div>
-        <div class="goal-amounts"><span style="font-family:'Space Mono',monospace;color:var(--teal);font-weight:700;">₹8,400</span><span style="font-family:'Space Mono',monospace;font-weight:700;">₹22,000</span></div>
-        <div class="prog-bar"><div class="prog-fill" style="width:38%;background:var(--teal)"></div></div>
-      </div>
-
-      <div class="goal-card">
-        <div class="goal-head"><div class="goal-emoji">💻</div><div><div class="goal-name">Freelance Month</div><div class="goal-deadline">₹25K from freelance only</div></div><div class="chip purple" style="margin-left:auto;">83%</div></div>
-        <div class="goal-amounts"><span style="font-family:'Space Mono',monospace;color:var(--purple);font-weight:700;">₹20,750</span><span style="font-family:'Space Mono',monospace;font-weight:700;">₹25,000</span></div>
-        <div class="prog-bar"><div class="prog-fill" style="width:83%;background:var(--purple)"></div></div>
-      </div>
+      <div id="goals-empty" style="text-align:center;padding:24px 16px;color:var(--text3);font-size:12px;">No goals yet. Tap + New to set your first target.</div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">🔥 14-Day Streak</div></div>
-        <div class="card-body">
-          <div class="streak-grid">
-            <div class="sd done">1</div><div class="sd done">2</div><div class="sd done">3</div><div class="sd done">4</div><div class="sd done">5</div><div class="sd done">6</div><div class="sd done">7</div><div class="sd done">8</div><div class="sd done">9</div><div class="sd done">10</div><div class="sd done">11</div><div class="sd done">12</div><div class="sd done">13</div><div class="sd done">14</div><div class="sd today">15</div><div class="sd">16</div><div class="sd">17</div><div class="sd">18</div><div class="sd">19</div><div class="sd">20</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
-            <div style="text-align:center;padding:10px;background:rgba(201,255,71,0.08);border:1px solid rgba(201,255,71,0.18);border-radius:11px;min-width:64px;"><div style="font-size:22px;">🏆</div><div style="font-size:8.5px;color:var(--lime);font-weight:700;margin-top:3px;">₹10K Club</div></div>
-            <div style="text-align:center;padding:10px;background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.18);border-radius:11px;min-width:64px;"><div style="font-size:22px;">🔥</div><div style="font-size:8.5px;color:var(--orange);font-weight:700;margin-top:3px;">14-Day Fire</div></div>
-            <div style="text-align:center;padding:10px;background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.18);border-radius:11px;min-width:64px;"><div style="font-size:22px;">🛡️</div><div style="font-size:8.5px;color:var(--teal);font-weight:700;margin-top:3px;">Buffer Boss</div></div>
-          </div>
+        <div class="card-head"><div class="card-title">🔥 Streak</div><div class="chip muted">Coming soon</div></div>
+        <div class="card-body" style="text-align:center;padding:26px 16px;">
+          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Streak tracking unlocks as you log daily</div>
         </div>
       </div>
     </div>
@@ -1120,22 +1030,20 @@ body{
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">Artha Mood Insight</div><div class="chip purple">On-device AI</div></div>
-        <div class="card-body">
-          <div style="background:var(--purple-d);border:1px solid rgba(123,92,255,0.18);border-radius:12px;padding:13px;margin-bottom:10px;">
-            <div style="font-size:10px;font-weight:700;color:var(--purple);margin-bottom:4px;">🔍 PATTERN DETECTED</div>
-            <div style="font-size:12px;color:var(--text2);line-height:1.55;">Mood dips on days with no logged income — even when you worked. <strong style="color:var(--text)">Log within 2 hours of earning</strong> to reduce financial anxiety measurably.</div>
-          </div>
-          <div class="tip-box" style="margin-bottom:0;"><strong>💚 Correlation:</strong> Your emergency fund growing directly correlates with better mood scores. Every ₹1,000 added = measurable wellbeing improvement.</div>
+        <div class="card-head"><div class="card-title">Artha Mood Insight</div><div class="chip muted">Coming soon</div></div>
+        <div class="card-body" style="text-align:center;padding:26px 16px;">
+          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Mood–money patterns appear once you've logged enough days</div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">April Mood Stats</div></div>
+        <div class="card-head"><div class="card-title">Mood Stats</div></div>
         <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">🔥</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--teal)">4</div><div style="font-size:9px;color:var(--text3)">Crushing</div></div>
-          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😊</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--lime)">11</div><div style="font-size:9px;color:var(--text3)">Good days</div></div>
-          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😞</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--orange)">3</div><div style="font-size:9px;color:var(--text3)">Stress</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">🔥</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--teal)" id="mood-stat-crushing">0</div><div style="font-size:9px;color:var(--text3)">Crushing</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😊</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--lime)" id="mood-stat-good">0</div><div style="font-size:9px;color:var(--text3)">Good days</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😞</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--orange)" id="mood-stat-stress">0</div><div style="font-size:9px;color:var(--text3)">Stress</div></div>
         </div>
       </div>
     </div>
@@ -1144,31 +1052,13 @@ body{
     <div class="screen" id="s-emergency">
       <div class="sec-head"><div><div class="sec-title">Emergency Fund</div><div class="sec-sub">Autopilot rules active</div></div><div class="chip lime">NEW</div></div>
 
-      <div class="card" style="border-color:rgba(0,212,170,0.2);margin-bottom:12px;">
-        <div class="card-body" style="text-align:center;padding:20px;">
-          <div style="font-family:'Space Mono',monospace;font-size:42px;font-weight:700;color:var(--teal);">₹8,400</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:4px;">Emergency Fund · 3 months growing</div>
-          <div style="margin-top:14px;">
-            <div style="font-size:10.5px;color:var(--text3);margin-bottom:4px;">Target: 1 month expenses (₹22,000)</div>
-            <div class="prog-bar" style="height:8px;"><div class="prog-fill" style="width:38%;background:var(--teal)"></div></div>
-          </div>
+      <div class="card">
+        <div class="card-body" style="text-align:center;padding:32px 16px;">
+          <div style="font-size:32px;margin-bottom:8px;">🔜</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11.5px;color:var(--text3);margin-top:5px;line-height:1.5;">Automated emergency-fund rules and tracking are on the roadmap. Your data stays on your device.</div>
         </div>
       </div>
-
-      <div class="ef-rule">
-        <div class="efr-head"><span class="efr-name">Surplus Reserve Rule</span><span class="efr-pct">15%</span></div>
-        <div class="efr-desc">When income exceeds ₹30K, tag 15% as emergency buffer. <span style="color:var(--lime)">Active · 3× this month</span></div>
-      </div>
-      <div class="ef-rule">
-        <div class="efr-head"><span class="efr-name">Slow Month Guard</span><span class="efr-pct">Alert</span></div>
-        <div class="efr-desc">If income drops below ₹15K in any week, notify immediately. <span style="color:var(--teal)">Active</span></div>
-      </div>
-      <div class="ef-rule">
-        <div class="efr-head"><span class="efr-name">Tax Lock</span><span class="efr-pct">12%</span></div>
-        <div class="efr-desc">Reserve 12% of every income entry as tax buffer. <span style="color:var(--lime)">Active</span></div>
-      </div>
-
-      <div class="tip-box"><strong>🧠 Artha:</strong> At current rate, you'll hit 1-month buffer by August 2026. This correlates directly with improving mood scores.</div>
     </div>
 
     <!-- ════ SCREEN: INCOME VERIFY ════ -->
@@ -1193,6 +1083,7 @@ body{
 
       <div class="ivr">
         <div class="ivr-logo">Ar<span>tha</span> Income Report</div>
+        <div style="background:rgba(255,184,48,0.12);color:#FFB830;border:1px solid rgba(255,184,48,0.25);border-radius:8px;padding:6px 10px;font-size:10px;font-weight:700;text-align:center;margin-bottom:10px;">SAMPLE PREVIEW — your generated PDF uses your real logged income</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
           <div class="ivr-section"><div class="ivr-label">Name</div><div class="ivr-val" id="ivr-name">—</div></div>
           <div class="ivr-section"><div class="ivr-label">Period</div><div class="ivr-val">Jan–Mar 2026</div></div>
@@ -1215,8 +1106,8 @@ body{
       <div class="sec-head"><div><div class="sec-title">Scheme Navigator</div><div class="sec-sub">Benefits you may be missing</div></div><div class="chip lime">NEW</div></div>
 
       <div style="background:var(--gold-d,rgba(255,184,48,0.1));border:1px solid rgba(255,184,48,0.2);border-radius:14px;padding:16px;text-align:center;margin-bottom:14px;">
-        <div style="font-family:'Space Mono',monospace;font-size:32px;font-weight:700;color:var(--gold);">₹6.25L</div>
-        <div style="font-size:11.5px;color:var(--text2);margin-top:4px;">in schemes you may qualify for</div>
+        <div style="font-size:24px;margin-bottom:4px;">🏛️</div>
+        <div style="font-size:11.5px;color:var(--text2);">Explore central &amp; state schemes for gig workers and freelancers</div>
       </div>
 
       <div class="scheme-card">
@@ -1247,37 +1138,15 @@ body{
 
     <!-- ════ SCREEN: CLIENT HEALTH ════ -->
     <div class="screen" id="s-clients">
-      <div class="sec-head"><div><div class="sec-title">Client Health</div><div class="sec-sub">Know who's worth your time</div></div><div class="chip lime">NEW</div></div>
+      <div class="sec-head"><div><div class="sec-title">Client Health</div><div class="sec-sub">Know who's worth your time</div></div><div class="chip muted">Coming soon</div></div>
 
-      <div class="info-box"><strong>From your logs only.</strong> Scores based on payment speed, repeat projects, invoice fulfilment, and hourly rate.</div>
-
-      <div class="cls-card">
-        <div class="cls-score sA">A+</div>
-        <div style="flex:1;"><div class="cls-name">GlobalTech Solutions</div><div class="cls-meta">Pays in 3 days · 4 repeat projects</div></div>
-        <div><div class="cls-rev">₹16,500</div><div class="cls-days">₹825/hr</div></div>
+      <div class="card">
+        <div class="card-body" style="text-align:center;padding:32px 16px;">
+          <div style="font-size:32px;margin-bottom:8px;">🔜</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11.5px;color:var(--text3);margin-top:5px;line-height:1.5;">Client scores will be computed from your real invoices and payment history.</div>
+        </div>
       </div>
-      <div class="cls-card">
-        <div class="cls-score sB">B+</div>
-        <div style="flex:1;"><div class="cls-name">TechStartup_IN</div><div class="cls-meta">Pays in 8 days · 2 projects</div></div>
-        <div><div class="cls-rev">₹14,500</div><div class="cls-days">₹604/hr</div></div>
-      </div>
-      <div class="cls-card">
-        <div class="cls-score sA">A</div>
-        <div style="flex:1;"><div class="cls-name">Priya Sharma</div><div class="cls-meta">Pays same day · Regular booking</div></div>
-        <div><div class="cls-rev">₹7,200</div><div class="cls-days">₹600/hr</div></div>
-      </div>
-      <div class="cls-card">
-        <div class="cls-score sC">C</div>
-        <div style="flex:1;"><div class="cls-name">Meera Foods</div><div class="cls-meta">⚠️ 1 overdue invoice</div></div>
-        <div><div class="cls-rev">₹4,200</div><div class="cls-days">₹350/hr</div></div>
-      </div>
-      <div class="cls-card">
-        <div class="cls-score sD">D</div>
-        <div style="flex:1;"><div class="cls-name">Client X</div><div class="cls-meta">🚨 2 unpaid invoices</div></div>
-        <div><div class="cls-rev">₹2,800</div><div class="cls-days">Pending</div></div>
-      </div>
-
-      <div class="tip-box" style="margin-top:4px;"><strong>🎯 Artha:</strong> Replace Meera + Client X with one GlobalTech-style client → +₹8,400/month for same hours.</div>
     </div>
 
     <!-- ════ SCREEN: VOICE LOG ════ -->
@@ -1320,44 +1189,30 @@ body{
       <div class="sec-head"><div><div class="sec-title">Invoices</div><div class="sec-sub">60-second professional invoices</div></div><button class="btn" style="padding:9px 14px;font-size:12px;" onclick="showNewInvoiceModal()">+ New</button></div>
 
       <div class="mc-row">
-        <div class="mc teal"><div class="mc-label">Total Sent</div><div class="mc-val teal" style="font-size:18px;">₹89,400</div></div>
-        <div class="mc orange"><div class="mc-label">Outstanding</div><div class="mc-val orange" style="font-size:18px;">₹4,800</div></div>
+        <div class="mc teal"><div class="mc-label">Total Sent</div><div class="mc-val teal" style="font-size:18px;" id="stat-inv-sent">₹0</div></div>
+        <div class="mc orange"><div class="mc-label">Outstanding</div><div class="mc-val orange" style="font-size:18px;" id="stat-inv-out">₹0</div></div>
       </div>
 
-      <div class="entry-list" id="invoices-list"        <div class="entry"><div class="entry-ico" style="background:rgba(201,255,71,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-043 · GlobalTech</div><div class="entry-meta">₹16,500 · Apr 19</div></div><div class="chip teal">Paid</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(255,107,53,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-042 · Priya Sharma</div><div class="entry-meta">₹4,800 · Apr 10</div></div><div class="chip orange">Overdue</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(255,77,139,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-041 · Client X</div><div class="entry-meta">₹2,800 · 3 weeks unpaid</div></div><div class="chip" style="background:rgba(255,77,139,0.1);color:var(--pink);border-color:rgba(255,77,139,0.2);">Chase</div></div>
-        <div class="entry"><div class="entry-ico" style="background:rgba(123,92,255,0.1)">📄</div><div class="entry-info"><div class="entry-name">INV-040 · Meera Foods</div><div class="entry-meta">₹4,200 · Apr 5</div></div><div class="chip blue">Sent</div></div>
-      </div>
+      <div class="entry-list" id="invoices-list"></div>
+      <div id="invoices-empty" style="text-align:center;padding:24px 16px;color:var(--text3);font-size:12px;">No invoices yet. Tap + New to create one.</div>
     </div>
 
     <!-- ════ SCREEN: COMMUNITY ════ -->
     <div class="screen" id="s-community">
-      <div class="sec-head"><div><div class="sec-title">Leaderboard</div><div class="sec-sub">Bangalore · Anonymous · April</div></div><div class="chip blue">🔒 Anonymous</div></div>
+      <div class="sec-head"><div><div class="sec-title">Leaderboard</div><div class="sec-sub">Anonymous · Opt-in</div></div><div class="chip muted">Coming soon</div></div>
 
-      <div class="lb-item"><div class="lb-rank r1">1</div><div style="flex:1;"><div class="lb-handle">Hustler_BLR_047</div><div class="lb-city">Freelance Design</div></div><div class="lb-amt">₹1,24,000</div></div>
-      <div class="lb-item"><div class="lb-rank r2">2</div><div style="flex:1;"><div class="lb-handle">Creator_BLR_112</div><div class="lb-city">Content + Freelance</div></div><div class="lb-amt">₹98,500</div></div>
-      <div class="lb-item"><div class="lb-rank r3">3</div><div style="flex:1;"><div class="lb-handle">DevStack_BLR_008</div><div class="lb-city">Dev + Teaching</div></div><div class="lb-amt">₹87,200</div></div>
-      <div class="lb-item" style="border-color:rgba(201,255,71,0.2);background:rgba(201,255,71,0.04);"><div class="lb-rank" style="background:rgba(201,255,71,0.15);color:var(--lime);font-size:9.5px;width:28px;">YOU</div><div style="flex:1;"><div class="lb-handle">Hustler_BLR_214</div><div class="lb-city">Design + Teaching</div></div><div class="lb-amt">₹34,500</div></div>
-
-      <div class="card" style="margin-top:14px;">
-        <div class="card-head"><div class="card-title">City Benchmarks</div><div class="chip purple">k-Anon</div></div>
-        <div class="card-body">
-          <div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Min 10 users per category before showing</div>
-          <div class="sleg">
-            <div class="sli"><div class="sld" style="background:var(--lime)"></div><div class="sln">Freelance Design</div><div class="slbw"><div class="slbf" style="width:62%;background:var(--lime)"></div></div><div class="slp" style="color:var(--lime)">₹42K</div></div>
-            <div class="sli"><div class="sld" style="background:var(--purple)"></div><div class="sln">Dev / Coding</div><div class="slbw"><div class="slbf" style="width:100%;background:var(--purple)"></div></div><div class="slp" style="color:var(--purple)">₹68K</div></div>
-            <div class="sli"><div class="sld" style="background:var(--orange)"></div><div class="sln">Teaching</div><div class="slbw"><div class="slbf" style="width:26%;background:var(--orange)"></div></div><div class="slp" style="color:var(--orange)">₹18K</div></div>
-            <div class="sli"><div class="sld" style="background:var(--teal)"></div><div class="sln">Gig/Delivery</div><div class="slbw"><div class="slbf" style="width:16%;background:var(--teal)"></div></div><div class="slp" style="color:var(--teal)">₹11K</div></div>
-          </div>
-          <div class="tip-box" style="margin-top:12px;margin-bottom:0;"><strong>You're in the top 22%</strong> of freelance designers in Bangalore. Top 10% earn ₹75K+ — achievable in 6 months at your rate.</div>
+      <div class="card">
+        <div class="card-body" style="text-align:center;padding:32px 16px;">
+          <div style="font-size:32px;margin-bottom:8px;">🔜</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11.5px;color:var(--text3);margin-top:5px;line-height:1.5;">Anonymous city leaderboards arrive once enough hustlers opt in — no fabricated rankings.</div>
         </div>
       </div>
     </div>
 
     <!-- ════ SCREEN: TIPS ════ -->
     <div class="screen" id="s-tips">
-      <div class="sec-head"><div><div class="sec-title">Hustle Tips</div><div class="sec-sub">Real stories · Anonymous</div></div><button class="btn" onclick="shareTip(this)">+ Share</button></div>
+      <div class="sec-head"><div><div class="sec-title">Hustle Tips</div><div class="sec-sub">Curated tips · Examples</div></div><button class="btn" onclick="shareTip(this)">↗ Share</button></div>
 
       <div class="tip-post">
         <div class="tp-head"><div class="tp-av">H</div><div><div class="tp-handle">Hustler_PUN_034</div><div class="tp-time">Pune · 2 hrs ago</div></div></div>
@@ -1381,36 +1236,19 @@ body{
 
     <!-- ════ SCREEN: FOUNDATION ════ -->
     <div class="screen" id="s-foundation">
-      <div class="sec-head"><div><div class="sec-title">Foundation</div><div class="sec-sub">Revenue → Impact</div></div><div class="chip" style="background:rgba(255,184,48,0.1);color:var(--gold);border-color:rgba(255,184,48,0.2);">LIVE</div></div>
+      <div class="sec-head"><div><div class="sec-title">Foundation</div><div class="sec-sub">Revenue → Impact</div></div><div class="chip muted">Coming soon</div></div>
 
       <div class="found-hero">
         <div style="font-size:42px;margin-bottom:8px;">🌱</div>
         <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:5px;">We grow because you grow</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:14px;">5% of every subscription funds micro-grants to users with consistent income growth. No applications. Algorithm decides — based only on income data.</div>
-        <div style="display:flex;justify-content:center;gap:28px;">
-          <div style="text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);">₹1.2L</div><div style="font-size:9px;color:var(--text3);">Granted</div></div>
-          <div style="text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);">47</div><div style="font-size:9px;color:var(--text3);">Hustlers</div></div>
-          <div style="text-align:center;"><div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--gold);">5%</div><div style="font-size:9px;color:var(--text3);">Of MRR</div></div>
-        </div>
-      </div>
-
-      <div class="grant-card">
-        <div class="gc-head"><div style="font-size:20px;width:36px;height:36px;background:rgba(201,255,71,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;">💻</div><div><div class="gc-name">Hustler_PUN_034</div><div class="gc-city">Pune · Freelance Designer</div></div><div class="chip" style="background:rgba(255,184,48,0.1);color:var(--gold);border-color:rgba(255,184,48,0.2);margin-left:auto;">₹15,000</div></div>
-        <div class="gc-story">"Used the grant to buy a drawing tablet. My Upwork income jumped 60% the next month."</div>
-        <div class="gc-impact">📈 Income growth: 48% over 6 months → qualified</div>
-      </div>
-      <div class="grant-card">
-        <div class="gc-head"><div style="font-size:20px;width:36px;height:36px;background:rgba(59,158,255,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;">📚</div><div><div class="gc-name">Teacher_DEL_006</div><div class="gc-city">Delhi · Online Tutor</div></div><div class="chip" style="background:rgba(255,184,48,0.1);color:var(--gold);border-color:rgba(255,184,48,0.2);margin-left:auto;">₹8,000</div></div>
-        <div class="gc-story">"Bought a mic and ring light. Now earning ₹6K/month passive from YouTube on top of tutoring."</div>
-        <div class="gc-impact">📈 Income growth: 52% over 6 months → qualified</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.55;">5% of every subscription will fund micro-grants to users with consistent income growth. Launching after we go live — grant recipients and totals will appear here.</div>
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">Your Status</div></div>
-        <div class="card-body">
-          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:6px;">Grant Eligibility: <span style="color:var(--lime)">Tracking</span></div>
-          <div class="prog"><div class="prog-row"><span class="prog-key">Growth Progress (need 40%)</span><span class="prog-val" style="color:var(--gold)">23% / 40%</span></div><div class="prog-bar"><div class="prog-fill" style="width:57%;background:var(--gold)"></div></div></div>
-          <div style="font-size:10.5px;color:var(--text3);">Checked automatically · No application · Fully anonymous</div>
+        <div class="card-body" style="text-align:center;padding:28px 16px;">
+          <div style="font-size:28px;margin-bottom:6px;">🔜</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Grants begin once Artha has paying subscribers</div>
         </div>
       </div>
     </div>
@@ -1902,6 +1740,7 @@ function updateMoodDisplay() {
       ? '😊 Your mood is stable. Income patterns look steady.'
       : '😐 Some fluctuations. Remember — dry months are normal.';
   }
+  try { renderRealStats(); } catch(e) {}
 }
 
 // ── MICROPHONE / VOICE ──
@@ -1995,6 +1834,8 @@ async function toggleVoice(btn) {
 
 // ── INCOME VERIFICATION PDF ──
 function generateVerificationPDF() {
+  const _entries = (() => { try { return JSON.parse(localStorage.getItem('incomeEntries')||'[]'); } catch { return []; } })();
+  if (!_entries.length) { alert('Log some income first — your verification report is generated from your real entries.'); return; }
   if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
   incrementUsage('pdfs');
   const doc = new jsPDF();
@@ -2013,8 +1854,14 @@ function generateVerificationPDF() {
   doc.setFontSize(14);
   doc.setTextColor(238, 238, 248);
   doc.text('Monthly Income Summary', 20, 68);
-  const months = ['Nov 2025','Dec 2025','Jan 2026','Feb 2026','Mar 2026','Apr 2026'];
-  const amounts = [28500,31200,29800,33500,36200,34500];
+  const now = new Date();
+  const months = [], amounts = [];
+  for (let i = 5; i >= 0; i--) {
+    const dt = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = dt.toISOString().slice(0, 7);
+    months.push(dt.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }));
+    amounts.push(_entries.filter(e => String(e.date || '').slice(0, 7) === key).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0));
+  }
   let y = 80;
   months.forEach((m, i) => {
     doc.setFontSize(11);
@@ -2837,7 +2684,63 @@ function submitLog() {
   hideLogModal();
   renderIncomeEntries();
 }
+function renderRealStats() {
+  const read = k => { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch { return []; } };
+  const entries = read('incomeEntries');
+  const expenses = read('expenses');
+  const moods = read('moods');
+  const fmt = n => '₹' + Math.round(n || 0).toLocaleString('en-IN');
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  const hasEntries = entries.length > 0;
+  const ym = new Date().toISOString().slice(0, 7);
+  const totalIncome = entries.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const monthIncome = entries.filter(e => String(e.date || '').slice(0, 7) === ym).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const totalExpenses = expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const bestDay = entries.reduce((m, e) => Math.max(m, parseFloat(e.amount) || 0), 0);
+
+  // Home + Income stat cards — always derived from real data (zero when empty)
+  set('stat-month', fmt(monthIncome));
+  set('stat-month-change', hasEntries ? 'This month' : 'Log your first income');
+  set('stat-net', fmt(totalIncome - totalExpenses));
+  set('stat-tax', fmt(totalIncome * 0.12));
+  set('stat-emergency', fmt(0));
+  set('stat-april-total', fmt(totalIncome));
+  set('stat-best-day', fmt(bestDay));
+
+  // Logging streak — consecutive days (income or mood) ending today
+  const days = new Set();
+  entries.forEach(e => { if (e.date) days.add(String(e.date).slice(0, 10)); });
+  moods.forEach(m => { if (m.date) days.add(String(m.date).slice(0, 10)); });
+  let streak = 0; const d = new Date();
+  while (days.has(d.toISOString().slice(0, 10))) { streak++; d.setDate(d.getDate() - 1); }
+  set('home-streak-line', streak > 0 ? streak + '-day logging streak · Keep it up!' : 'Start your logging streak today');
+
+  // Mood card (home)
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const tm = moods.filter(m => String(m.date).slice(0, 10) === todayKey).slice(-1)[0];
+  set('home-mood-line', tm ? 'Mood logged today ' + (tm.mood || '') : "Tap to log today's mood");
+
+  // Mood stats (computed from real mood logs)
+  const mc = e => moods.filter(m => m.mood === e).length;
+  set('mood-stat-crushing', String(mc('🔥')));
+  set('mood-stat-good', String(mc('😊') + mc('😄')));
+  set('mood-stat-stress', String(mc('😞')));
+
+  // Home recent income list (real entries, empty state)
+  const recent = document.getElementById('home-recent-list');
+  if (recent) {
+    const icons = { Freelance:'💻', Teaching:'📚', Content:'📹', Delivery:'🚗', Design:'🎨', Royalties:'🎵', Rental:'🏠', Other:'⚡' };
+    recent.innerHTML = entries.slice(0, 4).map(e => `
+      <div class="entry">
+        <div class="entry-ico" style="background:rgba(201,255,71,0.1)">${icons[e.category] || '💰'}</div>
+        <div class="entry-info"><div class="entry-name">${e.desc || e.category || 'Income'}</div><div class="entry-meta">${e.category || ''}${e.client ? ' · ' + e.client : ''} · ${e.date || 'Today'}</div></div>
+        <div class="entry-amt pos">+₹${(parseFloat(e.amount) || 0).toLocaleString('en-IN')}</div>
+      </div>`).join('') || '<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">No income yet. Tap + Log to add your first entry.</div>';
+  }
+}
+
 function renderIncomeEntries() {
+  try { renderRealStats(); } catch(e) {}
   const list = document.getElementById('income-entries-list');
   if (!list) return;
   const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
@@ -2927,7 +2830,9 @@ function renderGoals() {
   const container = document.getElementById('goals-list');
   if (!container) return;
   const goals = JSON.parse(localStorage.getItem('ar_goals')||'[]');
-  if (!goals.length) return;
+  const goalsEmpty = document.getElementById('goals-empty');
+  if (!goals.length) { container.innerHTML = ''; if (goalsEmpty) goalsEmpty.style.display = ''; return; }
+  if (goalsEmpty) goalsEmpty.style.display = 'none';
   container.innerHTML = goals.map(g => {
     const pct = Math.min(100, Math.round((g.current/g.target)*100));
     const color = pct>=80?'var(--lime)':pct>=50?'var(--purple)':'var(--blue)';
@@ -2950,7 +2855,13 @@ function renderInvoices() {
   const list = document.getElementById('invoices-list');
   if (!list) return;
   const invoices = JSON.parse(localStorage.getItem('ar_invoices')||'[]');
-  if (!invoices.length) return;
+  const invEmpty = document.getElementById('invoices-empty');
+  const fmtInv = n => '₹' + Math.round(n||0).toLocaleString('en-IN');
+  const setInv = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  setInv('stat-inv-sent', fmtInv(invoices.reduce((s,i)=>s+(parseFloat(i.amount)||0),0)));
+  setInv('stat-inv-out', fmtInv(invoices.filter(i=>i.status!=='Paid').reduce((s,i)=>s+(parseFloat(i.amount)||0),0)));
+  if (!invoices.length) { list.innerHTML=''; if(invEmpty) invEmpty.style.display=''; return; }
+  if (invEmpty) invEmpty.style.display='none';
   const sc = {Paid:'var(--teal)',Overdue:'var(--orange)',Sent:'var(--blue)',Chase:'var(--pink)'};
   list.innerHTML = invoices.map(inv => `<div class="entry" onclick="cycleInvoiceStatus(${inv.id})"><div class="entry-ico" style="background:var(--surf3)">📄</div><div class="entry-info"><div class="entry-name">${inv.num} · ${inv.client}</div><div class="entry-meta">₹${inv.amount.toLocaleString('en-IN')} · ${inv.date}</div></div><span style="background:rgba(0,0,0,0.3);color:${sc[inv.status]||'var(--text2)'};padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700">${inv.status}</span></div>`).join('');
 }
@@ -3000,7 +2911,8 @@ function confirmVoiceEntry(btn) {
   setTimeout(()=>{ btn.textContent='✓ Confirm'; btn.style.background=''; }, 2000);
 }
 function shareTip(btn) {
-  const tip = btn.closest('.tip-post')?.querySelector('p')?.textContent||'Check out Artha!';
+  const post = btn.closest('.tip-post') || document.querySelector('#s-tips .tip-post');
+  const tip = post?.querySelector('.tp-text')?.textContent?.trim()||'Check out Artha!';
   const text = `💡 Hustle Tip: "${tip.slice(0,100)}..." — https://app.sakredfire.ca`;
   if (navigator.share) navigator.share({title:'Hustle Tip',text}); else navigator.clipboard.writeText(text).then(()=>{ btn.textContent='✓ Copied!'; setTimeout(()=>btn.textContent='+ Share',2000); });
 }
@@ -3604,25 +3516,15 @@ window.addEventListener('DOMContentLoaded', () => {
   // ── AUTH INIT (runs first) ──
   initApp();
 
+  // App starts clean — no demo/seed data. New users begin with zero income entries and zero moods.
   updateMoodDisplay();
   const lastPdf = document.getElementById('last-pdf-date');
   if (lastPdf) lastPdf.textContent = localStorage.getItem('lastPdfDate') || 'Never';
-  if (!localStorage.getItem('incomeEntries')) {
-    localStorage.setItem('incomeEntries', JSON.stringify([
-      { client: 'TechStartup IN', amount: 8000 },
-      { client: 'Priya Sharma', amount: 1200 },
-      { client: 'GlobalTech Solutions', amount: 15000 },
-    ]));
-  }
-  if (!localStorage.getItem('moods')) {
-    localStorage.setItem('moods', JSON.stringify([
-      { date: '2026-04-20', mood: '😊' }, { date: '2026-04-21', mood: '😊' },
-      { date: '2026-04-22', mood: '😐' }, { date: '2026-04-23', mood: '😊' }
-    ]));
-  }
-  updateMoodDisplay();
   updateReceiptsList();
-  rmRefreshStats();
+  try { rmRefreshStats(); } catch(e) {}
+  try { renderRealStats(); } catch(e) {}
+  try { renderGoals(); } catch(e) {}
+  try { renderInvoices(); } catch(e) {}
 });
 </script>
 

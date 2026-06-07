@@ -1838,7 +1838,7 @@ async function sendAI() {
   msgs.innerHTML += `<div class="msg ai" id="${typingId}"><span class="ai-typing"><span></span><span></span><span></span></span><div class="msg-time">Stacks · thinking…</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
   try {
-    const WORKER_URL = 'https://stacks-ai.mihir86-mp.workers.dev/ai';
+    const WORKER_URL = 'https://artha-ai.mihir86-mp.workers.dev/ai';
     const tierToken = localStorage.getItem('ar_tier_token') || '';
     const response = await fetch(WORKER_URL, {
       method: 'POST',

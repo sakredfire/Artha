@@ -674,7 +674,7 @@ body{
     </div>
 
     <div class="consent-block">
-      <strong>🔒 Your data stays on your phone.</strong> Artha stores all information locally using device storage. No account needed. No data is uploaded unless you opt into cloud backup.<br><br>
+      <strong>🔒 Your data stays on your phone.</strong> Artha stores all information locally using device storage. No account needed. When you use Stacks AI, a brief summary of your income is sent securely to generate replies — never sold or shared with advertisers.<br><br>
       By continuing you agree to our <a href="./privacy.html" target="_blank">Privacy Policy</a>.
     </div>
 
@@ -1206,7 +1206,7 @@ body{
           <tr><td>Mar 2026</td><td>₹34,100</td><td>₹28,000</td></tr>
           <tr style="font-weight:700;background:#f5f5fc;"><td>Total</td><td>₹93,700</td><td>₹77,000</td></tr>
         </table>
-        <div class="ivr-sig">🔏 Code: SS-2026-0419-AK-7F4D<br>verify.artha.in to confirm authenticity</div>
+        <div class="ivr-sig">🔏 Code: SS-2026-0419-AK-7F4D<br>Authenticity code included — SHA-256 signed</div>
       </div>
     </div>
 
@@ -1452,7 +1452,7 @@ body{
 
       <div style="background:rgba(59,158,255,0.07);border:1px solid rgba(59,158,255,0.15);border-radius:13px;padding:14px;margin-top:6px;font-size:11.5px;color:var(--text2);line-height:1.6;">
         <strong style="color:var(--blue);">📜 DPDP Act 2023</strong><br>Artha is built ahead of the May 2027 full compliance deadline.<br><br>
-        Grievance Officer: <strong style="color:var(--text)">privacy@artha.in</strong>
+        Grievance Officer: <strong style="color:var(--text)">mihir86.mp@gmail.com</strong>
       </div>
     </div>
 
@@ -1803,18 +1803,15 @@ function buildStacksContext() {
   const profile = (() => { try { return JSON.parse(localStorage.getItem('ar_profile') || 'null'); } catch { return null; } })();
   const entries = (() => { try { return JSON.parse(localStorage.getItem('incomeEntries') || '[]'); } catch { return []; } })();
   const expenses = (() => { try { return JSON.parse(localStorage.getItem('expenses') || '[]'); } catch { return []; } })();
-  const moods = (() => { try { return JSON.parse(localStorage.getItem('moods') || '[]'); } catch { return []; } })();
   const totalIncome = entries.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
   const totalExpenses = expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
   const byClient = {};
   entries.forEach(e => { if (e.client) byClient[e.client] = (byClient[e.client]||0) + (parseFloat(e.amount)||0); });
-  const recentMoods = moods.slice(-7).map(m => m.mood).join(' ');
   return `You are Stacks, an AI financial co-pilot in Artha — India's Side Hustle OS. Be friendly, direct, and knowledgeable about Indian gig finance (GST, ITR, advance tax, UPI, PAN, Aadhaar, PM-SVANidhi, e-Shram).
 
-USER: ${profile?.name||'Hustler'} · ${profile?.city||'India'} · ${profile?.hustle||'Freelance'}
+USER: ${profile?.hustle||'Freelance'}
 INCOME: ₹${totalIncome.toLocaleString('en-IN')} total · ₹${totalExpenses.toLocaleString('en-IN')} expenses · Net: ₹${(totalIncome-totalExpenses).toLocaleString('en-IN')}
 ENTRIES: ${entries.length} logged${Object.keys(byClient).length ? ' · Top: '+Object.entries(byClient).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>k+' ₹'+v.toLocaleString('en-IN')).join(', ') : ''}
-MOOD (last 7): ${recentMoods||'none logged'}
 
 Keep responses SHORT (max 4 sentences). Use ₹ and Indian number format. Be specific with their real numbers. Use 1-2 emojis max.`;
 }
@@ -2047,7 +2044,7 @@ function generateVerificationPDF() {
   doc.setFontSize(10);
   doc.setTextColor(90, 90, 112);
   doc.text('This document is generated from on-device data by Artha.', 20, y);
-  doc.text('For queries: support@artha.in', 20, y + 7);
+  doc.text('For queries: mihir86.mp@gmail.com', 20, y + 7);
   doc.save('Artha_Income_Verification.pdf');
   localStorage.setItem('lastPdfDate', new Date().toLocaleString('en-IN'));
   const el = document.getElementById('last-pdf-date');

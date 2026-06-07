@@ -1036,11 +1036,12 @@ body{
 
       <div class="card">
         <div class="card-head"><div class="card-title">Mood Stats</div></div>
-        <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">🔥</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--teal)" id="mood-stat-crushing">0</div><div style="font-size:9px;color:var(--text3)">Crushing</div></div>
-          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😊</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--lime)" id="mood-stat-good">0</div><div style="font-size:9px;color:var(--text3)">Good/Great</div></div>
-          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😐</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--text2)" id="mood-stat-neutral">0</div><div style="font-size:9px;color:var(--text3)">Neutral</div></div>
-          <div style="background:var(--surf2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--border);"><div style="font-size:22px;">😞</div><div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--orange)" id="mood-stat-stress">0</div><div style="font-size:9px;color:var(--text3)">Stress</div></div>
+        <div class="card-body" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;">
+          <div style="background:var(--surf2);border-radius:11px;padding:10px 3px;text-align:center;border:1px solid var(--border);"><div style="font-size:19px;">😞</div><div style="font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--orange)" id="mood-stat-stress">0</div><div style="font-size:8px;color:var(--text3)">Stressed</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:10px 3px;text-align:center;border:1px solid var(--border);"><div style="font-size:19px;">😐</div><div style="font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--text2)" id="mood-stat-neutral">0</div><div style="font-size:8px;color:var(--text3)">Neutral</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:10px 3px;text-align:center;border:1px solid var(--border);"><div style="font-size:19px;">😊</div><div style="font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--lime)" id="mood-stat-good">0</div><div style="font-size:8px;color:var(--text3)">Good</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:10px 3px;text-align:center;border:1px solid var(--border);"><div style="font-size:19px;">😄</div><div style="font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--gold)" id="mood-stat-great">0</div><div style="font-size:8px;color:var(--text3)">Great</div></div>
+          <div style="background:var(--surf2);border-radius:11px;padding:10px 3px;text-align:center;border:1px solid var(--border);"><div style="font-size:19px;">🔥</div><div style="font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--teal)" id="mood-stat-crushing">0</div><div style="font-size:8px;color:var(--text3)">Crushing</div></div>
         </div>
       </div>
     </div>
@@ -2724,10 +2725,11 @@ function renderRealStats() {
 
   // Mood stats (computed from real mood logs)
   const mc = e => moods.filter(m => m.mood === e).length;
-  set('mood-stat-crushing', String(mc('🔥')));
-  set('mood-stat-good', String(mc('😊') + mc('😄')));
-  set('mood-stat-neutral', String(mc('😐')));
   set('mood-stat-stress', String(mc('😞')));
+  set('mood-stat-neutral', String(mc('😐')));
+  set('mood-stat-good', String(mc('😊')));
+  set('mood-stat-great', String(mc('😄')));
+  set('mood-stat-crushing', String(mc('🔥')));
 
   // Income source breakdown (home) — real aggregation, empty state when no data
   const srcEl = document.getElementById('home-source-breakdown');

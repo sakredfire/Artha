@@ -1099,7 +1099,7 @@ body:not(.unlocked) .app{display:none;}
           <tr><td>Mar 2026</td><td>₹34,100</td><td>₹28,000</td></tr>
           <tr style="font-weight:700;background:#f5f5fc;"><td>Total</td><td>₹93,700</td><td>₹77,000</td></tr>
         </table>
-        <div class="ivr-sig">🔏 Code: SS-2026-0419-AK-7F4D<br>Authenticity code included — SHA-256 signed</div>
+        <div class="ivr-sig">🔏 Code: SA-2026-0419-AK-7F4D<br>Authenticity code included — SHA-256 signed</div>
       </div>
     </div>
 
@@ -1908,7 +1908,7 @@ function generateVerificationPDF() {
   doc.setTextColor(90, 90, 112);
   doc.text('This document is generated from your saved data in Sakred Artha.', 20, y);
   doc.text('For queries: mihir86.mp@gmail.com', 20, y + 7);
-  doc.save('Artha_Income_Verification.pdf');
+  doc.save('Sakred_Artha_Income_Verification.pdf');
   localStorage.setItem('lastPdfDate', new Date().toLocaleString('en-IN'));
   const el = document.getElementById('last-pdf-date');
   if (el) el.textContent = new Date().toLocaleString('en-IN');
@@ -2198,7 +2198,7 @@ function rmDownloadPDF() {
   y += 20; doc.setFontSize(9); doc.setTextColor(90,90,112);
   doc.text('This document is self-generated from your saved data using Sakred Artha.', 20, y);
   doc.text('For verification, please also provide bank statements and ITR.', 20, y+7);
-  doc.save('Artha_Income_Proof_' + name.replace(/ /g,'_') + '.pdf');
+  doc.save('Sakred_Artha_Income_Proof_' + name.replace(/ /g,'_') + '.pdf');
 }
 
 // ══════════════════════════════════════════
@@ -2635,7 +2635,7 @@ function exportData() {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = 'Artha_MyData.json'; a.click();
+  a.href = url; a.download = 'Sakred_Artha_MyData.json'; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -2832,7 +2832,7 @@ function exportITR() {
   doc.text('Estimate only. Assumes Sec 44ADA 50% presumptive deduction, which applies', 20, y); y += 5;
   doc.text('to specified professionals under turnover limits. This is a summary of your', 20, y); y += 5;
   doc.text('logged entries, not a filed return. Verify with a qualified CA before filing.', 20, y);
-  doc.save('Artha_ITR1_FY2025-26.pdf');
+  doc.save('Sakred_Artha_ITR1_FY2025-26.pdf');
 }
 
 // ══ PROFILE EDIT ══

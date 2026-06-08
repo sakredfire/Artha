@@ -1,5 +1,5 @@
-// Artha Service Worker v4.1
-const CACHE_NAME = 'artha-v7';
+// Sakred Artha Service Worker v4.1
+const CACHE_NAME = 'artha-v8';
 const OFFLINE_URL = '/';
 
 // Files to cache immediately on install (root paths — served from app.sakredfire.ca)
@@ -7,8 +7,9 @@ const PRECACHE_URLS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
+  '/icon192.png',
+  '/icon512.png',
+  '/icon-maskable-512.png',
 ];
 
 // ── INSTALL: cache core assets ──
@@ -68,7 +69,7 @@ self.addEventListener('fetch', event => {
         caches.match(req)
           .then(cached => cached || caches.match(OFFLINE_URL))
           .then(cached => cached || new Response(
-            '<html><body style="background:#080810;color:#C9FF47;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;"><div><div style="font-size:48px">📵</div><h2>You\'re offline</h2><p style="color:#9494B0;margin-top:8px">Open Artha when connected to sync your data.</p></div></body></html>',
+            '<html><body style="background:#080810;color:#C9FF47;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;"><div><div style="font-size:48px">📵</div><h2>You\'re offline</h2><p style="color:#9494B0;margin-top:8px">Open Sakred Artha when connected to sync your data.</p></div></body></html>',
             { headers: { 'Content-Type': 'text/html' } }
           ))
       )

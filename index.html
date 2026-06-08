@@ -3561,6 +3561,26 @@ if ('serviceWorker' in navigator) {
 }
 
 // ── INIT ──
+// ── AUTO-LOCK ON BACKGROUND (re-prompt PIN after time away) ──
+const AUTO_LOCK_MS = 60000; // 60s — long enough to ignore quick app-switches
+let bgHiddenAt = 0;
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    // arm only if we're actually inside the unlocked app and a PIN is set
+    if (document.body.classList.contains('unlocked') && localStorage.getItem('ar_pin')) {
+      bgHiddenAt = Date.now();
+    }
+  } else if (document.visibilityState === 'visible') {
+    if (bgHiddenAt && (Date.now() - bgHiddenAt) >= AUTO_LOCK_MS
+        && document.body.classList.contains('unlocked')
+        && localStorage.getItem('ar_pin')) {
+      document.body.classList.remove('unlocked'); // hide app content behind the lock
+      try { showPinLock(); } catch (e) {}
+    }
+    bgHiddenAt = 0;
+  }
+});
+
 window.addEventListener('DOMContentLoaded', () => {
   // ── AUTH INIT (runs first) ──
   initApp();

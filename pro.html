@@ -16,8 +16,10 @@
   --text: #EEEEF8;
   --text2: #A0A0B8;
   --text3: #606078;
-  --lime: #CBFF47;
-  --lime-d: rgba(203,255,71,0.1);
+  --lime: #1bbf56;
+  --lime-d: rgba(27,191,86,0.12);
+  --saffron: #FF9933;
+  --flag-grad: linear-gradient(135deg,#FF9933 0%,#ff7e3f 45%,#149a3f 100%);
   --purple: #7C5CFF;
   --teal: #00D4AA;
   --pink: #FF4D8B;
@@ -62,9 +64,9 @@ body {
   font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px;
 }
 .logo-icon {
-  width: 28px; height: 28px; background: var(--lime); border-radius: 7px;
+  width: 28px; height: 28px; background: var(--flag-grad); border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 900; color: #000;
+  font-size: 12px; font-weight: 900; color: #fff;
 }
 .lang-pills {
   display: flex; gap: 6px; flex-wrap: wrap;
@@ -155,13 +157,13 @@ body {
 
 /* ── CTA BUTTON ── */
 .cta-btn {
-  width: 100%; padding: 16px; background: var(--lime); border: none;
-  border-radius: 14px; color: #000; font-family: 'Syne', sans-serif;
+  width: 100%; padding: 16px; background: var(--flag-grad); border: none;
+  border-radius: 14px; color: #fff; font-family: 'Syne', sans-serif;
   font-size: 16px; font-weight: 700; cursor: pointer;
   transition: all 0.15s; position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.cta-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(203,255,71,0.3); }
+.cta-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(255,135,60,0.34); }
 .cta-btn:active { transform: translateY(0); }
 
 /* ── CODE SECTION ── */
@@ -368,7 +370,7 @@ body {
     <p style="font-size:13px;color:var(--text2);margin-bottom:16px;" data-t="success-sub">Copy this code and enter it in the Artha app to activate your plan.</p>
     <div class="success-code" id="success-code" onclick="copyCode()">AR-PRO-XXXXXX</div>
     <div class="copy-hint" data-t="tap-copy">Tap to copy</div>
-    <button onclick="openApp()" style="margin-top:20px;width:100%;padding:14px;background:var(--lime);border:none;border-radius:12px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;" data-t="open-app">Open Artha App →</button>
+    <button onclick="openApp()" style="margin-top:20px;width:100%;padding:14px;background:var(--flag-grad);border:none;border-radius:12px;color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;" data-t="open-app">Open Artha App →</button>
   </div>
 
   <!-- FAQ -->
@@ -552,7 +554,7 @@ function showComingSoon() {
       <input id="notify-email" type="email" placeholder="your@email.com"
         style="width:100%;background:var(--surf2);border:1.5px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-size:14px;outline:none;margin-bottom:10px;"
         onfocus="this.style.borderColor='var(--lime)'" onblur="this.style.borderColor='var(--border2)'">
-      <button onclick="saveEmail()" style="width:100%;padding:13px;background:var(--lime);border:none;border-radius:11px;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">
+      <button onclick="saveEmail()" style="width:100%;padding:13px;background:var(--flag-grad);border:none;border-radius:11px;color:#fff;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">
         Notify Me →
       </button>
       <button onclick="this.closest('div').parentElement.remove()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Close</button>

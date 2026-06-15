@@ -957,7 +957,7 @@ body:not(.unlocked) .app{display:none;}
         <div class="more-item" onclick="showScreen('clients')"><div class="more-item-ico">👔</div><div class="more-item-label">Client Health</div></div>
         <div class="more-item" onclick="showScreen('voice')"><div class="more-item-ico">🎙️</div><div class="more-item-label">Voice Log</div></div>
         <div class="more-item" onclick="showScreen('receipt')"><div class="more-item-ico">📷</div><div class="more-item-label">Receipt Scan</div></div>
-        <div class="more-item" onclick="showScreen('rental')"><div class="more-item-ico">🏦</div><div class="more-item-label">Bank Verify</div></div>
+        <div class="more-item" onclick="showScreen('rental')"><div class="more-item-ico">🏦</div><div class="more-item-label">Bank Income Report</div></div>
         <div class="more-item" onclick="showScreen('privacy')"><div class="more-item-ico">🔐</div><div class="more-item-label">Privacy</div></div>
         <div class="more-item" onclick="showScreen('settings')"><div class="more-item-ico">⚙️</div><div class="more-item-label">Settings</div></div>
       </div>
@@ -1408,14 +1408,14 @@ body:not(.unlocked) .app{display:none;}
     <!-- ════ SCREEN: RENTAL & BANK VERIFY ════ -->
     <div class="screen" id="s-rental">
       <div class="sec-head">
-        <div><div class="sec-title">Rental & Bank Verify</div><div class="sec-sub">Income report for home loans & rentals</div></div>
+        <div><div class="sec-title">Rental & Bank Report</div><div class="sec-sub">Income report for home loans & rentals</div></div>
         <span class="chip lime">🔒 Local</span>
       </div>
 
       <div class="card" style="margin-top:8px;">
         <div class="card-body" style="padding:26px 18px;text-align:center;">
           <div style="font-size:30px;margin-bottom:8px;">🔒</div>
-          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">Bank Verify — coming soon</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">Bank Income Report — coming soon</div>
           <div style="font-size:12.5px;color:var(--text3);line-height:1.5;margin-bottom:18px;">We're polishing the bank-ready report. Meanwhile, Income Summary generates a PDF from your logged income.</div>
           <button class="btn btn-primary btn-full" onclick="showScreen('verify')">Open Income Summary →</button>
         </div>
@@ -1591,7 +1591,7 @@ const screenMap = {
   privacy:    { nav: null, label: 'Privacy Dashboard' },
   settings:   { nav: null, label: 'Settings' },
   receipt:    { nav: null, label: 'Receipt Scanner' },
-  rental:     { nav: null, label: 'Rental & Bank Verify' },
+  rental:     { nav: null, label: 'Rental & Bank Report' },
 };
 
 const subScreens = ['goals','mood','emergency','verify','invoices','schemes','community','tips','clients','voice','privacy','settings','receipt','rental'];

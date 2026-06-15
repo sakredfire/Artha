@@ -857,7 +857,7 @@ body:not(.unlocked) .app{display:none;}
 
       <div class="mc-row">
         <div class="mc lime"><div class="mc-label">Total Income</div><div class="mc-val lime" style="font-size:18px;" id="stat-april-total">₹0</div></div>
-        <div class="mc orange"><div class="mc-label">Best Day</div><div class="mc-val orange" style="font-size:18px;" id="stat-best-day">₹0</div></div>
+        <div class="mc orange"><div class="mc-label">Highest Day</div><div class="mc-val orange" style="font-size:18px;" id="stat-best-day">₹0</div></div>
       </div>
 
       <div style="display:flex;gap:8px;margin-bottom:12px;">
@@ -949,7 +949,7 @@ body:not(.unlocked) .app{display:none;}
         <div class="more-item" onclick="showScreen('goals')"><div class="more-item-ico">🎯</div><div class="more-item-label">Goals & Streaks</div></div>
         <div class="more-item" onclick="showScreen('mood')"><div class="more-item-ico">🧠</div><div class="more-item-label">Mood Tracker</div></div>
         <div class="more-item" onclick="showScreen('emergency')"><div class="more-item-ico">🛡️</div><div class="more-item-label">Emergency Fund</div></div>
-        <div class="more-item" onclick="showScreen('verify')"><div class="more-item-ico">🔏</div><div class="more-item-label">Income Proof</div></div>
+        <div class="more-item" onclick="showScreen('verify')"><div class="more-item-ico">🔏</div><div class="more-item-label">Income Summary</div></div>
         <div class="more-item" onclick="showScreen('invoices')"><div class="more-item-ico">📄</div><div class="more-item-label">Invoices</div></div>
         <div class="more-item" onclick="showScreen('schemes')"><div class="more-item-ico">🏛️</div><div class="more-item-label">Scheme Navigator</div></div>
         <div class="more-item" onclick="showScreen('community')"><div class="more-item-ico">🏆</div><div class="more-item-label">Leaderboard</div></div>
@@ -958,7 +958,6 @@ body:not(.unlocked) .app{display:none;}
         <div class="more-item" onclick="showScreen('voice')"><div class="more-item-ico">🎙️</div><div class="more-item-label">Voice Log</div></div>
         <div class="more-item" onclick="showScreen('receipt')"><div class="more-item-ico">📷</div><div class="more-item-label">Receipt Scan</div></div>
         <div class="more-item" onclick="showScreen('rental')"><div class="more-item-ico">🏦</div><div class="more-item-label">Bank Verify</div></div>
-        <div class="more-item highlight" onclick="showScreen('foundation')"><div class="more-item-ico">🌱</div><div class="more-item-label">Foundation</div></div>
         <div class="more-item" onclick="showScreen('privacy')"><div class="more-item-ico">🔐</div><div class="more-item-label">Privacy</div></div>
         <div class="more-item" onclick="showScreen('settings')"><div class="more-item-ico">⚙️</div><div class="more-item-label">Settings</div></div>
       </div>
@@ -1065,9 +1064,9 @@ body:not(.unlocked) .app{display:none;}
 
     <!-- ════ SCREEN: INCOME VERIFY ════ -->
     <div class="screen" id="s-verify">
-      <div class="sec-head"><div><div class="sec-title">Income Proof</div><div class="sec-sub">Your data · Your terms</div></div><div class="chip lime">NEW</div></div>
+      <div class="sec-head"><div><div class="sec-title">Income Summary</div><div class="sec-sub">Your data · Your terms</div></div><div class="chip lime">NEW</div></div>
 
-      <div class="info-box"><strong>60% of gig workers can't get loans</strong> — banks want salary slips. This report is tamper-evident proof of your income. Share with landlords or banks on your terms.</div>
+      <div class="info-box"><strong>60% of gig workers can't get loans</strong> — banks want salary slips. This report summarises the income you've logged. Share with landlords or banks on your terms.</div>
 
       <div class="card" style="margin-bottom:12px;">
         <div class="card-head"><div class="card-title">Generate Report</div></div>
@@ -1234,25 +1233,6 @@ body:not(.unlocked) .app{display:none;}
         <div class="tp-text">GROUP tutoring changed everything. 6 students, same 2hr slot. ₹800 × 6 = ₹4,800 for 2 hours. That's ₹1,200/hour.</div>
         <div style="display:flex;gap:6px;margin-bottom:8px;"><span class="chip purple">Teaching</span></div>
         <div class="tp-foot"><div class="tp-action">❤️ 234</div><div class="tp-action">💬 51</div><div class="tp-action">🔖 Save</div></div>
-      </div>
-    </div>
-
-    <!-- ════ SCREEN: FOUNDATION ════ -->
-    <div class="screen" id="s-foundation">
-      <div class="sec-head"><div><div class="sec-title">Foundation</div><div class="sec-sub">Revenue → Impact</div></div><div class="chip muted">Coming soon</div></div>
-
-      <div class="found-hero">
-        <div style="font-size:42px;margin-bottom:8px;">🌱</div>
-        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:5px;">We grow because you grow</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.55;">5% of every subscription will fund micro-grants to users with consistent income growth. Launching after we go live — grant recipients and totals will appear here.</div>
-      </div>
-
-      <div class="card">
-        <div class="card-body" style="text-align:center;padding:28px 16px;">
-          <div style="font-size:28px;margin-bottom:6px;">🔜</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Grants begin once Sakred Artha has paying subscribers</div>
-        </div>
       </div>
     </div>
 
@@ -1428,7 +1408,7 @@ body:not(.unlocked) .app{display:none;}
     <!-- ════ SCREEN: RENTAL & BANK VERIFY ════ -->
     <div class="screen" id="s-rental">
       <div class="sec-head">
-        <div><div class="sec-title">Rental & Bank Verify</div><div class="sec-sub">Income proof for home loans & rentals</div></div>
+        <div><div class="sec-title">Rental & Bank Verify</div><div class="sec-sub">Income report for home loans & rentals</div></div>
         <span class="chip lime">🔒 Local</span>
       </div>
 
@@ -1436,8 +1416,8 @@ body:not(.unlocked) .app{display:none;}
         <div class="card-body" style="padding:26px 18px;text-align:center;">
           <div style="font-size:30px;margin-bottom:8px;">🔒</div>
           <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">Bank Verify — coming soon</div>
-          <div style="font-size:12.5px;color:var(--text3);line-height:1.5;margin-bottom:18px;">We're polishing the bank-ready report. Meanwhile, Income Proof generates a verifiable PDF from your real logged income.</div>
-          <button class="btn btn-primary btn-full" onclick="showScreen('verify')">Open Income Proof →</button>
+          <div style="font-size:12.5px;color:var(--text3);line-height:1.5;margin-bottom:18px;">We're polishing the bank-ready report. Meanwhile, Income Summary generates a PDF from your logged income.</div>
+          <button class="btn btn-primary btn-full" onclick="showScreen('verify')">Open Income Summary →</button>
         </div>
       </div>
 
@@ -1505,7 +1485,7 @@ body:not(.unlocked) .app{display:none;}
           <div class="card-body">
             <div class="ef-rule"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px;">✅ Rental Income</div><div style="font-size:11px;color:var(--text3);">Accepted by all banks with registered rent agreement + 3–6 months bank statement showing credits.</div></div>
             <div class="ef-rule"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px;">✅ Freelance / Gig Income</div><div style="font-size:11px;color:var(--text3);">Accepted with 12-month ITR + bank statement. HDFC, ICICI, Kotak are most freelancer-friendly.</div></div>
-            <div class="ef-rule"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px;">⚠️ Cash Income</div><div style="font-size:11px;color:var(--text3);">Not accepted without bank proof. Deposit consistently and get a CA letter for best results.</div></div>
+            <div class="ef-rule"><div style="font-size:12.5px;font-weight:600;margin-bottom:4px;">⚠️ Cash Income</div><div style="font-size:11px;color:var(--text3);">Not accepted without bank records. Deposit consistently and get a CA letter for stronger results.</div></div>
           </div>
         </div>
       </div>
@@ -1601,21 +1581,20 @@ const screenMap = {
   goals:      { nav: null, label: 'Goals & Streaks' },
   mood:       { nav: null, label: 'Mood Tracker' },
   emergency:  { nav: null, label: 'Emergency Fund' },
-  verify:     { nav: null, label: 'Income Proof' },
+  verify:     { nav: null, label: 'Income Summary' },
   schemes:    { nav: null, label: 'Scheme Navigator' },
   clients:    { nav: null, label: 'Client Health' },
   voice:      { nav: null, label: 'Voice Log' },
   invoices:   { nav: null, label: 'Invoices' },
   community:  { nav: null, label: 'Leaderboard' },
   tips:       { nav: null, label: 'Hustle Tips' },
-  foundation: { nav: null, label: 'Sakred Artha Foundation' },
   privacy:    { nav: null, label: 'Privacy Dashboard' },
   settings:   { nav: null, label: 'Settings' },
   receipt:    { nav: null, label: 'Receipt Scanner' },
   rental:     { nav: null, label: 'Rental & Bank Verify' },
 };
 
-const subScreens = ['goals','mood','emergency','verify','invoices','schemes','community','tips','clients','voice','foundation','privacy','settings','receipt','rental'];
+const subScreens = ['goals','mood','emergency','verify','invoices','schemes','community','tips','clients','voice','privacy','settings','receipt','rental'];
 let currentScreen = 'home';
 
 function showScreen(id) {
@@ -1638,7 +1617,7 @@ function showScreen(id) {
   if (id === 'schemes') initSchemeFlow();
   if (id === 'clients') renderClientScores();
   if (id === 'receipt') updateReceiptsList();
-  // Bank Verify gated — Revenue Manager disabled (see Income Proof)
+  // Bank Verify gated — Revenue Manager disabled (see Income Summary)
   if (id === 'goals') renderGoals();
   if (id === 'invoices') renderInvoices();
   if (id === 'income') renderIncomeEntries();
@@ -2198,7 +2177,7 @@ function rmDownloadPDF() {
   y += 20; doc.setFontSize(9); doc.setTextColor(90,90,112);
   doc.text('This document is self-generated from your saved data using Sakred Artha.', 20, y);
   doc.text('For verification, please also provide bank statements and ITR.', 20, y+7);
-  doc.save('Sakred_Artha_Income_Proof_' + name.replace(/ /g,'_') + '.pdf');
+  doc.save('Sakred_Artha_Income_Summary_' + name.replace(/ /g,'_') + '.pdf');
 }
 
 // ══════════════════════════════════════════
@@ -3049,7 +3028,7 @@ const TRANSLATIONS = {
     weekly_trend: 'Weekly Trend', recent_income: 'Recent Income', view_all: 'View All →',
     // Income
     income_log: 'Income Log', every_rupee: 'Every rupee tracked', log_btn: '+ Log',
-    april_total: 'APRIL TOTAL', best_day: 'BEST DAY',
+    april_total: 'APRIL TOTAL', best_day: 'HIGHEST DAY',
     // AI
     ai_title: 'AI Co-Pilot', ai_sub: 'Stacks · Secure · Powered by Claude',
     ai_placeholder: 'Ask about income, taxes, goals…',
@@ -3074,7 +3053,7 @@ const TRANSLATIONS = {
     this_month: 'इस महीने', net_income: 'शुद्ध आय', tax_reserved: 'कर आरक्षित', emergency_fund: 'आपातकालीन निधि',
     weekly_trend: 'साप्ताहिक रुझान', recent_income: 'हालिया आय', view_all: 'सभी देखें →',
     income_log: 'आय लॉग', every_rupee: 'हर रुपया ट्रैक किया', log_btn: '+ लॉग',
-    april_total: 'अप्रैल कुल', best_day: 'सर्वश्रेष्ठ दिन',
+    april_total: 'अप्रैल कुल', best_day: 'सर्वाधिक दिन',
     ai_title: 'AI सह-पायलट', ai_sub: 'Stacks · सुरक्षित · Powered by Claude',
     ai_placeholder: 'आय, कर, लक्ष्य के बारे में पूछें…',
     tax_title: 'कर इंजन', tax_sub: 'FY 2025–26 अनुमान',
@@ -3093,7 +3072,7 @@ const TRANSLATIONS = {
     this_month: 'இந்த மாதம்', net_income: 'நிகர வருமானம்', tax_reserved: 'வரி ஒதுக்கு', emergency_fund: 'அவசர நிதி',
     weekly_trend: 'வாராந்திர போக்கு', recent_income: 'சமீபத்திய வருமானம்', view_all: 'அனைத்தும் காண்க →',
     income_log: 'வருமான பதிவு', every_rupee: 'ஒவ்வொரு ரூபாயும் கண்காணிக்கப்படுகிறது', log_btn: '+ பதிவு',
-    april_total: 'ஏப்ரல் மொத்தம்', best_day: 'சிறந்த நாள்',
+    april_total: 'ஏப்ரல் மொத்தம்', best_day: 'அதிகபட்ச நாள்',
     ai_title: 'AI துணை-பைலட்', ai_sub: 'Stacks · பாதுகாப்பானது · Powered by Claude',
     ai_placeholder: 'வருமானம், வரி, இலக்குகளைப் பற்றி கேளுங்கள்…',
     tax_title: 'வரி இயந்திரம்', tax_sub: 'FY 2025–26 மதிப்பீடு',
@@ -3112,7 +3091,7 @@ const TRANSLATIONS = {
     this_month: 'ఈ నెల', net_income: 'నికర ఆదాయం', tax_reserved: 'పన్ను నిల్వ', emergency_fund: 'అత్యవసర నిధి',
     weekly_trend: 'వారపు ట్రెండ్', recent_income: 'ఇటీవలి ఆదాయం', view_all: 'అన్నీ చూడు →',
     income_log: 'ఆదాయ లాగ్', every_rupee: 'ప్రతి రూపాయి ట్రాక్ చేయబడింది', log_btn: '+ లాగ్',
-    april_total: 'ఏప్రిల్ మొత్తం', best_day: 'అత్యుత్తమ రోజు',
+    april_total: 'ఏప్రిల్ మొత్తం', best_day: 'అత్యధిక రోజు',
     ai_title: 'AI కో-పైలట్', ai_sub: 'Stacks · సురక్షితం · Powered by Claude',
     ai_placeholder: 'ఆదాయం, పన్ను, లక్ష్యాల గురించి అడగండి…',
     tax_title: 'పన్ను ఇంజిన్', tax_sub: 'FY 2025–26 అంచనా',
@@ -3131,7 +3110,7 @@ const TRANSLATIONS = {
     this_month: 'या महिन्यात', net_income: 'निव्वळ उत्पन्न', tax_reserved: 'कर राखीव', emergency_fund: 'आपत्कालीन निधी',
     weekly_trend: 'साप्ताहिक कल', recent_income: 'अलीकडील उत्पन्न', view_all: 'सर्व पाहा →',
     income_log: 'उत्पन्न नोंद', every_rupee: 'प्रत्येक रुपया ट्रॅक केला', log_btn: '+ नोंद',
-    april_total: 'एप्रिल एकूण', best_day: 'सर्वोत्तम दिवस',
+    april_total: 'एप्रिल एकूण', best_day: 'सर्वाधिक दिवस',
     ai_title: 'AI सह-चालक', ai_sub: 'Stacks · सुरक्षित · Powered by Claude',
     ai_placeholder: 'उत्पन्न, कर, उद्दिष्टांबद्दल विचारा…',
     tax_title: 'कर इंजिन', tax_sub: 'FY 2025–26 अंदाज',
@@ -3150,7 +3129,7 @@ const TRANSLATIONS = {
     this_month: 'ಈ ತಿಂಗಳು', net_income: 'ನಿವ್ವಳ ಆದಾಯ', tax_reserved: 'ತೆರಿಗೆ ಮೀಸಲು', emergency_fund: 'ತುರ್ತು ನಿಧಿ',
     weekly_trend: 'ವಾರದ ಟ್ರೆಂಡ್', recent_income: 'ಇತ್ತೀಚಿನ ಆದಾಯ', view_all: 'ಎಲ್ಲ ನೋಡಿ →',
     income_log: 'ಆದಾಯ ದಾಖಲೆ', every_rupee: 'ಪ್ರತಿ ರೂಪಾಯಿ ಟ್ರ್ಯಾಕ್ ಆಗಿದೆ', log_btn: '+ ದಾಖಲಿಸಿ',
-    april_total: 'ಏಪ್ರಿಲ್ ಒಟ್ಟು', best_day: 'ಅತ್ಯುತ್ತಮ ದಿನ',
+    april_total: 'ಏಪ್ರಿಲ್ ಒಟ್ಟು', best_day: 'ಗರಿಷ್ಠ ದಿನ',
     ai_title: 'AI ಸಹ-ಪೈಲಟ್', ai_sub: 'Stacks · ಸುರಕ್ಷಿತ · Powered by Claude',
     ai_placeholder: 'ಆದಾಯ, ತೆರಿಗೆ, ಗುರಿಗಳ ಬಗ್ಗೆ ಕೇಳಿ…',
     tax_title: 'ತೆರಿಗೆ ಎಂಜಿನ್', tax_sub: 'FY 2025–26 ಅಂದಾಜು',

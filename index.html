@@ -949,7 +949,7 @@ body:not(.unlocked) .app{display:none;}
         <div class="more-item" onclick="showScreen('goals')"><div class="more-item-ico">🎯</div><div class="more-item-label">Goals & Streaks</div></div>
         <div class="more-item" onclick="showScreen('mood')"><div class="more-item-ico">🧠</div><div class="more-item-label">Mood Tracker</div></div>
         <div class="more-item" onclick="showScreen('emergency')"><div class="more-item-ico">🛡️</div><div class="more-item-label">Emergency Fund</div></div>
-        <div class="more-item" onclick="showScreen('verify')"><div class="more-item-ico">🔏</div><div class="more-item-label">Income Summary</div></div>
+        <div class="more-item" onclick="showScreen('verify')"><div class="more-item-ico">📄</div><div class="more-item-label">Income Summary</div></div>
         <div class="more-item" onclick="showScreen('invoices')"><div class="more-item-ico">📄</div><div class="more-item-label">Invoices</div></div>
         <div class="more-item" onclick="showScreen('schemes')"><div class="more-item-ico">🏛️</div><div class="more-item-label">Scheme Navigator</div></div>
         <div class="more-item" onclick="showScreen('community')"><div class="more-item-ico">🏆</div><div class="more-item-label">Leaderboard</div></div>
@@ -1077,8 +1077,8 @@ body:not(.unlocked) .app{display:none;}
             <div class="entry">📅 Last 6 months (Oct 2025–Mar 2026)</div>
             <div class="entry">📅 Full FY 2025–26</div>
           </div>
-          <button class="btn btn-full" style="background:var(--purple);color:#fff;" onclick="generateVerificationPDF()">🔏 Generate Signed PDF</button>
-          <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">SHA-256 signed · QR verification · Free for Pro+</div>
+          <button class="btn btn-full" style="background:var(--purple);color:#fff;" onclick="generateVerificationPDF()">📄 Generate PDF</button>
+          <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Included with Pro+</div>
         </div>
       </div>
 
@@ -1098,7 +1098,7 @@ body:not(.unlocked) .app{display:none;}
           <tr><td>Mar 2026</td><td>₹34,100</td><td>₹28,000</td></tr>
           <tr style="font-weight:700;background:#f5f5fc;"><td>Total</td><td>₹93,700</td><td>₹77,000</td></tr>
         </table>
-        <div class="ivr-sig">🔏 Code: SA-2026-0419-AK-7F4D<br>Authenticity code included — SHA-256 signed</div>
+        <div class="ivr-sig">Reference: SA-2026-0419-AK-7F4D</div>
       </div>
     </div>
 
@@ -1830,7 +1830,7 @@ async function toggleVoice(btn) {
 // ── INCOME VERIFICATION PDF ──
 function generateVerificationPDF() {
   const _entries = (() => { try { return JSON.parse(localStorage.getItem('incomeEntries')||'[]'); } catch { return []; } })();
-  if (!_entries.length) { alert('Log some income first — your verification report is generated from your real entries.'); return; }
+  if (!_entries.length) { alert('Log some income first — your income summary is generated from your real entries.'); return; }
   if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
   incrementUsage('pdfs');
   const doc = new jsPDF();
@@ -1839,7 +1839,7 @@ function generateVerificationPDF() {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(22);
   doc.setTextColor(203, 255, 71);
-  doc.text('Sakred Artha Income Verification', 20, 30);
+  doc.text('Sakred Artha Income Summary', 20, 30);
   doc.setFontSize(11);
   doc.setTextColor(160, 160, 184);
   doc.text('India\'s Side Hustle OS · v5.0', 20, 40);
@@ -1887,7 +1887,7 @@ function generateVerificationPDF() {
   doc.setTextColor(90, 90, 112);
   doc.text('This document is generated from your saved data in Sakred Artha.', 20, y);
   doc.text('For queries: mihir86.mp@gmail.com', 20, y + 7);
-  doc.save('Sakred_Artha_Income_Verification.pdf');
+  doc.save('Sakred_Artha_Income_Summary.pdf');
   localStorage.setItem('lastPdfDate', new Date().toLocaleString('en-IN'));
   const el = document.getElementById('last-pdf-date');
   if (el) el.textContent = new Date().toLocaleString('en-IN');
@@ -2124,7 +2124,7 @@ function rmPreviewReport() {
   const total6m = rmEntries.slice(0, 6).reduce((a, e) => a + e.amount, 0);
   const avg = rmEntries.length ? Math.round(total6m / Math.min(rmEntries.length, 6)) : 0;
   document.getElementById('rm-preview-content').innerHTML = `
-    <div style="font-weight:700;font-size:14px;color:var(--lime);margin-bottom:8px;">INCOME VERIFICATION REPORT</div>
+    <div style="font-weight:700;font-size:14px;color:var(--lime);margin-bottom:8px;">INCOME SUMMARY REPORT</div>
     <div><strong>Name:</strong> ${name}</div>
     <div><strong>PAN:</strong> ${pan}</div>
     <div><strong>Purpose:</strong> ${purpose}</div>
@@ -2149,7 +2149,7 @@ function rmDownloadPDF() {
   const doc = new jsPDF();
   doc.setFillColor(8,8,16); doc.rect(0,0,210,297,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(203,255,71);
-  doc.text('Income Verification Report', 20, 28);
+  doc.text('Income Summary Report', 20, 28);
   doc.setFontSize(10); doc.setTextColor(90,90,112);
   doc.text('Sakred Artha v5.0 · India\'s Side Hustle OS', 20, 37);
   doc.setDrawColor(203,255,71); doc.line(20,42,190,42);
@@ -2176,7 +2176,7 @@ function rmDownloadPDF() {
   doc.text('Monthly Average:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+avg.toLocaleString('en-IN'), 150, y);
   y += 20; doc.setFontSize(9); doc.setTextColor(90,90,112);
   doc.text('This document is self-generated from your saved data using Sakred Artha.', 20, y);
-  doc.text('For verification, please also provide bank statements and ITR.', 20, y+7);
+  doc.text('Not official proof of income — please also provide bank statements and ITR.', 20, y+7);
   doc.save('Sakred_Artha_Income_Summary_' + name.replace(/ /g,'_') + '.pdf');
 }
 

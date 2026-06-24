@@ -966,7 +966,7 @@ body:not(.unlocked) .app{display:none;}
       <div style="background:linear-gradient(135deg,rgba(255,153,51,0.10),rgba(20,154,63,0.10));border:1px solid rgba(255,153,51,0.22);border-radius:16px;padding:18px;margin-bottom:14px;">
         <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:5px;">Upgrade to Pro+</div>
         <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:12px;">Remove limits · More AI · Priority features</div>
-        <button class="btn btn-primary btn-full" onclick="window.open('https://app.sakredfire.ca/pro','_blank')">Unlock Pro →</button>
+        <button class="btn btn-primary btn-full" onclick="upgradeToPro()">Unlock Pro →</button>
         <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Cancel anytime · UPI Autopay · 7-day trial</div>
       </div>
 
@@ -3502,6 +3502,16 @@ async function buyProViaPlay() {
   } catch (e) {
     // User cancelled or sheet failed — silent, no crash.
     return false;
+  }
+}
+
+// Single entry point for all "Upgrade to Pro" taps.
+// In the Play app -> native purchase sheet. Elsewhere -> existing code flow.
+function upgradeToPro() {
+  if (playBillingAvailable()) {
+    buyProViaPlay();
+  } else if (typeof startProTrial === 'function') {
+    startProTrial();
   }
 }
 

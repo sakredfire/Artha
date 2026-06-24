@@ -3433,7 +3433,7 @@ function startProTrial() {
       <div style="background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:12px;">
         <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Already subscribed? Enter your code:</div>
         <div style="display:flex;gap:8px;">
-          <input id="unlock-code-input" placeholder="e.g. AR-PRO-XXXXX" maxlength="14"
+          <input id="unlock-code-input" placeholder="Enter your unlock code" maxlength="24"
             style="flex:1;background:var(--surf3);border:1.5px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'Space Mono',monospace;outline:none;letter-spacing:0.05em;text-transform:uppercase;"
             onfocus="this.style.borderColor='var(--lime)'"
             onblur="this.style.borderColor='var(--border2)'"
@@ -3528,44 +3528,34 @@ async function acknowledgeProPurchase(token) {
 
 function activateCode() {
   const input = document.getElementById('unlock-code-input');
-  const code = input?.value?.trim().toUpperCase();
+  const code = (input?.value || '').trim().toUpperCase();
   const errorEl = document.getElementById('code-error');
 
-  if (!code || code.length < 8) {
-    errorEl.style.display = 'block';
-    errorEl.textContent = 'Please enter a valid unlock code.';
+  // Manual comp codes — secrets, full Pro, no expiry. Case-insensitive.
+  // (Client-side only; Phase 2 will move validation server-side.)
+  const VALID_PRO_CODES = ['ARTHA-MP-Z01', 'ARTHA-MP-Z02', 'ARTHA-MP-Z03', 'ARTHA-26-MP' ];
+  const isValid = VALID_PRO_CODES.some(c => c.trim().toUpperCase() === code);
+
+  if (!code || !isValid) {
+    if (errorEl) {
+      errorEl.style.display = 'block';
+      errorEl.textContent = 'Invalid code. Please check and try again.';
+    }
     return;
   }
 
-  // v1.0: validate code format AR-PRO-XXXXX
-  // v1.1: validate against server/KV database
-  const isValidFormat = /^AR-(PRO|TRIAL)-[A-Z0-9]{5,8}$/.test(code);
-
-  if (!isValidFormat) {
-    errorEl.style.display = 'block';
-    errorEl.textContent = 'Invalid code format. Codes look like: AR-PRO-AB123';
-    return;
-  }
-
-  // Check if trial code
-  const isTrial = code.startsWith('AR-TRIAL-');
-
-  // Activate
-  const trial = isTrial ? { started: Date.now(), code, plan: 'pro' } : null;
-  if (trial) localStorage.setItem('ar_trial', JSON.stringify(trial));
   localStorage.setItem('ar_tier', 'pro');
   localStorage.setItem('ar_tier_token', 'ar_pro_' + code);
   localStorage.setItem('ar_activated_code', code);
+  localStorage.removeItem('ar_trial');
 
   document.getElementById('pay-modal')?.remove();
-  loadProfileIntoApp();
-  updateAIUsageBadge();
+  if (typeof loadProfileIntoApp === 'function') loadProfileIntoApp();
+  if (typeof updateAIUsageBadge === 'function') updateAIUsageBadge();
 
   const toast = document.createElement('div');
   toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:14px 24px;border-radius:14px;font-size:13px;font-weight:700;z-index:9999;text-align:center;max-width:320px;line-height:1.6;';
-  toast.innerHTML = isTrial
-    ? '🎉 Pro Trial activated! 7 days free.<br><span style="font-weight:400;font-size:11px;">Cancel anytime in Settings before day 7</span>'
-    : '🎉 Pro activated! Welcome to Sakred Artha Pro.';
+  toast.innerHTML = '🎉 Pro activated! Welcome to Sakred Artha Pro.';
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 5000);
 }

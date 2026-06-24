@@ -1712,13 +1712,9 @@ function askAI(q) {
 
 // ── MOOD ──
 function selectMood(el) {
+  // Selection only — never persists. Mood is written solely by logMoodConfirm().
   document.querySelectorAll('.mood-opt').forEach(o => o.classList.remove('sel'));
   el.classList.add('sel');
-  const emoji = el.querySelector('.mood-emoji').textContent;
-  const moods = JSON.parse(localStorage.getItem('moods') || '[]');
-  moods.push({ date: new Date().toISOString().split('T')[0], mood: emoji });
-  localStorage.setItem('moods', JSON.stringify(moods.slice(-30)));
-  updateMoodDisplay();
 }
 
 function updateMoodDisplay() {
@@ -2915,17 +2911,18 @@ function shareReferral() {
 function logMoodConfirm(btn) {
   const sel = document.querySelector('.mood-opt.sel');
   if (!sel) { alert('Select a mood first'); return; }
-  const spans = sel.querySelectorAll('span');
-  const emoji = spans[0]?.textContent || '😊';
+  // Emoji lives in .mood-emoji (a DIV, not a <span>)
+  const emoji = (sel.querySelector('.mood-emoji')?.textContent || '').trim();
+  if (!emoji) { alert('Select a mood first'); return; }
   const today = new Date().toISOString().split('T')[0];
   const moods = JSON.parse(localStorage.getItem('moods') || '[]');
-  const filtered = moods.filter(function(m) { return m.date !== today; });
+  const filtered = moods.filter(function(m) { return String(m.date).slice(0,10) !== today; });
   filtered.push({ date: today, mood: emoji });
-  localStorage.setItem('moods', JSON.stringify(filtered));
+  localStorage.setItem('moods', JSON.stringify(filtered.slice(-30)));
   updateMoodDisplay();
-  btn.textContent = 'Mood Logged!';
+  btn.textContent = '✓ Mood Logged!';
   btn.style.background = 'var(--teal)';
-  setTimeout(function() { btn.textContent = 'Log Today Mood'; btn.style.background = ''; }, 2500);
+  setTimeout(function() { btn.textContent = "✓ Log Today's Mood"; btn.style.background = ''; }, 2500);
 }
 function confirmVoiceEntry(btn) {
   const amt = document.getElementById('voice-amount')?.value;
@@ -3458,6 +3455,66 @@ function openPaymentSite() {
   document.getElementById('pay-modal')?.remove();
   window.open('https://app.sakredfire.ca/pro', '_blank');
 }
+
+// ─────────────────────────────────────────────────────────────
+// GOOGLE PLAY BILLING (client-side) — Sakred Artha Pro
+// SKU + base plan must match Play Console exactly.
+// ─────────────────────────────────────────────────────────────
+const PLAY_SKU = 'artha_pro_monthly';
+const PLAY_BASE_PLAN = 'pro-monthly';
+const PLAY_BILLING_PAYMENT_METHOD = 'https://play.google.com/billing';
+
+// True only inside the Play-installed, billing-enabled TWA.
+// Undefined in any browser / PWA / old build — so callers no-op safely.
+function playBillingAvailable() {
+  return (typeof window !== 'undefined')
+    && ('getDigitalGoodsService' in window)
+    && (typeof PaymentRequest !== 'undefined');
+}
+
+// Launch the native Play purchase sheet for Pro. Returns true on success.
+async function buyProViaPlay() {
+  if (!playBillingAvailable()) {
+    // Not in the Play app — fall back to the existing code-entry UI.
+    if (typeof startProTrial === 'function') startProTrial();
+    return false;
+  }
+  try {
+    const supportedInstruments = [{
+      supportedMethods: PLAY_BILLING_PAYMENT_METHOD,
+      data: { sku: PLAY_SKU }
+    }];
+    const details = { total: { label: 'Artha Pro', amount: { currency: 'INR', value: '49' } } };
+    const request = new PaymentRequest(supportedInstruments, details);
+    const response = await request.show();
+    const token = response?.details?.token;
+    if (!token) { await response.complete('fail'); return false; }
+    // Acknowledge within 3 days or Play auto-refunds. We acknowledge now.
+    await acknowledgeProPurchase(token);
+    // Flip the existing tier engine to Pro.
+    localStorage.setItem('ar_tier', 'pro');
+    localStorage.setItem('ar_tier_token', 'play_' + token.slice(0, 24));
+    localStorage.setItem('ar_activated_code', 'PLAY-PURCHASE');
+    await response.complete('success');
+    if (typeof loadProfileIntoApp === 'function') loadProfileIntoApp();
+    if (typeof updateAIUsageBadge === 'function') updateAIUsageBadge();
+    return true;
+  } catch (e) {
+    // User cancelled or sheet failed — silent, no crash.
+    return false;
+  }
+}
+
+// Acknowledge the purchase so Play does not auto-refund it.
+async function acknowledgeProPurchase(token) {
+  try {
+    const service = await window.getDigitalGoodsService(PLAY_BILLING_PAYMENT_METHOD);
+    if (service && typeof service.acknowledge === 'function') {
+      await service.acknowledge(token, 'onetime');
+    }
+  } catch (e) { /* non-fatal; Phase 2 server check will re-verify */ }
+}
+// ─────────────────────────────────────────────────────────────
 
 function activateCode() {
   const input = document.getElementById('unlock-code-input');

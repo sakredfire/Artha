@@ -3474,6 +3474,7 @@ function playBillingAvailable() {
 
 // Launch the native Play purchase sheet for Pro. Returns true on success.
 async function buyProViaPlay() {
+  alert('BILLING DEBUG → playBillingAvailable = ' + playBillingAvailable() + ' · getDigitalGoodsService in window = ' + ('getDigitalGoodsService' in window) + ' · PaymentRequest = ' + (typeof PaymentRequest));
   if (!playBillingAvailable()) {
     // Not in the Play app — fall back to the existing code-entry UI.
     if (typeof startProTrial === 'function') startProTrial();
@@ -3500,7 +3501,7 @@ async function buyProViaPlay() {
     if (typeof updateAIUsageBadge === 'function') updateAIUsageBadge();
     return true;
   } catch (e) {
-    // User cancelled or sheet failed — silent, no crash.
+    alert('BILLING DEBUG → ' + (e && e.name ? e.name : 'Error') + ': ' + (e && e.message ? e.message : String(e)));
     return false;
   }
 }

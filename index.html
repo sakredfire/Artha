@@ -927,18 +927,34 @@ body:not(.unlocked) .app{display:none;}
 
     <!-- ════ SCREEN: TAX ════ -->
     <div class="screen" id="s-tax">
-      <div class="sec-head"><div><div class="sec-title">Tax Engine</div><div class="sec-sub">FY 2025–26 estimate</div></div><div class="chip purple">Old Regime</div></div>
+      <div class="sec-head"><div><div class="sec-title">Tax Engine</div><div class="sec-sub" id="tax-fy-sub">FY estimate</div></div><div class="chip purple" id="tax-regime-chip">—</div></div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">Tax Estimate</div><div class="chip muted">Coming soon</div></div>
-        <div class="card-body" style="text-align:center;padding:26px 16px;">
-          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">A personalised estimate from your logged income is in the works. You can still export an ITR-1 summary of your real entries below.</div>
+        <div class="card-head"><div class="card-title">Your work type</div></div>
+        <div class="card-body">
+          <div id="tax-type-row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:8px;line-height:1.5;" id="tax-type-hint"></div>
         </div>
       </div>
 
-      <button class="btn btn-full" style="background:var(--purple);color:#fff;" onclick="exportITR()">📥 Export ITR-1 Summary</button>
+      <div class="mc-row">
+        <div class="mc purple"><div class="mc-label">Tax Owed</div><div class="mc-val purple" id="tax-owed" style="font-size:18px;">₹0</div><div class="mc-change" id="tax-owed-sub" style="color:var(--text3)">—</div></div>
+        <div class="mc orange"><div class="mc-label">Suggested Reserve</div><div class="mc-val orange" id="tax-reserve" style="font-size:18px;">₹0</div><div class="mc-change">set aside</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Breakdown</div></div>
+        <div class="card-body" id="tax-breakdown"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Regime comparison</div></div>
+        <div class="card-body" id="tax-regime-compare"></div>
+      </div>
+
+      <div style="font-size:10px;color:var(--text3);text-align:center;margin:4px 0 12px;line-height:1.5;">Estimate only, not tax advice. Computed from income logged this financial year. Verify with a CA before filing.</div>
+
+      <button class="btn btn-full" style="background:var(--purple);color:#fff;" onclick="exportITR()">📥 Export ITR Summary</button>
     </div>
 
     <!-- ════ SCREEN: MORE ════ -->
@@ -1620,6 +1636,7 @@ function showScreen(id) {
   // Bank Verify gated — Revenue Manager disabled (see Income Summary)
   if (id === 'goals') renderGoals();
   if (id === 'invoices') renderInvoices();
+  if (id === 'tax') renderTaxEngine();
   if (id === 'income') renderIncomeEntries();
   if (id === 'ai') updateAIUsageBadge();
 }
@@ -2773,6 +2790,97 @@ function renderIncomeEntries() {
     </div>`).join('') || '<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px;">No entries yet. Tap + Log to add your first income!</div>';
 }
 
+// ───── TAX ENGINE — FY 2026-27 slabs (verified; Budget 2026 left slabs unchanged) ─────
+function taxCurrentFY() {
+  const d = new Date(), y = d.getFullYear();
+  const s = (d.getMonth() >= 3) ? y : y - 1;            // FY starts 1 April
+  return { label: s + '–' + String(s + 1).slice(2), start: s + '-04-01', end: (s + 1) + '-03-31' };
+}
+function taxSlab(income, brackets) {
+  let t = 0, prev = 0;
+  for (let i = 0; i < brackets.length; i++) {
+    const cap = brackets[i][0], rate = brackets[i][1];
+    if (income > prev) { t += (Math.min(income, cap) - prev) * rate; prev = cap; } else break;
+  }
+  return t;
+}
+function taxNewRegime(taxable) {
+  let t = taxSlab(taxable, [[400000,0],[800000,0.05],[1200000,0.10],[1600000,0.15],[2000000,0.20],[2400000,0.25],[Infinity,0.30]]);
+  if (taxable <= 1200000) t = Math.max(0, t - 60000); else t = Math.min(t, taxable - 1200000);
+  return Math.round(t * 1.04);
+}
+function taxOldRegime(taxable) {
+  let t = taxSlab(taxable, [[250000,0],[500000,0.05],[1000000,0.20],[Infinity,0.30]]);
+  if (taxable <= 500000) t = Math.max(0, t - 12500);
+  return Math.round(t * 1.04);
+}
+function taxableFromWorkType(gross, expenses, workType) {
+  if (workType === '44ADA') return gross * 0.50;
+  if (workType === '44AD_digital') return gross * 0.06;
+  if (workType === '44AD_cash') return gross * 0.08;
+  return Math.max(0, gross - (expenses || 0));
+}
+const TAX_TYPES = [
+  { id:'44ADA', label:'Freelancer / Pro', hint:'Sec 44ADA — 50% of income is deemed taxable; the rest is presumed expenses. For professionals (design, consulting, content, coaching, etc.).' },
+  { id:'44AD_digital', label:'Business · digital', hint:'Sec 44AD — 6% of turnover received via UPI/bank is deemed profit.' },
+  { id:'44AD_cash', label:'Business · cash', hint:'Sec 44AD — 8% of turnover received in cash is deemed profit.' },
+  { id:'none', label:'Actual − expenses', hint:'Taxable = income logged minus expenses logged this financial year.' }
+];
+function getTaxType() { return localStorage.getItem('ar_tax_type') || '44ADA'; }
+function setTaxType(t) { localStorage.setItem('ar_tax_type', t); renderTaxEngine(); }
+function taxFmt(n) { return '₹' + Math.round(n || 0).toLocaleString('en-IN'); }
+function renderTaxEngine() {
+  const fy = taxCurrentFY();
+  const sub = document.getElementById('tax-fy-sub'); if (sub) sub.textContent = 'FY ' + fy.label + ' · from logged income';
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const expensesArr = JSON.parse(localStorage.getItem('expenses') || '[]');
+  const inFY = e => { const dt = String(e.date || '').slice(0,10); return dt >= fy.start && dt <= fy.end; };
+  const gross = entries.filter(inFY).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  const exp = expensesArr.filter(inFY).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  const wt = getTaxType();
+  const taxable = taxableFromWorkType(gross, exp, wt);
+  const nTax = taxNewRegime(taxable), oTax = taxOldRegime(taxable);
+  const best = nTax <= oTax ? 'New' : 'Old';
+  const owed = Math.min(nTax, oTax);
+
+  const row = document.getElementById('tax-type-row');
+  if (row) row.innerHTML = TAX_TYPES.map(t =>
+    '<div onclick="setTaxType(\'' + t.id + '\')" style="cursor:pointer;padding:10px 6px;border-radius:11px;font-size:11.5px;font-weight:600;text-align:center;border:1.5px solid ' + (wt===t.id?'var(--lime)':'var(--border)') + ';background:' + (wt===t.id?'var(--surf3)':'var(--surf2)') + ';color:' + (wt===t.id?'var(--lime)':'var(--text2)') + ';">' + t.label + '</div>'
+  ).join('');
+  const hintEl = document.getElementById('tax-type-hint');
+  if (hintEl) hintEl.textContent = (TAX_TYPES.find(t=>t.id===wt) || {}).hint || '';
+
+  const owedEl = document.getElementById('tax-owed'); if (owedEl) owedEl.textContent = taxFmt(owed);
+  const owedSub = document.getElementById('tax-owed-sub'); if (owedSub) owedSub.textContent = best + ' regime' + (owed===0 ? ' · ₹0 due' : '');
+  const reserveEl = document.getElementById('tax-reserve'); if (reserveEl) reserveEl.textContent = taxFmt(Math.ceil(owed/100)*100);
+
+  const bd = document.getElementById('tax-breakdown');
+  if (bd) {
+    let rows = '<div class="prog"><div class="prog-row"><span class="prog-key">Income logged (FY ' + fy.label + ')</span><span class="prog-val" style="color:var(--lime)">' + taxFmt(gross) + '</span></div></div>';
+    if (wt !== 'none') {
+      const pct = wt==='44ADA'?'50%':(wt==='44AD_digital'?'6%':'8%');
+      rows += '<div class="prog"><div class="prog-row"><span class="prog-key">Taxable @ ' + pct + ' (presumptive)</span><span class="prog-val">' + taxFmt(taxable) + '</span></div></div>';
+    } else {
+      rows += '<div class="prog"><div class="prog-row"><span class="prog-key">Less: expenses logged</span><span class="prog-val" style="color:var(--orange)">−' + taxFmt(exp) + '</span></div></div>';
+      rows += '<div class="prog"><div class="prog-row"><span class="prog-key">Taxable income</span><span class="prog-val">' + taxFmt(taxable) + '</span></div></div>';
+    }
+    rows += '<div class="divider"></div><div class="prog"><div class="prog-row"><span class="prog-key">Tax (' + best + ' regime, incl. 4% cess)</span><span class="prog-val" style="color:var(--purple)">' + taxFmt(owed) + '</span></div></div>';
+    if (owed === 0 && taxable > 0) rows += '<div class="tip-box"><strong>💡 Stacks:</strong> Your taxable income is within the ₹12L rebate, so estimated tax is ₹0 under the New regime. You may still need to file an ITR to stay compliant.</div>';
+    if (gross === 0) rows = '<div style="text-align:center;padding:18px;color:var(--text3);font-size:12px;">Log some income to see your tax estimate.</div>';
+    bd.innerHTML = rows;
+  }
+
+  const cmp = document.getElementById('tax-regime-compare');
+  if (cmp) {
+    const cardFn = (name, val, isBest) =>
+      '<div style="flex:1;padding:12px;border-radius:11px;border:1.5px solid ' + (isBest?'var(--lime)':'var(--border)') + ';background:var(--surf2);text-align:center;">' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:4px;">' + name + ' regime ' + (isBest?'✓':'') + '</div>' +
+      '<div style="font-family:\'Space Mono\',monospace;font-size:16px;font-weight:700;color:' + (isBest?'var(--lime)':'var(--text2)') + ';">' + taxFmt(val) + '</div></div>';
+    cmp.innerHTML = '<div style="display:flex;gap:8px;">' + cardFn('New', nTax, best==='New') + cardFn('Old', oTax, best==='Old') + '</div>';
+  }
+  const chip = document.getElementById('tax-regime-chip'); if (chip) chip.textContent = best + ' Regime';
+}
+
 // ══ EXPORT ITR ══
 function exportITR() {
   if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
@@ -3691,6 +3799,7 @@ window.addEventListener('DOMContentLoaded', () => {
   try { renderRealStats(); } catch(e) {}
   try { renderGoals(); } catch(e) {}
   try { renderInvoices(); } catch(e) {}
+  try { renderTaxEngine(); } catch(e) {}
   try { restoreProEntitlement(); } catch(e) {}
   try { refreshProUI(); } catch(e) {}
 });

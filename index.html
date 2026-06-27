@@ -3488,17 +3488,24 @@ async function buyProViaPlay() {
     const details = { total: { label: 'Artha Pro', amount: { currency: 'INR', value: '49' } } };
     const request = new PaymentRequest(supportedInstruments, details);
     const response = await request.show();
-    const token = response?.details?.token;
-    if (!token) { await response.complete('fail'); return false; }
-    // Acknowledge within 3 days or Play auto-refunds. We acknowledge now.
-    await acknowledgeProPurchase(token);
-    // Flip the existing tier engine to Pro.
+    // TEMP DIAG — remove after billing confirmed.
+    alert('BILLING DEBUG → response.details = ' + JSON.stringify(response && response.details));
+    // Token field name varies across Chrome/Play versions — accept both.
+    const token = (response && response.details &&
+      (response.details.token || response.details.purchaseToken)) || '';
+    if (token) { try { await acknowledgeProPurchase(token); } catch (ackErr) {} }
+    // Sheet resolved => Play confirmed the purchase. Grant Pro even if the
+    // token field came back empty.
     localStorage.setItem('ar_tier', 'pro');
-    localStorage.setItem('ar_tier_token', 'play_' + token.slice(0, 24));
+    localStorage.setItem('ar_tier_token', token ? ('play_' + token.slice(0, 24)) : 'play_sub');
     localStorage.setItem('ar_activated_code', 'PLAY-PURCHASE');
-    await response.complete('success');
+    localStorage.removeItem('ar_trial');
+    try { await response.complete('success'); } catch (compErr) {}
+    // TEMP DIAG — remove after billing confirmed.
+    alert('BILLING DEBUG → tier now = ' + localStorage.getItem('ar_tier') + ' · token length = ' + token.length);
     if (typeof loadProfileIntoApp === 'function') loadProfileIntoApp();
     if (typeof updateAIUsageBadge === 'function') updateAIUsageBadge();
+    showProToast();
     return true;
   } catch (e) {
     alert('BILLING DEBUG → ' + (e && e.name ? e.name : 'Error') + ': ' + (e && e.message ? e.message : String(e)));
@@ -3509,6 +3516,10 @@ async function buyProViaPlay() {
 // Single entry point for all "Upgrade to Pro" taps.
 // In the Play app -> native purchase sheet. Elsewhere -> existing code flow.
 function upgradeToPro() {
+  if (typeof isPro === 'function' && isPro()) {
+    alert('You are already on Sakred Artha Pro. Manage your plan in Google Play → Subscriptions.');
+    return;
+  }
   if (playBillingAvailable()) {
     buyProViaPlay();
   } else if (typeof startProTrial === 'function') {
@@ -3524,6 +3535,42 @@ async function acknowledgeProPurchase(token) {
       await service.acknowledge(token, 'onetime');
     }
   } catch (e) { /* non-fatal; Phase 2 server check will re-verify */ }
+}
+
+function showProToast() {
+  try {
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:14px 24px;border-radius:14px;font-size:14px;font-weight:700;z-index:99999;text-align:center;max-width:320px;line-height:1.5;';
+    toast.innerHTML = '🎉 You are Pro! Subscription active.';
+    document.body.appendChild(toast);
+    setTimeout(function () { toast.remove(); }, 5000);
+  } catch (e) {}
+}
+
+async function restoreProEntitlement() {
+  try {
+    if (!playBillingAvailable()) return false;
+    const service = await window.getDigitalGoodsService(PLAY_BILLING_PAYMENT_METHOD);
+    if (!service || typeof service.listPurchases !== 'function') return false;
+    const purchases = await service.listPurchases();
+    const ids = (purchases || []).map(function (p) { return p.itemId; });
+    // TEMP DIAG — remove after billing confirmed.
+    alert('BILLING DEBUG → existing Play purchases = ' + JSON.stringify(ids));
+    const sub = (purchases || []).find(function (p) { return p.itemId === PLAY_SKU; });
+    if (!sub) return false;
+    const wasPro = (localStorage.getItem('ar_tier') === 'pro');
+    if (sub.purchaseToken) { try { await acknowledgeProPurchase(sub.purchaseToken); } catch (e) {} }
+    localStorage.setItem('ar_tier', 'pro');
+    localStorage.setItem('ar_tier_token', 'play_' + String(sub.purchaseToken || 'sub').slice(0, 24));
+    localStorage.setItem('ar_activated_code', 'PLAY-PURCHASE');
+    localStorage.removeItem('ar_trial');
+    if (typeof loadProfileIntoApp === 'function') loadProfileIntoApp();
+    if (typeof updateAIUsageBadge === 'function') updateAIUsageBadge();
+    if (!wasPro) showProToast();
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 // ─────────────────────────────────────────────────────────────
 
@@ -3631,6 +3678,7 @@ window.addEventListener('DOMContentLoaded', () => {
   try { renderRealStats(); } catch(e) {}
   try { renderGoals(); } catch(e) {}
   try { renderInvoices(); } catch(e) {}
+  try { restoreProEntitlement(); } catch(e) {}
 });
 </script>
 

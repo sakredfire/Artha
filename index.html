@@ -1840,70 +1840,74 @@ async function toggleVoice(btn) {
   }
 }
 
+// ───────── PROFESSIONAL PDF KIT (white, business-grade) ─────────
+const PDF_INK = [26, 26, 46], PDF_MUTED = [110, 110, 130], PDF_ACCENT = [20, 110, 75], PDF_RULE = [220, 220, 228], PDF_HEADBG = [245, 246, 248];
+function pdfHeader(doc, title, subtitle) {
+  doc.setTextColor.apply(doc, PDF_ACCENT); doc.setFont('helvetica','bold'); doc.setFontSize(9);
+  doc.text('SAKRED ARTHA', 20, 18);
+  doc.setTextColor.apply(doc, PDF_MUTED); doc.setFont('helvetica','normal'); doc.setFontSize(8);
+  doc.text('Side-income tracker', 190, 18, { align: 'right' });
+  doc.setDrawColor.apply(doc, PDF_ACCENT); doc.setLineWidth(0.8); doc.line(20, 22, 190, 22); doc.setLineWidth(0.2);
+  doc.setTextColor.apply(doc, PDF_INK); doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.text(title, 20, 36);
+  if (subtitle) { doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor.apply(doc, PDF_MUTED); doc.text(subtitle, 20, 43); }
+  return 54;
+}
+function pdfFooter(doc, lines) {
+  doc.setDrawColor.apply(doc, PDF_RULE); doc.line(20, 275, 190, 275);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor.apply(doc, PDF_MUTED);
+  let fy = 281; (lines||[]).forEach(function(l){ doc.text(l, 20, fy); fy += 4; });
+}
+function pdfRow(doc, label, value, y, opts) {
+  opts = opts || {};
+  doc.setFont('helvetica', opts.bold ? 'bold' : 'normal'); doc.setFontSize(opts.size || 10);
+  doc.setTextColor.apply(doc, opts.muted ? PDF_MUTED : PDF_INK); doc.text(String(label), 22, y);
+  doc.setTextColor.apply(doc, opts.accent ? PDF_ACCENT : PDF_INK);
+  doc.setFont('helvetica', (opts.bold || opts.valueBold) ? 'bold' : 'normal');
+  doc.text(String(value), 188, y, { align: 'right' });
+}
+function pdfTableHead(doc, leftLabel, rightLabel, y) {
+  doc.setFillColor.apply(doc, PDF_HEADBG); doc.rect(20, y-5, 170, 8, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor.apply(doc, PDF_MUTED);
+  doc.text(leftLabel, 22, y); doc.text(rightLabel, 188, y, { align:'right' });
+}
+function pdfRule(doc, y) { doc.setDrawColor.apply(doc, PDF_RULE); doc.line(20, y, 190, y); }
+function pdfSave(doc, filename) {
+  doc.save(filename);
+  try {
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:13px 22px;border-radius:13px;font-size:13px;font-weight:700;z-index:99999;text-align:center;max-width:330px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,0.4);';
+    t.innerHTML = '✓ Downloaded<br><span style="font-weight:400;font-size:11px;">' + filename + ' is in your Downloads folder</span>';
+    document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 4000);
+  } catch(e) {}
+}
+
 // ── INCOME VERIFICATION PDF ──
 function generateVerificationPDF() {
-  const _entries = (() => { try { return JSON.parse(localStorage.getItem('incomeEntries')||'[]'); } catch { return []; } })();
+  const _entries = (function(){ try { return JSON.parse(localStorage.getItem('incomeEntries')||'[]'); } catch(e){ return []; } })();
   if (!_entries.length) { alert('Log some income first — your income summary is generated from your real entries.'); return; }
   if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
   incrementUsage('pdfs');
-  const doc = new jsPDF();
-  doc.setFillColor(8, 8, 16);
-  doc.rect(0, 0, 210, 297, 'F');
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(22);
-  doc.setTextColor(203, 255, 71);
-  doc.text('Sakred Artha Income Summary', 20, 30);
-  doc.setFontSize(11);
-  doc.setTextColor(160, 160, 184);
-  doc.text('India\'s Side Hustle OS · v5.0', 20, 40);
-  doc.text('Generated: ' + new Date().toLocaleString('en-IN'), 20, 50);
-  doc.setDrawColor(203, 255, 71);
-  doc.line(20, 55, 190, 55);
-  doc.setFontSize(14);
-  doc.setTextColor(238, 238, 248);
-  doc.text('Monthly Income Summary', 20, 68);
-  const now = new Date();
-  const months = [], amounts = [];
+  const profile = (function(){ try { return JSON.parse(localStorage.getItem('ar_profile')||'{}'); } catch(e){ return {}; } })();
+  const now = new Date(); const months = [], amounts = [];
   for (let i = 5; i >= 0; i--) {
     const dt = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const key = dt.toISOString().slice(0, 7);
     months.push(dt.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }));
-    amounts.push(_entries.filter(e => String(e.date || '').slice(0, 7) === key).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0));
+    amounts.push(_entries.filter(function(e){ return String(e.date||'').slice(0,7) === key; }).reduce(function(s,e){ return s+(parseFloat(e.amount)||0); }, 0));
   }
-  let y = 80;
-  months.forEach((m, i) => {
-    doc.setFontSize(11);
-    doc.setTextColor(160, 160, 184);
-    doc.text(m, 25, y);
-    doc.setTextColor(203, 255, 71);
-    doc.text('₹' + amounts[i].toLocaleString('en-IN'), 120, y);
-    y += 9;
-  });
-  const total = amounts.reduce((a, b) => a + b, 0);
-  const avg = Math.round(total / amounts.length);
-  y += 5;
-  doc.setDrawColor(90, 90, 112);
-  doc.line(20, y, 190, y);
-  y += 10;
-  doc.setFontSize(12);
-  doc.setTextColor(238, 238, 248);
-  doc.text('6-Month Total:', 25, y);
-  doc.setTextColor(203, 255, 71);
-  doc.text('₹' + total.toLocaleString('en-IN'), 120, y);
-  y += 9;
-  doc.setTextColor(238, 238, 248);
-  doc.text('Monthly Average:', 25, y);
-  doc.setTextColor(203, 255, 71);
-  doc.text('₹' + avg.toLocaleString('en-IN'), 120, y);
-  y += 20;
-  doc.setFontSize(10);
-  doc.setTextColor(90, 90, 112);
-  doc.text('This document is generated from your saved data in Sakred Artha.', 20, y);
-  doc.text('For queries: mihir86.mp@gmail.com', 20, y + 7);
-  doc.save('Sakred_Artha_Income_Summary.pdf');
+  const total = amounts.reduce(function(a,b){return a+b;},0), avg = Math.round(total/amounts.length);
+  const doc = new jsPDF();
+  let y = pdfHeader(doc, 'Income Summary', 'Last 6 months  ·  Generated ' + new Date().toLocaleDateString('en-IN'));
+  if (profile.name) { doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor.apply(doc, PDF_MUTED); doc.text(profile.name + (profile.city?('  ·  '+profile.city):''), 22, y); y += 10; }
+  pdfTableHead(doc, 'MONTH', 'INCOME', y); y += 9;
+  months.forEach(function(m,i){ pdfRow(doc, m, '₹'+Math.round(amounts[i]).toLocaleString('en-IN'), y); y += 7; });
+  y += 2; pdfRule(doc, y); y += 8;
+  pdfRow(doc, '6-month total', '₹'+Math.round(total).toLocaleString('en-IN'), y, {bold:true, accent:true}); y += 7;
+  pdfRow(doc, 'Monthly average', '₹'+avg.toLocaleString('en-IN'), y, {bold:true}); y += 7;
+  pdfFooter(doc, ['Generated by Sakred Artha from your saved entries. Not an audited statement.', 'For queries: mihir86.mp@gmail.com']);
+  pdfSave(doc, 'Sakred_Artha_Income_Summary.pdf');
   localStorage.setItem('lastPdfDate', new Date().toLocaleString('en-IN'));
-  const el = document.getElementById('last-pdf-date');
-  if (el) el.textContent = new Date().toLocaleString('en-IN');
+  const el = document.getElementById('last-pdf-date'); if (el) el.textContent = localStorage.getItem('lastPdfDate');
 }
 
 // ── SCHEME NAVIGATOR ──
@@ -2157,40 +2161,22 @@ function rmDownloadPDF() {
   const pan = document.getElementById('rm-rpan').value.trim() || 'XXXXX0000X';
   const purpose = document.getElementById('rm-rpurpose').value;
   const bank = document.getElementById('rm-rbank').value;
-  const total6m = rmEntries.slice(0, 6).reduce((a, e) => a + e.amount, 0);
+  const total6m = rmEntries.slice(0, 6).reduce(function(a,e){ return a + e.amount; }, 0);
   const avg = rmEntries.length ? Math.round(total6m / Math.min(rmEntries.length, 6)) : 0;
   const doc = new jsPDF();
-  doc.setFillColor(8,8,16); doc.rect(0,0,210,297,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(203,255,71);
-  doc.text('Income Summary Report', 20, 28);
-  doc.setFontSize(10); doc.setTextColor(90,90,112);
-  doc.text('Sakred Artha v5.0 · India\'s Side Hustle OS', 20, 37);
-  doc.setDrawColor(203,255,71); doc.line(20,42,190,42);
-  doc.setFontSize(11); doc.setTextColor(238,238,248);
-  doc.text('Applicant: ' + name, 20, 54);
-  doc.text('PAN: ' + pan, 20, 63);
-  doc.text('Purpose: ' + purpose, 20, 72);
-  doc.text('Submitted to: ' + bank, 20, 81);
-  doc.text('Date: ' + new Date().toLocaleDateString('en-IN'), 20, 90);
-  doc.setDrawColor(30,30,38); doc.line(20,96,190,96);
-  doc.setFontSize(13); doc.setTextColor(203,255,71); doc.text('Income Summary', 20, 108);
-  let y = 118;
-  rmEntries.slice(0,6).forEach(e => {
-    doc.setFontSize(10); doc.setTextColor(160,160,184);
-    doc.text(e.month + ' · ' + e.sourceType.replace(/^[^ ]+ /,''), 25, y);
-    doc.setTextColor(203,255,71);
-    doc.text('₹' + e.amount.toLocaleString('en-IN'), 150, y);
-    y += 9;
-  });
-  y += 5; doc.setDrawColor(60,60,80); doc.line(20,y,190,y); y += 10;
-  doc.setFontSize(12); doc.setTextColor(238,238,248);
-  doc.text('6-Month Total:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+total6m.toLocaleString('en-IN'), 150, y); y += 9;
-  doc.setTextColor(238,238,248);
-  doc.text('Monthly Average:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+avg.toLocaleString('en-IN'), 150, y);
-  y += 20; doc.setFontSize(9); doc.setTextColor(90,90,112);
-  doc.text('This document is self-generated from your saved data using Sakred Artha.', 20, y);
-  doc.text('Not official proof of income — please also provide bank statements and ITR.', 20, y+7);
-  doc.save('Sakred_Artha_Income_Summary_' + name.replace(/ /g,'_') + '.pdf');
+  let y = pdfHeader(doc, 'Income Summary Report', 'Generated ' + new Date().toLocaleDateString('en-IN'));
+  pdfRow(doc, 'Applicant', name, y); y += 7;
+  pdfRow(doc, 'PAN', pan, y); y += 7;
+  pdfRow(doc, 'Purpose', purpose, y); y += 7;
+  pdfRow(doc, 'Submitted to', bank, y); y += 9;
+  pdfRule(doc, y); y += 9;
+  pdfTableHead(doc, 'MONTH · SOURCE', 'AMOUNT', y); y += 9;
+  rmEntries.slice(0,6).forEach(function(e){ pdfRow(doc, e.month + ' · ' + e.sourceType.replace(/^[^ ]+ /,''), '₹'+e.amount.toLocaleString('en-IN'), y); y += 7; });
+  y += 2; pdfRule(doc, y); y += 8;
+  pdfRow(doc, '6-month total', '₹'+total6m.toLocaleString('en-IN'), y, {bold:true, accent:true}); y += 7;
+  pdfRow(doc, 'Monthly average', '₹'+avg.toLocaleString('en-IN'), y, {bold:true}); y += 7;
+  pdfFooter(doc, ['Self-generated from saved data using Sakred Artha. Not official proof of income —', 'please also provide bank statements and your ITR.']);
+  pdfSave(doc, 'Sakred_Artha_Income_Summary_' + name.replace(/ /g,'_') + '.pdf');
 }
 
 // ══════════════════════════════════════════
@@ -2884,38 +2870,51 @@ function renderTaxEngine() {
 // ══ EXPORT ITR ══
 function exportITR() {
   if (!checkLimit('pdfs')) { showUpgradePrompt('pdfs'); return; }
-  incrementUsage('pdfs');
+  const fy = taxCurrentFY();
   const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
-  const profile = (() => { try { return JSON.parse(localStorage.getItem('ar_profile')||'{}'); } catch { return {}; } })();
-  const total = entries.reduce((s,e) => s+(parseFloat(e.amount)||0), 0);
-  const deduction = Math.round(total * 0.5);
-  const taxable = total - deduction;
+  const expensesArr = JSON.parse(localStorage.getItem('expenses') || '[]');
+  const profile = (function(){ try { return JSON.parse(localStorage.getItem('ar_profile')||'{}'); } catch(e){ return {}; } })();
+  const inFY = function(e){ const dt = String(e.date||'').slice(0,10); return dt >= fy.start && dt <= fy.end; };
+  const fyEntries = entries.filter(inFY);
+  if (!fyEntries.length) { alert('No income logged for FY ' + fy.label + ' yet. The tax summary is generated from your logged entries.'); return; }
+  incrementUsage('pdfs');
+  const gross = fyEntries.reduce(function(s,e){ return s+(parseFloat(e.amount)||0); }, 0);
+  const exp = expensesArr.filter(inFY).reduce(function(s,e){ return s+(parseFloat(e.amount)||0); }, 0);
+  const wt = getTaxType();
+  const taxable = taxableFromWorkType(gross, exp, wt);
+  const nTax = taxNewRegime(taxable), oTax = taxOldRegime(taxable);
+  const best = nTax <= oTax ? 'New' : 'Old'; const owed = Math.min(nTax, oTax);
+  const wtLabel = (TAX_TYPES.find(function(t){ return t.id===wt; })||{}).label || 'Actual';
   const byCategory = {};
-  entries.forEach(e => { byCategory[e.category||'Other'] = (byCategory[e.category||'Other']||0) + (parseFloat(e.amount)||0); });
+  fyEntries.forEach(function(e){ const c = e.category||'Other'; byCategory[c] = (byCategory[c]||0) + (parseFloat(e.amount)||0); });
   const doc = new jsPDF();
-  doc.setFillColor(8,8,16); doc.rect(0,0,210,297,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor(203,255,71);
-  doc.text('ITR-1 Income Summary', 20, 28);
-  doc.setFontSize(10); doc.setTextColor(90,90,112);
-  doc.text('Sakred Artha v5.0 · FY 2025-26 · Generated: '+new Date().toLocaleDateString('en-IN'), 20, 37);
-  doc.setDrawColor(203,255,71); doc.line(20,42,190,42);
-  doc.setFontSize(11); doc.setTextColor(238,238,248);
-  doc.text('Taxpayer: '+(profile.name||'User'), 20, 54);
-  doc.text('City: '+(profile.city||'—'), 20, 63);
-  let y = 80;
-  Object.entries(byCategory).forEach(([cat,amt]) => {
-    doc.setTextColor(160,160,184); doc.text(cat, 25, y);
-    doc.setTextColor(238,238,248); doc.text('₹'+amt.toLocaleString('en-IN'), 150, y); y+=9;
-  });
-  y+=5; doc.setDrawColor(60,60,80); doc.line(20,y,190,y); y+=10;
-  doc.setTextColor(238,238,248); doc.text('Gross:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+total.toLocaleString('en-IN'), 150, y); y+=9;
-  doc.setTextColor(238,238,248); doc.text('Sec 44ADA (50%):', 25, y); doc.setTextColor(124,92,255); doc.text('-₹'+deduction.toLocaleString('en-IN'), 150, y); y+=9;
-  doc.setTextColor(238,238,248); doc.text('Taxable:', 25, y); doc.setTextColor(203,255,71); doc.text('₹'+taxable.toLocaleString('en-IN'), 150, y);
-  y += 16; doc.setFontSize(8); doc.setTextColor(120,120,140);
-  doc.text('Estimate only. Assumes Sec 44ADA 50% presumptive deduction, which applies', 20, y); y += 5;
-  doc.text('to specified professionals under turnover limits. This is a summary of your', 20, y); y += 5;
-  doc.text('logged entries, not a filed return. Verify with a qualified CA before filing.', 20, y);
-  doc.save('Sakred_Artha_ITR1_FY2025-26.pdf');
+  let y = pdfHeader(doc, 'Income Tax Summary', 'FY ' + fy.label + '  ·  Generated ' + new Date().toLocaleDateString('en-IN'));
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor.apply(doc, PDF_INK); doc.text('Taxpayer', 22, y);
+  doc.setFont('helvetica','normal'); doc.setTextColor.apply(doc, PDF_MUTED);
+  doc.text((profile.name||'—') + (profile.city?('  ·  '+profile.city):''), 50, y);
+  y += 7; doc.setTextColor.apply(doc, PDF_INK); doc.setFont('helvetica','bold'); doc.text('Basis', 22, y);
+  doc.setFont('helvetica','normal'); doc.setTextColor.apply(doc, PDF_MUTED); doc.text(wtLabel, 50, y);
+  y += 11; pdfTableHead(doc, 'INCOME BY SOURCE', 'AMOUNT', y); y += 9;
+  Object.keys(byCategory).forEach(function(cat){ pdfRow(doc, cat, '₹'+Math.round(byCategory[cat]).toLocaleString('en-IN'), y); y += 7; });
+  y += 2; pdfRule(doc, y); y += 8;
+  pdfRow(doc, 'Gross receipts (FY '+fy.label+')', '₹'+Math.round(gross).toLocaleString('en-IN'), y, {bold:true}); y += 8;
+  if (wt !== 'none') {
+    const pct = wt==='44ADA'?'50% (Sec 44ADA)':(wt==='44AD_digital'?'6% (Sec 44AD)':'8% (Sec 44AD)');
+    pdfRow(doc, 'Presumptive taxable @ '+pct, '₹'+Math.round(taxable).toLocaleString('en-IN'), y); y += 8;
+  } else {
+    pdfRow(doc, 'Less: expenses logged', '−₹'+Math.round(exp).toLocaleString('en-IN'), y, {muted:true}); y += 7;
+    pdfRow(doc, 'Taxable income', '₹'+Math.round(taxable).toLocaleString('en-IN'), y); y += 8;
+  }
+  pdfRule(doc, y); y += 8;
+  pdfRow(doc, 'New regime tax (incl. 4% cess)', '₹'+nTax.toLocaleString('en-IN'), y, {accent: best==='New'}); y += 7;
+  pdfRow(doc, 'Old regime tax (incl. 4% cess)', '₹'+oTax.toLocaleString('en-IN'), y, {accent: best==='Old'}); y += 9;
+  pdfRow(doc, 'Estimated tax payable ('+best+' regime)', '₹'+owed.toLocaleString('en-IN'), y, {bold:true, accent:true, size:11});
+  pdfFooter(doc, [
+    'Estimate only — not a filed return and not tax advice. Slabs: FY '+fy.label+' (Budget 2026, unchanged).',
+    'Presumptive schemes apply within turnover limits. Verify with a qualified CA before filing.',
+    'Generated by Sakred Artha from your logged entries · mihir86.mp@gmail.com'
+  ]);
+  pdfSave(doc, 'Sakred_Artha_Tax_Summary_FY'+fy.label.replace('–','-')+'.pdf');
 }
 
 // ══ PROFILE EDIT ══

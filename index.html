@@ -1132,30 +1132,8 @@ body:not(.unlocked) .app{display:none;}
         <div style="font-size:11.5px;color:var(--text2);">Explore central &amp; state schemes for gig workers and freelancers</div>
       </div>
 
-      <div class="scheme-card">
-        <div class="sc-title">PM-YASASVI Scholarship</div>
-        <div class="sc-ministry">Ministry of Social Justice · Central</div>
-        <div class="sc-desc">For youth up to 29 years with family income below ₹2.5L. Annual scholarship for higher education.</div>
-        <div class="sc-benefit">💰 Up to ₹1.25L/year · Apply by Oct 31</div>
-      </div>
-      <div class="scheme-card">
-        <div class="sc-title">Gig Worker ID + PM-JAY</div>
-        <div class="sc-ministry">Ministry of Labour · Budget 2025</div>
-        <div class="sc-desc">Government gig worker card enabling PM-JAY health insurance (₹5L coverage) and social security.</div>
-        <div class="sc-benefit">💊 ₹5L health cover · 25,000+ hospitals</div>
-      </div>
-      <div class="scheme-card">
-        <div class="sc-title">Startup India Seed Fund</div>
-        <div class="sc-ministry">DPIIT · Ministry of Commerce</div>
-        <div class="sc-desc">Up to ₹20L grant for registered startups. Your freelance business may qualify if registered.</div>
-        <div class="sc-benefit">🚀 ₹20L grant · Zero equity</div>
-      </div>
-      <div class="scheme-card">
-        <div class="sc-title">PM Vishwakarma Scheme</div>
-        <div class="sc-ministry">Ministry of MSME</div>
-        <div class="sc-desc">Credit at 5% interest, skill training stipend, and digital payment incentives for professionals.</div>
-        <div class="sc-benefit">🏦 ₹3L credit · ₹500/day training stipend</div>
-      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;" id="schemes-updated">Loading schemes…</div>
+      <div id="scheme-list"></div>
     </div>
 
     <!-- ════ SCREEN: CLIENT HEALTH ════ -->
@@ -1635,7 +1613,7 @@ function showScreen(id) {
   document.getElementById('page-label').textContent = info.label || id;
   document.getElementById('scroll-area').scrollTop = 0;
   currentScreen = id;
-  if (id === 'schemes') initSchemeFlow();
+  if (id === 'schemes') { initSchemeFlow(); renderSchemes(); }
   if (id === 'clients') renderClientScores();
   if (id === 'receipt') updateReceiptsList();
   // Bank Verify gated — Revenue Manager disabled (see Income Summary)
@@ -1949,6 +1927,38 @@ function renderSchemeQuestion() {
   }
 }
 function selectSchemeAnswer(ans) { schemeAnswers.push(ans); schemeStep++; renderSchemeQuestion(); }
+
+// Baked-in fallback so the list is never empty (offline / fetch failure).
+const SCHEMES_FALLBACK = [
+  { title:'PM-YASASVI Scholarship', ministry:'Ministry of Social Justice · Central', desc:'For youth up to 29 years with family income below ₹2.5L. Annual scholarship for higher education.', benefit:'💰 Up to ₹1.25L/year · Apply by Oct 31' },
+  { title:'Gig Worker ID + PM-JAY', ministry:'Ministry of Labour · Budget 2025', desc:'Government gig worker card enabling PM-JAY health insurance (₹5L coverage) and social security.', benefit:'💊 ₹5L health cover · 25,000+ hospitals' },
+  { title:'Startup India Seed Fund', ministry:'DPIIT · Ministry of Commerce', desc:'Up to ₹20L grant for registered startups. Your freelance business may qualify if registered.', benefit:'🚀 ₹20L grant · Zero equity' },
+  { title:'PM Vishwakarma Scheme', ministry:'Ministry of MSME', desc:'Credit at 5% interest, skill training stipend, and digital payment incentives for professionals.', benefit:'🏦 ₹3L credit · ₹500/day training stipend' }
+];
+function schemeCardHTML(s) {
+  return '<div class="scheme-card">' +
+    '<div class="sc-title">' + (s.title || '') + '</div>' +
+    (s.ministry ? '<div class="sc-ministry">' + s.ministry + '</div>' : '') +
+    (s.desc ? '<div class="sc-desc">' + s.desc + '</div>' : '') +
+    (s.benefit ? '<div class="sc-benefit">' + s.benefit + '</div>' : '') +
+    '</div>';
+}
+function paintSchemes(list, updatedText) {
+  const listEl = document.getElementById('scheme-list');
+  if (listEl) listEl.innerHTML = (list || []).map(schemeCardHTML).join('');
+  const upEl = document.getElementById('schemes-updated');
+  if (upEl) upEl.textContent = updatedText || '';
+}
+function renderSchemes() {
+  paintSchemes(SCHEMES_FALLBACK, '');   // paint immediately so it's never empty
+  fetch('schemes.json?cb=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+    .then(function (data) {
+      const list = (data && Array.isArray(data.schemes)) ? data.schemes : SCHEMES_FALLBACK;
+      paintSchemes(list, (data && data.lastUpdated) ? ('Updated ' + data.lastUpdated) : '');
+    })
+    .catch(function () { paintSchemes(SCHEMES_FALLBACK, 'Offline — showing saved schemes'); });
+}
 
 // ── CLIENT HEALTH ──
 function renderClientScores() {

@@ -1,0 +1,29 @@
+{
+  "lastUpdated": "2026-06-26",
+  "schemes": [
+    {
+      "title": "PM-YASASVI Scholarship",
+      "ministry": "Ministry of Social Justice · Central",
+      "desc": "For youth up to 29 years with family income below ₹2.5L. Annual scholarship for higher education.",
+      "benefit": "💰 Up to ₹1.25L/year · Apply by Oct 31"
+    },
+    {
+      "title": "Gig Worker ID + PM-JAY",
+      "ministry": "Ministry of Labour · Budget 2025",
+      "desc": "Government gig worker card enabling PM-JAY health insurance (₹5L coverage) and social security.",
+      "benefit": "💊 ₹5L health cover · 25,000+ hospitals"
+    },
+    {
+      "title": "Startup India Seed Fund",
+      "ministry": "DPIIT · Ministry of Commerce",
+      "desc": "Up to ₹20L grant for registered startups. Your freelance business may qualify if registered.",
+      "benefit": "🚀 ₹20L grant · Zero equity"
+    },
+    {
+      "title": "PM Vishwakarma Scheme",
+      "ministry": "Ministry of MSME",
+      "desc": "Credit at 5% interest, skill training stipend, and digital payment incentives for professionals.",
+      "benefit": "🏦 ₹3L credit · ₹500/day training stipend"
+    }
+  ]
+}

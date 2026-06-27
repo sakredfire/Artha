@@ -808,12 +808,10 @@ body:not(.unlocked) .app{display:none;}
       <div class="card">
         <div class="card-head">
           <div class="card-title">Weekly Trend</div>
-          <div class="card-action">April 2026</div>
+          <div class="card-action" id="home-trend-month">This week</div>
         </div>
-        <div class="card-body" style="text-align:center;padding:26px 16px;">
-          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Trend charts unlock as you log income</div>
+        <div class="card-body">
+          <div id="home-trend"><div style="text-align:center;padding:22px 8px;color:var(--text3);font-size:12px;">Log income to see your weekly trend.</div></div>
         </div>
       </div>
 
@@ -898,21 +896,13 @@ body:not(.unlocked) .app{display:none;}
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">This Week's Insights</div></div>
-        <div class="card-body" style="text-align:center;padding:26px 16px;">
-          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Ask Stacks AI above for insights on your real data</div>
-        </div>
+        <div class="card-head"><div class="card-title">This Week's Insights</div><div class="chip lime">Live</div></div>
+        <div class="card-body" id="home-week-insights" style="padding:16px;"><div style="text-align:center;padding:18px 8px;color:var(--text3);font-size:12px;">Log income this week to see insights, or ask Stacks AI above.</div></div>
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">Income Forecast</div><div class="chip muted">Coming soon</div></div>
-        <div class="card-body" style="text-align:center;padding:26px 16px;">
-          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Forecasts arrive once you have logged history</div>
-        </div>
+        <div class="card-head"><div class="card-title">Income Forecast</div><div class="chip lime">Estimate</div></div>
+        <div class="card-body" id="home-forecast" style="padding:18px 16px;"><div style="text-align:center;padding:18px 8px;color:var(--text3);font-size:12px;">Log income this month to see a projection.</div></div>
       </div>
 
       <!-- Quick prompts -->
@@ -1014,11 +1004,11 @@ body:not(.unlocked) .app{display:none;}
       <div id="goals-empty" style="text-align:center;padding:24px 16px;color:var(--text3);font-size:12px;">No goals yet. Tap + New to set your first target.</div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">🔥 Streak</div><div class="chip muted">Coming soon</div></div>
-        <div class="card-body" style="text-align:center;padding:26px 16px;">
-          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Streak tracking unlocks as you log daily</div>
+        <div class="card-head"><div class="card-title">🔥 Logging Streak</div><div class="chip lime">Live</div></div>
+        <div class="card-body" style="text-align:center;padding:24px 16px;">
+          <div style="font-size:40px;font-weight:800;color:var(--lime);line-height:1;" id="goals-streak-num">0</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:6px;" id="goals-streak-label">day streak</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:6px;" id="goals-streak-sub">Log income or mood daily to build your streak.</div>
         </div>
       </div>
     </div>
@@ -1050,12 +1040,8 @@ body:not(.unlocked) .app{display:none;}
       </div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">Sakred Artha Mood Insight</div><div class="chip muted">Coming soon</div></div>
-        <div class="card-body" style="text-align:center;padding:26px 16px;">
-          <div style="font-size:26px;margin-bottom:6px;">🔜</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Mood–money patterns appear once you've logged enough days</div>
-        </div>
+        <div class="card-head"><div class="card-title">Sakred Artha Mood Insight</div><div class="chip lime">Live</div></div>
+        <div class="card-body" id="home-mood-insight" style="padding:18px 16px;"><div style="text-align:center;padding:18px 8px;color:var(--text3);font-size:12px;">Log your mood to see weekly patterns.</div></div>
       </div>
 
       <div class="card">
@@ -1072,13 +1058,27 @@ body:not(.unlocked) .app{display:none;}
 
     <!-- ════ SCREEN: EMERGENCY FUND ════ -->
     <div class="screen" id="s-emergency">
-      <div class="sec-head"><div><div class="sec-title">Emergency Fund</div><div class="sec-sub">Autopilot rules active</div></div><div class="chip lime">NEW</div></div>
+      <div class="sec-head"><div><div class="sec-title">Emergency Fund</div><div class="sec-sub">Your safety buffer for slow months</div></div><div class="chip lime">Live</div></div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-body" style="text-align:center;padding:22px 16px;">
+          <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;">Current Buffer</div>
+          <div style="font-size:32px;font-weight:800;color:var(--teal);margin:4px 0;" id="ef-balance">₹0</div>
+          <div style="font-size:11.5px;color:var(--text3);" id="ef-runway">Set a target to start tracking</div>
+          <div class="prog-bar" style="margin-top:14px;"><div class="prog-fill" id="ef-progress" style="width:0%;background:var(--teal);height:6px;border-radius:3px;"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--text3);margin-top:6px;"><span id="ef-pct">0%</span><span id="ef-target-label">Target: not set</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button class="btn btn-primary" style="flex:1;" onclick="efAddContribution()">＋ Add to Fund</button>
+        <button class="btn btn-ghost" style="flex:1;" onclick="efSetTarget()">🎯 Set Target</button>
+      </div>
 
       <div class="card">
-        <div class="card-body" style="text-align:center;padding:32px 16px;">
-          <div style="font-size:32px;margin-bottom:8px;">🔜</div>
-          <div style="font-size:14px;font-weight:700;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11.5px;color:var(--text3);margin-top:5px;line-height:1.5;">Automated emergency-fund rules and tracking are on the roadmap. Your data stays on your device.</div>
+        <div class="card-head"><div class="card-title">💡 How much should you save?</div></div>
+        <div class="card-body">
+          <div style="font-size:11.5px;color:var(--text2);line-height:1.6;">A common rule for gig and freelance income is <strong>3–6 months of expenses</strong>. Irregular income means aim higher. Add to your fund whenever you have a strong earning week — it only counts what you put in.</div>
         </div>
       </div>
     </div>
@@ -1138,14 +1138,12 @@ body:not(.unlocked) .app{display:none;}
 
     <!-- ════ SCREEN: CLIENT HEALTH ════ -->
     <div class="screen" id="s-clients">
-      <div class="sec-head"><div><div class="sec-title">Client Health</div><div class="sec-sub">Know who's worth your time</div></div><div class="chip muted">Coming soon</div></div>
+      <div class="sec-head"><div><div class="sec-title">Client Health</div><div class="sec-sub">Know who's worth your time</div></div><div class="chip lime">Live</div></div>
 
-      <div class="card">
-        <div class="card-body" style="text-align:center;padding:32px 16px;">
-          <div style="font-size:32px;margin-bottom:8px;">🔜</div>
-          <div style="font-size:14px;font-weight:700;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11.5px;color:var(--text3);margin-top:5px;line-height:1.5;">Client scores will be computed from your real invoices and payment history.</div>
-        </div>
+      <div class="info-box" style="margin-bottom:12px;">Scores are computed from the income you log with a client name. Tag clients in your Income Log to rank them by revenue.</div>
+
+      <div id="client-list-container">
+        <div style="text-align:center;padding:24px;color:var(--text3);font-size:12px;">Log income with client names to see scores.</div>
       </div>
     </div>
 
@@ -1202,11 +1200,13 @@ body:not(.unlocked) .app{display:none;}
     <div class="screen" id="s-community">
       <div class="sec-head"><div><div class="sec-title">Leaderboard</div><div class="sec-sub">Anonymous · Opt-in</div></div><div class="chip muted">Coming soon</div></div>
 
-      <div class="card">
-        <div class="card-body" style="text-align:center;padding:32px 16px;">
-          <div style="font-size:32px;margin-bottom:8px;">🔜</div>
-          <div style="font-size:14px;font-weight:700;color:var(--text2);">Coming soon</div>
-          <div style="font-size:11.5px;color:var(--text3);margin-top:5px;line-height:1.5;">Anonymous city leaderboards arrive once enough hustlers opt in — no fabricated rankings.</div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-body" style="text-align:center;padding:28px 16px;">
+          <div style="font-size:32px;margin-bottom:8px;">🏆</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);">Anonymous City Leaderboards</div>
+          <div style="font-size:11.5px;color:var(--text3);margin-top:6px;line-height:1.6;">Compare your monthly hustle against other earners in your city — anonymised, opt-in, never your name. Launching once enough hustlers join. No fabricated rankings.</div>
+          <button class="btn btn-primary btn-full" style="margin-top:16px;" id="lb-optin-btn" onclick="lbToggleOptin()">Join when it launches</button>
+          <div style="font-size:10.5px;color:var(--text3);margin-top:8px;" id="lb-optin-state">Tap to reserve your anonymous spot.</div>
         </div>
       </div>
     </div>
@@ -1411,14 +1411,7 @@ body:not(.unlocked) .app{display:none;}
         <span class="chip lime">🔒 Local</span>
       </div>
 
-      <div class="card" style="margin-top:8px;">
-        <div class="card-body" style="padding:26px 18px;text-align:center;">
-          <div style="font-size:30px;margin-bottom:8px;">🔒</div>
-          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">Bank Income Report — coming soon</div>
-          <div style="font-size:12.5px;color:var(--text3);line-height:1.5;margin-bottom:18px;">We're polishing the bank-ready report. Meanwhile, Income Summary generates a PDF from your logged income.</div>
-          <button class="btn btn-primary btn-full" onclick="showScreen('verify')">Open Income Summary →</button>
-        </div>
-      </div>
+      <div class="info-box" style="margin-top:8px;">Log your income by month and source, then generate a clean PDF report for home-loan or rental applications — built from your own entries, stored only on your device.</div>
 
       <div class="rm-tab-row">
         <div class="rm-tab active" onclick="rmTab('log')">📋 Log</div>
@@ -1616,7 +1609,9 @@ function showScreen(id) {
   if (id === 'schemes') { initSchemeFlow(); renderSchemes(); }
   if (id === 'clients') renderClientScores();
   if (id === 'receipt') updateReceiptsList();
-  // Bank Verify gated — Revenue Manager disabled (see Income Summary)
+  if (id === 'rental') { rmPopulateMonths(); rmRefreshStats(); }
+  if (id === 'emergency') renderEmergency();
+  if (id === 'community') lbRenderOptin();
   if (id === 'goals') renderGoals();
   if (id === 'invoices') renderInvoices();
   if (id === 'tax') renderTaxEngine();
@@ -2085,31 +2080,56 @@ function rmTab(id) {
   if (panel) panel.classList.add('active');
 }
 
+function rmCurrentMonth() {
+  return new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+}
+
+// Populate the month dropdown with the last 6 months ending this month (always current)
+function rmPopulateMonths() {
+  const sel = document.getElementById('rm-month');
+  if (!sel) return;
+  const opts = [];
+  const d = new Date();
+  for (let i = 0; i < 6; i++) {
+    opts.push(d.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }));
+    d.setMonth(d.getMonth() - 1);
+  }
+  sel.innerHTML = opts.map(m => `<option>${m}</option>`).join('');
+}
+
 function rmAddEntry() {
-  const amount = parseFloat(document.getElementById('rm-amount').value);
-  const source = selectedRMSource || 'Rental';
-  const note = document.getElementById('rm-note').value.trim();
+  const amountEl = document.getElementById('rm-amount');
+  const amount = parseFloat(amountEl.value);
   if (!amount || isNaN(amount)) {
-    document.getElementById('rm-amount').style.borderColor = 'var(--pink)';
-    setTimeout(() => document.getElementById('rm-amount').style.borderColor = '', 1500);
+    amountEl.style.borderColor = 'var(--pink)';
+    setTimeout(() => amountEl.style.borderColor = '', 1500);
     return;
   }
+  const sourceType = (document.getElementById('rm-source-type') || {}).value || '🏠 Rental Income';
+  const month = (document.getElementById('rm-month') || {}).value || rmCurrentMonth();
+  const desc = ((document.getElementById('rm-desc') || {}).value || '').trim();
   const today = new Date().toISOString().split('T')[0];
-  const rmEntries = JSON.parse(localStorage.getItem('rmEntries') || '[]');
-  rmEntries.unshift({ id: Date.now(), amount, source, note, date: today });
+  const cleanSource = sourceType.replace(/^[^ ]+ /, '');
+  // Single consistent schema: { id, amount, sourceType, month, desc, date }
+  rmEntries = JSON.parse(localStorage.getItem('rmEntries') || '[]');
+  rmEntries.unshift({ id: Date.now(), amount, sourceType, month, desc, date: today });
   localStorage.setItem('rmEntries', JSON.stringify(rmEntries));
+  // Mirror into the main income log so it counts everywhere
   const incomeEntries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
-  incomeEntries.unshift({ id: Date.now()+1, amount, category: source, desc: note || source + ' income', date: today });
+  incomeEntries.unshift({ id: Date.now() + 1, amount, category: cleanSource, desc: desc || cleanSource + ' income', client: null, date: today });
   localStorage.setItem('incomeEntries', JSON.stringify(incomeEntries));
-  document.getElementById('rm-amount').value = '';
-  if (document.getElementById('rm-note')) document.getElementById('rm-note').value = '';
+  amountEl.value = '';
+  if (document.getElementById('rm-desc')) document.getElementById('rm-desc').value = '';
   rmRefreshStats();
-  renderIncomeEntries();
+  try { renderIncomeEntries(); } catch (e) {}
+  try { renderRealStats(); } catch (e) {}
 }
 
 function rmRefreshStats() {
-  const monthly = rmEntries.reduce((a, e) => a + (e.month === 'April 2026' ? e.amount : 0), 0);
-  const rental = rmEntries.reduce((a, e) => a + (e.sourceType.includes('Rental') ? e.amount : 0), 0);
+  rmEntries = JSON.parse(localStorage.getItem('rmEntries') || '[]');
+  const cm = rmCurrentMonth();
+  const monthly = rmEntries.reduce((a, e) => a + (e.month === cm ? e.amount : 0), 0);
+  const rental = rmEntries.reduce((a, e) => a + ((e.sourceType || '').includes('Rental') ? e.amount : 0), 0);
   const ms = document.getElementById('rm-stat-month');
   const rs = document.getElementById('rm-stat-rental');
   const cs = document.getElementById('rm-stat-count');
@@ -2130,10 +2150,11 @@ function rmRenderEntries() {
   }
   const icons = { 'Rental': '🏠', 'Freelance': '💻', 'Tutoring': '📚', 'Delivery': '🚗', 'Content': '📹', 'Design': '🎨' };
   list.innerHTML = rmEntries.map(e => {
-    const icon = Object.entries(icons).find(([k]) => e.sourceType.includes(k))?.[1] || '💰';
+    const st = e.sourceType || '💰 Income';
+    const icon = Object.entries(icons).find(([k]) => st.includes(k))?.[1] || '💰';
     return `<div class="rm-entry-item">
       <div class="rm-entry-icon" style="background:var(--lime-d);">${icon}</div>
-      <div class="rm-entry-body"><div class="rm-entry-name">${e.sourceType.replace(/^[^ ]+ /,'')}</div><div class="rm-entry-meta">${e.month}${e.desc ? ' · ' + e.desc : ''}</div></div>
+      <div class="rm-entry-body"><div class="rm-entry-name">${st.replace(/^[^ ]+ /,'')}</div><div class="rm-entry-meta">${e.month || ''}${e.desc ? ' · ' + e.desc : ''}</div></div>
       <div class="rm-entry-amount">₹${e.amount.toLocaleString('en-IN')}</div>
       <button class="rm-entry-del" onclick="rmDeleteEntry(${e.id})">✕</button>
     </div>`;
@@ -2186,7 +2207,7 @@ function rmDownloadPDF() {
   pdfRow(doc, 'Submitted to', bank, y); y += 9;
   pdfRule(doc, y); y += 9;
   pdfTableHead(doc, 'MONTH · SOURCE', 'AMOUNT', y); y += 9;
-  rmEntries.slice(0,6).forEach(function(e){ pdfRow(doc, e.month + ' · ' + e.sourceType.replace(/^[^ ]+ /,''), '₹'+e.amount.toLocaleString('en-IN'), y); y += 7; });
+  rmEntries.slice(0,6).forEach(function(e){ pdfRow(doc, (e.month || '') + ' · ' + (e.sourceType || 'Income').replace(/^[^ ]+ /,''), '₹'+e.amount.toLocaleString('en-IN'), y); y += 7; });
   y += 2; pdfRule(doc, y); y += 8;
   pdfRow(doc, '6-month total', '₹'+total6m.toLocaleString('en-IN'), y, {bold:true, accent:true}); y += 7;
   pdfRow(doc, 'Monthly average', '₹'+avg.toLocaleString('en-IN'), y, {bold:true}); y += 7;
@@ -2654,7 +2675,7 @@ function confirmDeleteAccount() {
   if (!confirmed) return;
   const confirmed2 = confirm('Are you sure? All income records, expenses, goals, and settings will be erased.');
   if (!confirmed2) return;
-  ['ar_profile','ar_pin','ar_onboarded','incomeEntries','expenses','moods','rmEntries','lastPdfDate'].forEach(k => localStorage.removeItem(k));
+  ['ar_profile','ar_pin','ar_onboarded','ar_tier','ar_tier_token','ar_trial','ar_bio_cred','ar_lang','ar_goals','ar_invoices','ar_emergency','ar_lb_optin','incomeEntries','expenses','moods','rmEntries','lastPdfDate'].forEach(k => localStorage.removeItem(k));
   location.reload();
 }
 
@@ -2713,17 +2734,19 @@ function renderRealStats() {
   set('stat-month-change', hasEntries ? 'This month' : 'Log your first income');
   set('stat-net', fmt(totalIncome - totalExpenses));
   set('stat-tax', fmt(totalIncome * 0.12));
-  set('stat-emergency', fmt(0));
+  set('stat-emergency', fmt(efGetBalance()));
   set('stat-april-total', fmt(totalIncome));
   set('stat-best-day', fmt(bestDay));
 
   // Logging streak — consecutive days (income or mood) ending today
-  const days = new Set();
-  entries.forEach(e => { if (e.date) days.add(String(e.date).slice(0, 10)); });
-  moods.forEach(m => { if (m.date) days.add(String(m.date).slice(0, 10)); });
-  let streak = 0; const d = new Date();
-  while (days.has(d.toISOString().slice(0, 10))) { streak++; d.setDate(d.getDate() - 1); }
+  const streak = computeStreak();
   set('home-streak-line', streak > 0 ? streak + '-day logging streak · Keep it up!' : 'Start your logging streak today');
+
+  // Home insight cards — all derived from real data
+  try { renderWeekInsights(); } catch (e) {}
+  try { renderWeeklyTrend(); } catch (e) {}
+  try { renderForecast(); } catch (e) {}
+  try { renderMoodInsight(); } catch (e) {}
 
   // Mood card (home)
   const todayKey = new Date().toISOString().slice(0, 10);
@@ -2997,7 +3020,210 @@ function saveProfileEdit() {
   if (skip) skip.style.display = '';
 }
 
+// ══ HOME INSIGHT CARDS (all from real data) ══
+function renderWeekInsights() {
+  const el = document.getElementById('home-week-insights');
+  if (!el) return;
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 6);
+  const cutKey = cutoff.toISOString().slice(0, 10);
+  const week = entries.filter(e => String(e.date || '').slice(0, 10) >= cutKey);
+  if (!week.length) {
+    el.innerHTML = '<div style="text-align:center;padding:18px 8px;color:var(--text3);font-size:12px;">Log income this week to see insights, or ask Stacks AI above.</div>';
+    return;
+  }
+  const total = week.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const best = week.reduce((m, e) => Math.max(m, parseFloat(e.amount) || 0), 0);
+  const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  el.innerHTML = `<div style="display:flex;gap:10px;">
+    <div style="flex:1;text-align:center;"><div style="font-size:18px;font-weight:800;color:var(--lime);">${fmt(total)}</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">earned this week</div></div>
+    <div style="flex:1;text-align:center;"><div style="font-size:18px;font-weight:800;color:var(--text);">${week.length}</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">${week.length === 1 ? 'entry' : 'entries'}</div></div>
+    <div style="flex:1;text-align:center;"><div style="font-size:18px;font-weight:800;color:var(--text);">${fmt(best)}</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">best entry</div></div>
+  </div>`;
+}
+
+function renderWeeklyTrend() {
+  const el = document.getElementById('home-trend');
+  if (!el) return;
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const today = new Date();
+  const mEl = document.getElementById('home-trend-month');
+  if (mEl) mEl.textContent = today.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const total = entries.filter(e => String(e.date || '').slice(0, 10) === key).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+    days.push({ label: ['S', 'M', 'T', 'W', 'T', 'F', 'S'][d.getDay()], total });
+  }
+  if (!days.some(d => d.total > 0)) {
+    el.innerHTML = '<div style="text-align:center;padding:22px 8px;color:var(--text3);font-size:12px;">Log income to see your weekly trend.</div>';
+    return;
+  }
+  const max = Math.max(...days.map(d => d.total), 1);
+  const k = n => n >= 1000 ? '₹' + (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'k' : '₹' + Math.round(n);
+  el.innerHTML = '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:96px;padding-top:6px;">' +
+    days.map(d => {
+      const h = Math.round((d.total / max) * 70) + 2;
+      const lit = d.total > 0;
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <div style="font-size:8.5px;color:var(--text3);height:11px;line-height:11px;">${d.total > 0 ? k(d.total) : ''}</div>
+        <div style="width:100%;height:${h}px;background:${lit ? 'var(--lime)' : 'var(--surf3)'};border-radius:4px;"></div>
+        <div style="font-size:9px;color:var(--text3);">${d.label}</div>
+      </div>`;
+    }).join('') + '</div>';
+}
+
+function renderForecast() {
+  const el = document.getElementById('home-forecast');
+  if (!el) return;
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const now = new Date();
+  const ym = now.toISOString().slice(0, 7);
+  const monthIncome = entries.filter(e => String(e.date || '').slice(0, 7) === ym).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  if (monthIncome <= 0) {
+    el.innerHTML = '<div style="text-align:center;padding:18px 8px;color:var(--text3);font-size:12px;">Log income this month to see a projection.</div>';
+    return;
+  }
+  const dayOfMonth = now.getDate();
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const projected = Math.round(monthIncome / dayOfMonth * daysInMonth);
+  const monthName = now.toLocaleDateString('en-IN', { month: 'long' });
+  el.innerHTML = `<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;"><div style="font-size:24px;font-weight:800;color:var(--lime);">₹${projected.toLocaleString('en-IN')}</div><div style="font-size:11px;color:var(--text3);">projected for ${monthName}</div></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:6px;line-height:1.5;">From ₹${Math.round(monthIncome).toLocaleString('en-IN')} earned over ${dayOfMonth} day${dayOfMonth === 1 ? '' : 's'} — a rough estimate at your current pace, not a guarantee.</div>`;
+}
+
+function renderMoodInsight() {
+  const el = document.getElementById('home-mood-insight');
+  if (!el) return;
+  const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 6);
+  const cutKey = cutoff.toISOString().slice(0, 10);
+  const recent = moods.filter(m => String(m.date || '').slice(0, 10) >= cutKey);
+  if (!recent.length) {
+    el.innerHTML = '<div style="text-align:center;padding:18px 8px;color:var(--text3);font-size:12px;">Log your mood to see weekly patterns.</div>';
+    return;
+  }
+  const counts = {};
+  recent.forEach(m => { if (m.mood) counts[m.mood] = (counts[m.mood] || 0) + 1; });
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  const emoji = top ? top[0] : '🙂';
+  el.innerHTML = `<div style="display:flex;align-items:center;gap:12px;"><div style="font-size:34px;">${emoji}</div><div><div style="font-size:13px;font-weight:700;color:var(--text);">Your most common mood this week</div><div style="font-size:11px;color:var(--text3);margin-top:2px;">${recent.length} day${recent.length === 1 ? '' : 's'} logged in the last 7 days</div></div></div>`;
+}
+
+// ══ STREAK (shared) ══
+function computeStreak() {
+  const entries = JSON.parse(localStorage.getItem('incomeEntries') || '[]');
+  const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+  const days = new Set();
+  entries.forEach(e => { if (e.date) days.add(String(e.date).slice(0, 10)); });
+  moods.forEach(m => { if (m.date) days.add(String(m.date).slice(0, 10)); });
+  let streak = 0; const d = new Date();
+  while (days.has(d.toISOString().slice(0, 10))) { streak++; d.setDate(d.getDate() - 1); }
+  return streak;
+}
+function renderStreakUI() {
+  const s = computeStreak();
+  const num = document.getElementById('goals-streak-num');
+  const lbl = document.getElementById('goals-streak-label');
+  const sub = document.getElementById('goals-streak-sub');
+  if (num) num.textContent = s;
+  if (lbl) lbl.textContent = s === 1 ? 'day streak' : 'day streak';
+  if (sub) sub.textContent = s > 0
+    ? 'Keep logging income or mood daily to extend it.'
+    : 'Log income or mood today to start your streak.';
+}
+
+// ══ EMERGENCY FUND ══
+function efGet() {
+  try { return JSON.parse(localStorage.getItem('ar_emergency') || '{}'); } catch { return {}; }
+}
+function efSave(ef) { localStorage.setItem('ar_emergency', JSON.stringify(ef)); }
+function efGetBalance() { return parseFloat(efGet().balance) || 0; }
+
+function renderEmergency() {
+  const ef = efGet();
+  const balance = parseFloat(ef.balance) || 0;
+  const target = parseFloat(ef.target) || 0;
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('ef-balance', '₹' + Math.round(balance).toLocaleString('en-IN'));
+  const pct = target > 0 ? Math.min(100, Math.round((balance / target) * 100)) : 0;
+  const bar = document.getElementById('ef-progress');
+  if (bar) bar.style.width = pct + '%';
+  set('ef-pct', target > 0 ? pct + '%' : '—');
+  set('ef-target-label', target > 0 ? 'Target: ₹' + Math.round(target).toLocaleString('en-IN') : 'Target: not set');
+  // Runway from real expenses if available
+  const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  const totalExp = expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const avgMonthly = expenses.length ? totalExp / 3 : 0; // rough: spread logged expenses over ~3 months
+  if (balance <= 0) {
+    set('ef-runway', 'Add to your fund to start tracking');
+  } else if (avgMonthly > 0) {
+    const months = (balance / avgMonthly);
+    set('ef-runway', '≈ ' + months.toFixed(1) + ' months of your logged expenses');
+  } else if (target > 0) {
+    set('ef-runway', pct + '% of your ₹' + Math.round(target).toLocaleString('en-IN') + ' target');
+  } else {
+    set('ef-runway', 'Set a target to track your progress');
+  }
+}
+function efAddContribution() {
+  const v = prompt('Add to emergency fund (₹)?');
+  if (v === null) return;
+  const amt = parseFloat(v);
+  if (!amt || isNaN(amt) || amt <= 0) { alert('Enter a valid amount.'); return; }
+  const ef = efGet();
+  ef.balance = (parseFloat(ef.balance) || 0) + amt;
+  efSave(ef);
+  renderEmergency();
+  try { renderRealStats(); } catch (e) {}
+}
+function efSetTarget() {
+  const cur = parseFloat(efGet().target) || 0;
+  const v = prompt('Set your emergency fund target (₹)?', cur ? String(cur) : '');
+  if (v === null) return;
+  const amt = parseFloat(v);
+  if (!amt || isNaN(amt) || amt <= 0) { alert('Enter a valid target.'); return; }
+  const ef = efGet();
+  ef.target = amt;
+  efSave(ef);
+  renderEmergency();
+}
+
 // ══ GOALS ══
+function addGoalProgress(id) {
+  const v = prompt('Add amount toward this goal (₹)?');
+  if (v === null) return;
+  const amt = parseFloat(v);
+  if (!amt || isNaN(amt) || amt <= 0) { alert('Enter a valid amount.'); return; }
+  const goals = JSON.parse(localStorage.getItem('ar_goals') || '[]');
+  const g = goals.find(x => x.id === id);
+  if (!g) return;
+  g.current = (parseFloat(g.current) || 0) + amt;
+  localStorage.setItem('ar_goals', JSON.stringify(goals));
+  renderGoals();
+}
+function deleteGoal(id) {
+  if (!confirm('Delete this goal?')) return;
+  let goals = JSON.parse(localStorage.getItem('ar_goals') || '[]');
+  goals = goals.filter(x => x.id !== id);
+  localStorage.setItem('ar_goals', JSON.stringify(goals));
+  renderGoals();
+}
+// ══ LEADERBOARD (opt-in only — no fabricated data) ══
+function lbRenderOptin() {
+  const on = localStorage.getItem('ar_lb_optin') === '1';
+  const btn = document.getElementById('lb-optin-btn');
+  const state = document.getElementById('lb-optin-state');
+  if (btn) { btn.textContent = on ? "✓ You're on the list" : 'Join when it launches'; btn.style.background = on ? 'var(--teal)' : ''; }
+  if (state) state.textContent = on ? "You'll be added anonymously when leaderboards go live." : 'Tap to reserve your anonymous spot.';
+}
+function lbToggleOptin() {
+  const on = localStorage.getItem('ar_lb_optin') === '1';
+  localStorage.setItem('ar_lb_optin', on ? '0' : '1');
+  lbRenderOptin();
+}
+
 function showNewGoalModal() {
   const name = prompt('Goal name? (e.g. "Buy Laptop")'); if (!name) return;
   const target = prompt('Target amount (₹)?'); if (!target||isNaN(parseFloat(target))) return;
@@ -3008,6 +3234,7 @@ function showNewGoalModal() {
   renderGoals();
 }
 function renderGoals() {
+  renderStreakUI();
   const container = document.getElementById('goals-list');
   if (!container) return;
   const goals = JSON.parse(localStorage.getItem('ar_goals')||'[]');
@@ -3015,9 +3242,12 @@ function renderGoals() {
   if (!goals.length) { container.innerHTML = ''; if (goalsEmpty) goalsEmpty.style.display = ''; return; }
   if (goalsEmpty) goalsEmpty.style.display = 'none';
   container.innerHTML = goals.map(g => {
-    const pct = Math.min(100, Math.round((g.current/g.target)*100));
+    const current = parseFloat(g.current) || 0;
+    const target = parseFloat(g.target) || 0;
+    const pct = target > 0 ? Math.min(100, Math.round((current/target)*100)) : 0;
     const color = pct>=80?'var(--lime)':pct>=50?'var(--purple)':'var(--blue)';
-    return `<div class="goal-card"><div class="goal-head"><div class="goal-emoji">${g.emoji}</div><div><div class="goal-name">${g.name}</div><div class="goal-deadline">${g.deadline}</div></div><span class="chip" style="background:rgba(203,255,71,0.1);color:var(--lime);margin-left:auto">${pct}%</span></div><div class="goal-amounts"><span>₹${(g.current||0).toLocaleString('en-IN')}</span><span>₹${g.target.toLocaleString('en-IN')}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${color};height:5px;border-radius:3px;"></div></div></div>`;
+    const done = pct >= 100;
+    return `<div class="goal-card"><div class="goal-head"><div class="goal-emoji">${g.emoji||'🎯'}</div><div><div class="goal-name">${g.name}</div><div class="goal-deadline">${g.deadline||'No deadline'}</div></div><span class="chip" style="background:rgba(203,255,71,0.1);color:${done?'var(--teal)':'var(--lime)'};margin-left:auto">${done?'✓ Done':pct+'%'}</span></div><div class="goal-amounts"><span>₹${current.toLocaleString('en-IN')}</span><span>₹${target.toLocaleString('en-IN')}</span></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${color};height:5px;border-radius:3px;"></div></div><div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-ghost" style="flex:1;font-size:11px;padding:7px;" onclick="addGoalProgress(${g.id})">＋ Add ₹</button><button class="btn btn-ghost" style="font-size:11px;padding:7px 12px;" onclick="deleteGoal(${g.id})">🗑</button></div></div>`;
   }).join('');
 }
 

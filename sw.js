@@ -1,5 +1,5 @@
 // Sakred Artha Service Worker v4.1
-const CACHE_NAME = 'artha-v8';
+const CACHE_NAME = 'artha-v9';
 const OFFLINE_URL = '/';
 
 // Files to cache immediately on install (root paths — served from app.sakredfire.ca)

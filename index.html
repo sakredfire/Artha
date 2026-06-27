@@ -1928,7 +1928,7 @@ function renderSchemeQuestion() {
 }
 function selectSchemeAnswer(ans) { schemeAnswers.push(ans); schemeStep++; renderSchemeQuestion(); }
 
-// Baked-in fallback so the list is never empty (offline / fetch failure).
+// ───── SCHEME NAVIGATOR — JSON-driven (edit schemes.json, no rebuild needed) ─────
 const SCHEMES_FALLBACK = [
   { title:'PM-YASASVI Scholarship', ministry:'Ministry of Social Justice · Central', desc:'For youth up to 29 years with family income below ₹2.5L. Annual scholarship for higher education.', benefit:'💰 Up to ₹1.25L/year · Apply by Oct 31' },
   { title:'Gig Worker ID + PM-JAY', ministry:'Ministry of Labour · Budget 2025', desc:'Government gig worker card enabling PM-JAY health insurance (₹5L coverage) and social security.', benefit:'💊 ₹5L health cover · 25,000+ hospitals' },

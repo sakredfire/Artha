@@ -975,10 +975,10 @@ body:not(.unlocked) .app{display:none;}
 
       <!-- Pro upgrade -->
       <div id="pro-upgrade-card" style="background:linear-gradient(135deg,rgba(255,153,51,0.10),rgba(20,154,63,0.10));border:1px solid rgba(255,153,51,0.22);border-radius:16px;padding:18px;margin-bottom:14px;">
-        <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:5px;">Upgrade to Pro+</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:12px;">Remove limits · More AI · Priority features</div>
-        <button class="btn btn-primary btn-full" onclick="upgradeToPro()">Unlock Pro →</button>
-        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Have an unlock code? Tap above to enter it</div>
+        <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:5px;">Sakred Artha Pro</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:12px;">More AI questions, receipt scans and PDF reports. <span id="pro-card-price">₹49/month or ₹399/year</span>.</div>
+        <button class="btn btn-primary btn-full" onclick="upgradeToPro()">See Pro plans →</button>
+        <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Sold through Google Play · cancel anytime · have a code? Enter it there</div>
       </div>
 
       <!-- Referral -->
@@ -1554,6 +1554,7 @@ body:not(.unlocked) .app{display:none;}
 
 </div><!-- end .app -->
 
+<script src="./billing.js?v=11"></script>
 <script>
 // ══════════════════════════════════════════
 // ARTHA v5.0 — INDIA LAUNCH
@@ -2674,7 +2675,7 @@ function confirmDeleteAccount() {
   if (!confirmed) return;
   const confirmed2 = confirm('Are you sure? All income records, expenses, goals, and settings will be erased.');
   if (!confirmed2) return;
-  ['ar_profile','ar_pin','ar_onboarded','ar_tier','ar_tier_token','ar_trial','ar_bio_cred','ar_lang','ar_goals','ar_invoices','ar_emergency','ar_lb_optin','incomeEntries','expenses','moods','rmEntries','lastPdfDate'].forEach(k => localStorage.removeItem(k));
+  ['ar_profile','ar_pin','ar_onboarded','ar_tier','ar_tier_token','ar_tier_src','ar_play_plan','ar_activated_code','ar_trial','ar_bio_cred','ar_lang','ar_goals','ar_invoices','ar_emergency','ar_lb_optin','incomeEntries','expenses','moods','rmEntries','lastPdfDate'].forEach(k => localStorage.removeItem(k));
   location.reload();
 }
 
@@ -3698,24 +3699,25 @@ function showUpgradePrompt(type) {
   const tier = getTier();
   const nextTier = tier === 'free' ? 'Pro' : 'Pro+';
   // Pricing shown on external website only
+  const L = LIMITS;
   const messages = {
     ai: {
       title: "AI limit reached",
       body: tier === 'free'
-        ? "You've used your 5 free AI questions today. Upgrade to Pro for 10/day, or Pro+ for 50/day with smarter Claude Sonnet AI."
-        : "You've used your 10 Pro AI questions today. Upgrade to Pro+ for 50 questions/day with Claude Sonnet."
+        ? `You've used your ${L.free.ai} free AI questions today. Pro gives you ${L.pro.ai} a day.`
+        : `You've used your ${L.pro.ai} Pro AI questions today. Pro+ (coming soon) will give ${L.proplus.ai} a day.`
     },
     scans: {
       title: "Scan limit reached",
       body: tier === 'free'
-        ? "You've used your 5 free receipt scans today. Pro gets you 10/day, Pro+ gets unlimited."
-        : "You've used your 10 Pro receipt scans today. Upgrade to Pro+ for unlimited scanning."
+        ? `You've used your ${L.free.scans} free receipt scans today. Pro gives you ${L.pro.scans} a day.`
+        : `You've used your ${L.pro.scans} Pro receipt scans today. Pro+ (coming soon) will be unlimited.`
     },
     pdfs: {
       title: "PDF limit reached",
       body: tier === 'free'
-        ? "You've used your free PDF exports this month. Upgrade for more exports."
-        : "You've used your Pro PDF exports this month. Upgrade for unlimited exports."
+        ? `You've used your ${L.free.pdfs} free PDF export this month. Pro gives you ${L.pro.pdfs} a month.`
+        : `You've used your ${L.pro.pdfs} Pro PDF exports this month. Pro+ (coming soon) will be unlimited.`
     },
     entries: {
       title: "Entry limit reached",
@@ -3745,21 +3747,21 @@ function showUpgradePrompt(type) {
             <div style="font-size:11px;color:var(--text3);">Everything you need to hustle smarter</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:11px;color:var(--teal);font-weight:600;">7-day free trial</div>
-            <div style="font-size:10px;color:var(--text3);margin-top:2px;">No limits during trial</div>
+            <div style="font-size:13px;color:var(--lime);font-weight:700;" class="pro-price-m">₹49/month</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px;"><span class="pro-price-y">₹399/year</span> · cancel anytime</div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
-          <div style="font-size:11px;color:var(--text2);">✓ More AI questions/day</div>
-          <div style="font-size:11px;color:var(--text2);">✓ More receipt scans</div>
-          <div style="font-size:11px;color:var(--text2);">✓ More PDF exports</div>
+          <div style="font-size:11px;color:var(--text2);">✓ ${L.pro.ai} AI questions/day</div>
+          <div style="font-size:11px;color:var(--text2);">✓ ${L.pro.scans} receipt scans/day</div>
+          <div style="font-size:11px;color:var(--text2);">✓ ${L.pro.pdfs} PDF reports/month</div>
           <div style="font-size:11px;color:var(--text2);">✓ Unlimited income entries</div>
         </div>
         <button onclick="upgradeToPro()" style="width:100%;padding:13px;background:var(--lime);border:none;border-radius:11px;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">
-          Upgrade to Pro →
+          See Pro plans →
         </button>
         <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text3);">
-          Enter your unlock code to activate Pro
+          Sold through Google Play · have a code? Enter it on the next screen
         </div>
       </div>
       <!-- Pro+ coming soon -->
@@ -3786,112 +3788,233 @@ function handleUpgrade(plan) {
   startProTrial();
 }
 
-function startProTrial() {
+function startProTrial() { showProPlans(); } // legacy name: older buttons still call it
+
+// ─────────────────────────────────────────────────────────────
+// PRO UPGRADE (Nov 2026)
+// Pro = Google Play subscription (artha_pro_monthly ₹49 / artha_pro_yearly ₹399), sold only
+// inside the Android app through Google Play Billing (billing.js). In a browser nothing is sold:
+// the app points to the Play listing (Play Payments policy). Comp codes still unlock Pro.
+// ar_tier_src: 'play' = re-checked against Play on every launch; 'code' (or unset, older
+// activations) = kept until the data is deleted.
+// ─────────────────────────────────────────────────────────────
+const PRO_MODAL_BOX = 'background:var(--surf);border-radius:20px;padding:26px;width:100%;max-width:400px;border:1px solid var(--border2);max-height:90dvh;overflow-y:auto;';
+let arthaPrices = { monthly: '₹49', yearly: '₹399' };
+
+function upgradeToPro() { showProPlans(); }
+
+function proModal(inner) {
   document.getElementById('upgrade-modal')?.remove();
-  // Code-entry only: no in-app link to any external payment page (Google Play Payments policy).
+  document.getElementById('pay-modal')?.remove();
   const modal = document.createElement('div');
   modal.id = 'pay-modal';
   modal.style.cssText = 'position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;';
-  modal.innerHTML = `
-    <div style="background:var(--surf);border-radius:20px;padding:28px;width:100%;max-width:400px;border:1px solid var(--border2);">
-      <div style="text-align:center;margin-bottom:20px;">
-        <div style="font-size:40px;margin-bottom:10px;">🔐</div>
-        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Get More from Sakred Artha</div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.6;">Enter your unlock code to activate Pro.</div>
-      </div>
-
-      <div style="background:var(--lime-d);border:1px solid rgba(203,255,71,0.2);border-radius:14px;padding:16px;margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:13px;font-weight:600;">Pro Plan</span>
-          <span style="font-size:13px;font-weight:600;color:var(--lime);">Unlock with a code</span>
-        </div>
-        <div style="font-size:11px;color:var(--text3);line-height:1.6;">
-          ✓ 10 AI questions/day &nbsp;·&nbsp; ✓ 10 receipt scans<br>
-          ✓ 5 PDF exports/month
-        </div>
-      </div>
-
-
-      <div style="background:var(--surf2);border-radius:12px;padding:14px;margin-bottom:12px;">
-        <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Have an unlock code? Enter it here:</div>
-        <div style="display:flex;gap:8px;">
-          <input id="unlock-code-input" placeholder="Enter your unlock code" maxlength="24"
-            style="flex:1;background:var(--surf3);border:1.5px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'Space Mono',monospace;outline:none;letter-spacing:0.05em;text-transform:uppercase;"
-            onfocus="this.style.borderColor='var(--lime)'"
-            onblur="this.style.borderColor='var(--border2)'"
-            oninput="this.value=this.value.toUpperCase()">
-          <button onclick="activateCode()" style="padding:10px 16px;background:var(--surf3);border:1.5px solid var(--lime);border-radius:10px;color:var(--lime);font-size:13px;font-weight:700;cursor:pointer;">Apply</button>
-        </div>
-        <div id="code-error" style="font-size:11px;color:var(--pink);margin-top:6px;display:none;">Invalid code. Please check and try again.</div>
-      </div>
-
-      <button onclick="document.getElementById('pay-modal').remove()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Maybe later</button>
-      <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--text3);">🔒 DPDP 2023</div>
-    </div>`;
-  modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
+  modal.innerHTML = `<div style="${PRO_MODAL_BOX}">${inner}
+    <button onclick="document.getElementById('pay-modal').remove()" style="width:100%;margin-top:6px;padding:10px;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;">Close</button></div>`;
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
   document.body.appendChild(modal);
+  return modal;
 }
 
-// ─────────────────────────────────────────────────────────────
-// PRO UPGRADE — activation-code flow only.
-// Google Play Billing / Digital Goods API was removed (Sept 2026): the
-// Play build no longer ships the Billing Library, so Pro unlocks with codes.
-// ─────────────────────────────────────────────────────────────
+function proCodeBox(open) {
+  return `<details ${open ? 'open' : ''} style="background:var(--surf2);border-radius:12px;padding:12px 14px;margin-top:12px;">
+    <summary style="font-size:12px;color:var(--text2);cursor:pointer;">Have an unlock code?</summary>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <input id="unlock-code-input" placeholder="ARTHA-XXXX-XXXX" maxlength="24" autocomplete="off"
+        style="flex:1;min-width:0;background:var(--surf3);border:1.5px solid var(--border2);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'Space Mono',monospace;outline:none;letter-spacing:0.05em;text-transform:uppercase;"
+        oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')activateCode()">
+      <button onclick="activateCode()" style="padding:10px 14px;background:var(--surf3);border:1.5px solid var(--lime);border-radius:10px;color:var(--lime);font-size:13px;font-weight:700;cursor:pointer;">Apply</button>
+    </div>
+    <div id="code-error" style="font-size:11px;color:var(--pink);margin-top:6px;display:none;"></div>
+  </details>`;
+}
 
-// Single entry point for all "Upgrade to Pro" taps.
-function upgradeToPro() {
-  if (typeof isPro === 'function' && isPro()) {
-    alert('You are already on Sakred Artha Pro.');
+function proFeatureList() {
+  const p = LIMITS.pro;
+  return `<div style="font-size:12px;color:var(--text2);line-height:1.8;margin:4px 0 14px;">
+    ✓ ${p.ai} AI questions a day (Free: ${LIMITS.free.ai})<br>
+    ✓ ${p.scans} receipt scans a day (Free: ${LIMITS.free.scans})<br>
+    ✓ ${p.pdfs} income PDF reports a month (Free: ${LIMITS.free.pdfs})<br>
+    ✓ Your data stays on your phone, as before</div>`;
+}
+
+async function showProPlans() {
+  const B = window.ArthaBilling;
+  let inPlay = false;
+  try { inPlay = B ? await B.isAvailable() : false; } catch (e) {}
+  if (inPlay) { try { arthaPrices = await B.getPrices(); } catch (e) {} }
+  const src = localStorage.getItem('ar_tier_src');
+  const head = (title, sub) => `<div style="text-align:center;margin-bottom:14px;">
+      <div style="font-size:36px;margin-bottom:8px;">⚡</div>
+      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;">${title}</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.55;">${sub}</div></div>`;
+
+  if (isPro() && !isInTrial()) {
+    const how = src === 'play'
+      ? `Your ${localStorage.getItem('ar_play_plan') === 'yearly' ? 'yearly' : 'monthly'} plan renews through Google Play.`
+      : 'Activated with an unlock code.';
+    proModal(head('You are on Sakred Artha Pro', how) + proFeatureList() +
+      (src === 'play' && B ? `<a href="${B.MANAGE_URL}" target="_blank" rel="noopener" style="display:block;text-align:center;padding:12px;border:1px solid var(--border2);border-radius:11px;color:var(--text);font-size:13px;text-decoration:none;">Manage or cancel in Google Play</a>` : ''));
     return;
   }
-  if (typeof startProTrial === 'function') startProTrial();
+
+  if (inPlay) {
+    const btn = (plan, label, note) => `<button class="pro-plan-btn" onclick="buyProPlan('${plan}', this)" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;margin-bottom:8px;background:${plan === 'yearly' ? 'var(--lime)' : 'var(--surf2)'};color:${plan === 'yearly' ? '#000' : 'var(--text)'};border:1.5px solid ${plan === 'yearly' ? 'var(--lime)' : 'var(--border2)'};border-radius:12px;cursor:pointer;font-family:'Syne',sans-serif;">
+        <span style="font-size:14px;font-weight:700;">${label}</span><span style="text-align:right;"><span style="font-size:15px;font-weight:800;">${arthaPrices[plan]}</span><br><span style="font-size:10px;font-family:'DM Sans',sans-serif;opacity:0.8;">${note}</span></span></button>`;
+    proModal(head('Sakred Artha Pro', 'More room for your side hustle.') + proFeatureList() +
+      btn('yearly', 'Yearly', 'best value') + btn('monthly', 'Monthly', 'cancel anytime') +
+      `<div id="pro-buy-msg" style="font-size:12px;color:var(--text2);text-align:center;min-height:16px;margin:4px 0;"></div>
+       <div style="font-size:10.5px;color:var(--text3);line-height:1.55;text-align:center;">Billed by Google Play. Renews automatically until you cancel in Google Play; Pro stays on to the end of the period you paid for. Refunds follow Google Play's rules.</div>
+       <button onclick="restoreProPurchase(this)" style="width:100%;margin-top:10px;padding:10px;background:transparent;border:1px solid var(--border2);border-radius:10px;color:var(--text2);font-size:12px;cursor:pointer;">Restore my purchase</button>` +
+      proCodeBox(false));
+    return;
+  }
+
+  // Browser, or an older app build without billing: nothing is sold here.
+  const listing = B ? B.PLAY_LISTING_URL : 'https://play.google.com/store/apps/details?id=com.sakredfire.sidestack';
+  const oldApp = !!(B && B.inPlayApp());
+  proModal(head('Sakred Artha Pro', `${arthaPrices.monthly}/month or ${arthaPrices.yearly}/year, in the Android app.`) + proFeatureList() +
+    `<a href="${listing}" target="_blank" rel="noopener" style="display:block;text-align:center;padding:13px;background:var(--lime);border-radius:11px;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;text-decoration:none;">${oldApp ? 'Update Sakred Artha on Google Play' : 'Get Sakred Artha on Google Play'}</a>
+     <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px;line-height:1.5;">${oldApp ? 'Pro needs the latest version of the app. Update it, then open this screen again.' : 'Pro is bought inside the Android app through Google Play.'}</div>` +
+    proCodeBox(true));
+}
+
+async function buyProPlan(plan, btn) {
+  const B = window.ArthaBilling;
+  const msg = document.getElementById('pro-buy-msg');
+  const buttons = Array.from(document.querySelectorAll('.pro-plan-btn'));
+  buttons.forEach(b => { b.disabled = true; b.style.opacity = '0.6'; });
+  if (msg) msg.textContent = 'Opening Google Play…';
+  try {
+    await B.buy(plan);
+    setProFromPlay(plan);
+    document.getElementById('pay-modal')?.remove();
+    proToast('🎉 Welcome to Sakred Artha Pro!');
+  } catch (e) {
+    buttons.forEach(b => { b.disabled = false; b.style.opacity = '1'; });
+    if (msg) msg.textContent = e && e.code === 'cancelled' ? '' : 'The purchase did not go through. Nothing was charged. Please try again.';
+  }
+}
+
+async function restoreProPurchase(btn) {
+  if (btn) { btn.disabled = true; btn.textContent = 'Checking Google Play…'; }
+  const ok = await syncPlayEntitlement();
+  if (ok) { document.getElementById('pay-modal')?.remove(); proToast('✓ Pro restored.'); return; }
+  if (btn) { btn.disabled = false; btn.textContent = 'No active Pro plan found on this Google account'; }
+}
+
+function setProFromPlay(plan) {
+  localStorage.setItem('ar_tier', 'pro');
+  localStorage.setItem('ar_tier_src', 'play');
+  localStorage.setItem('ar_play_plan', plan);
+  // The artha-ai Worker reads this token; it must accept the ar_pro_play_ form (see SOUL-STEPS-PRO.md).
+  localStorage.setItem('ar_tier_token', 'ar_pro_play_' + plan);
+  localStorage.removeItem('ar_trial');
+  afterTierChange();
+}
+
+function afterTierChange() {
+  try { if (typeof loadProfileIntoApp === 'function') loadProfileIntoApp(); } catch (e) {}
+  try { updateAIUsageBadge(); } catch (e) {}
+  refreshProUI();
+}
+
+// Make a Play-sourced Pro follow the subscription. Returns true when an active plan exists.
+// Leaves everything alone when billing can't be reached (browser, offline, older app build).
+async function syncPlayEntitlement() {
+  const B = window.ArthaBilling;
+  if (!B) return false;
+  let plan;
+  try { plan = await B.activePlan(); } catch (e) { return false; }
+  if (plan === undefined) return false;
+  if (plan) {
+    const src = localStorage.getItem('ar_tier_src');
+    if (src !== 'code' && (getTier() === 'free' || src !== 'play' || localStorage.getItem('ar_play_plan') !== plan)) {
+      setProFromPlay(plan);
+    }
+    return true;
+  }
+  if (localStorage.getItem('ar_tier_src') === 'play') {
+    localStorage.setItem('ar_tier', 'free');
+    ['ar_tier_src', 'ar_play_plan', 'ar_tier_token'].forEach(k => localStorage.removeItem(k));
+    afterTierChange();
+  }
+  return false;
+}
+
+async function refreshProPrices() {
+  const B = window.ArthaBilling;
+  try { if (B && await B.isAvailable()) arthaPrices = await B.getPrices(); } catch (e) {}
+  const el = document.getElementById('pro-card-price');
+  if (el) el.textContent = `${arthaPrices.monthly}/month or ${arthaPrices.yearly}/year`;
+}
+
+function proToast(text) {
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:14px 24px;border-radius:14px;font-size:13px;font-weight:700;z-index:9999;text-align:center;max-width:320px;line-height:1.6;';
+  toast.textContent = text;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 4500);
 }
 
 function refreshProUI() {
   try {
     const card = document.getElementById('pro-upgrade-card');
-    if (card && typeof isPro === 'function' && isPro()) {
+    if (card && isPro() && !isInTrial()) {
+      const play = localStorage.getItem('ar_tier_src') === 'play';
       card.innerHTML =
         '<div style="font-family:\'Syne\',sans-serif;font-size:15px;font-weight:800;margin-bottom:5px;color:var(--lime);">✓ Sakred Artha Pro</div>' +
-        '<div style="font-size:12px;color:var(--text2);line-height:1.55;">Your Pro plan is active. Thank you for supporting Sakred Artha.</div>';
+        '<div style="font-size:12px;color:var(--text2);line-height:1.55;">' +
+        (play ? 'Your Pro plan is active through Google Play. ' : 'Your Pro plan is active. ') +
+        'Thank you for supporting Sakred Artha.</div>' +
+        (play ? '<button class="btn btn-full" style="margin-top:10px;justify-content:center;font-size:12px;" onclick="showProPlans()">Manage plan</button>' : '');
     }
   } catch (e) {}
 }
 // ─────────────────────────────────────────────────────────────
 
-function activateCode() {
+// Comp codes: only SHA-256 hashes live here (this repo is public). The codes themselves are in
+// COMP-CODES.local.txt (git-ignored). The four codes used before Nov 2026 were public, so they
+// are retired; anyone already activated with one keeps Pro on that device.
+const COMP_CODE_HASHES = [
+  '54d6cb279cd75514afc4b6b05e224d81989c597c0897bce7f740596a890b1127',
+  'e14b7cfd527e82248b73e375de0802cf76c240011667b4112f909ece193e46ef',
+  'b021ad27a8033a30cbc45dd67a0ac239767349adf9df894e7f43d6b493233f9d',
+  'e9d225e5b10245932346f988a17756302f1ab0345d39e1e180e0f08bff389589',
+  '6526a6e4cd56e97b9610a7bfcce78cf9682a1b49cdea7dd0a7f69aae81e52d63',
+  '1d5e0f235f0272aa4b137024409f36539bc94e8ea3160d92257a8427b0bc193e',
+];
+
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function activateCode() {
   const input = document.getElementById('unlock-code-input');
   const code = (input?.value || '').trim().toUpperCase();
   const errorEl = document.getElementById('code-error');
+  let isValid = false;
+  try { isValid = !!code && COMP_CODE_HASHES.includes(await sha256Hex('artha-comp-v1:' + code)); } catch (e) {}
 
-  // Manual comp codes — secrets, full Pro, no expiry. Case-insensitive.
-  // (Client-side only; Phase 2 will move validation server-side.)
-  const VALID_PRO_CODES = ['ARTHA-MP-Z01', 'ARTHA-MP-Z02', 'ARTHA-MP-Z03', 'ARTHA-26-MP' ];
-  const isValid = VALID_PRO_CODES.some(c => c.trim().toUpperCase() === code);
-
-  if (!code || !isValid) {
+  if (!isValid) {
     if (errorEl) {
       errorEl.style.display = 'block';
-      errorEl.textContent = 'Invalid code. Please check and try again.';
+      errorEl.textContent = 'That code did not work. Please check it and try again.';
     }
     return;
   }
 
   localStorage.setItem('ar_tier', 'pro');
+  localStorage.setItem('ar_tier_src', 'code');
   localStorage.setItem('ar_tier_token', 'ar_pro_' + code);
   localStorage.setItem('ar_activated_code', code);
   localStorage.removeItem('ar_trial');
+  localStorage.removeItem('ar_play_plan');
 
   document.getElementById('pay-modal')?.remove();
-  if (typeof loadProfileIntoApp === 'function') loadProfileIntoApp();
-  if (typeof updateAIUsageBadge === 'function') updateAIUsageBadge();
-  refreshProUI();
-
-  const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--lime);color:#000;padding:14px 24px;border-radius:14px;font-size:13px;font-weight:700;z-index:9999;text-align:center;max-width:320px;line-height:1.6;';
-  toast.innerHTML = '🎉 Pro activated! Welcome to Sakred Artha Pro.';
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 5000);
+  afterTierChange();
+  proToast('🎉 Pro activated! Welcome to Sakred Artha Pro.');
 }
 
 function activateTrial() {
@@ -3966,6 +4089,8 @@ window.addEventListener('DOMContentLoaded', () => {
   try { renderInvoices(); } catch(e) {}
   try { renderTaxEngine(); } catch(e) {}
   try { refreshProUI(); } catch(e) {}
+  // Pro bought in Google Play follows the subscription (lapses when it ends).
+  try { syncPlayEntitlement(); refreshProPrices(); } catch(e) {}
 });
 </script>
 

@@ -1,5 +1,5 @@
 // Sakred Artha Service Worker v4.1
-const CACHE_NAME = 'artha-v10';
+const CACHE_NAME = 'artha-v11';
 const OFFLINE_URL = '/';
 
 // Files to cache immediately on install (root paths — served from app.sakredfire.ca)
@@ -60,7 +60,7 @@ self.addEventListener('fetch', event => {
   if (isNavigation || isHTML) {
     event.respondWith(
       fetch(req).then(response => {
-        if (response && response.status === 200 && response.type !== 'opaque') {
+        if (response && response.status === 200 && response.type !== 'opaque' && !response.redirected) {
           const toCache = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(req, toCache));
         }

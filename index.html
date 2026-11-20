@@ -3892,7 +3892,9 @@ async function buyProPlan(plan, btn) {
     proToast('🎉 Welcome to Sakred Artha Pro!');
   } catch (e) {
     buttons.forEach(b => { b.disabled = false; b.style.opacity = '1'; });
-    if (msg) msg.textContent = e && e.code === 'cancelled' ? '' : 'The purchase did not go through. Nothing was charged. Please try again.';
+    if (msg) msg.textContent = e && e.code === 'cancelled'
+      ? 'Google Play closed the purchase. Nothing was charged.'
+      : 'The purchase did not go through. Nothing was charged. Please try again. (' + ((e && (e.reason || e.code)) || 'error') + ')';
   }
 }
 

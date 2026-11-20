@@ -41,5 +41,21 @@ function load(win) { const ctx = vm.createContext({ window: win, Intl, Array, Nu
   await assert.rejects(B.buy('yearly'), e => e.code === 'no_token');
   assert.strictEqual(comp2, 'fail');
 
-  console.log('billing.js: all 4 scenarios pass; prices', prices);
+  // 5. Older app build: Chrome still returns a service, but Play never answers. Nothing is sold.
+  class PRUnsupported { async show() { const e = new Error('not supported'); e.name = 'NotSupportedError'; throw e; } }
+  const dead = { getDetails: async () => { throw new Error('no bridge'); }, listPurchases: async () => { throw new Error('no bridge'); } };
+  B = load({ getDigitalGoodsService: async () => dead, PaymentRequest: PRUnsupported });
+  assert.strictEqual(await B.isAvailable(), false);
+  assert.strictEqual(JSON.stringify(await B.getPrices()), JSON.stringify({ monthly: '₹49', yearly: '₹399' }));
+  assert.strictEqual(await B.activePlan(), undefined);
+  await assert.rejects(B.buy('monthly'), e => e.code === 'unavailable');
+  // ...and a service that answers with no plans (products not found) sells nothing either
+  B = load({ getDigitalGoodsService: async () => ({ getDetails: async () => [], listPurchases: async () => [] }), PaymentRequest: PRUnsupported });
+  assert.strictEqual(await B.isAvailable(), false);
+
+  // 6. The sheet never opens: the browser's reason is kept for the message
+  B = load({ getDigitalGoodsService: async () => svc, PaymentRequest: PRUnsupported });
+  await assert.rejects(B.buy('yearly'), e => e.code === 'show_failed' && e.reason === 'NotSupportedError');
+
+  console.log('billing.js: all 6 scenarios pass; prices', prices);
 })().catch(e => { console.error('FAIL', e); process.exit(1); });

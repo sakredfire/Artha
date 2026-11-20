@@ -48,9 +48,25 @@
     return svcPromise;
   }
 
+  // Chrome hands a service object to ANY Play-installed TWA, also to an older app build that has
+  // no billing bridge. Only an answer from Play (the plans come back) proves this build can sell;
+  // without it the buy buttons would open nothing and fail. A "yes" is remembered for the session,
+  // a "no" is asked again next time (the phone may have been offline).
+  var canSell = false;
   async function isAvailable() {
+    if (canSell) return true;
     if (typeof window.PaymentRequest !== 'function') return false;
-    return (await service()) !== null;
+    var svc = await service();
+    if (!svc) return false;
+    try {
+      var details = await svc.getDetails([SKUS.monthly, SKUS.yearly]);
+      canSell = Array.isArray(details) && details.some(function (d) {
+        return d && (d.itemId === SKUS.monthly || d.itemId === SKUS.yearly);
+      });
+    } catch (e) {
+      canSell = false;
+    }
+    return canSell;
   }
 
   function formatPrice(price) {
@@ -99,16 +115,20 @@
     var sku = SKUS[plan];
     if (!sku) throw PurchaseError('bad_plan');
     if (!(await isAvailable())) throw PurchaseError('unavailable');
-    var request = new window.PaymentRequest(
-      [{ supportedMethods: PLAY_BILLING_METHOD, data: { sku: sku } }],
-      // Play ignores this total and charges the Play Console price.
-      { total: { label: sku, amount: { currency: 'INR', value: '0' } } }
-    );
     var response;
     try {
+      var request = new window.PaymentRequest(
+        [{ supportedMethods: PLAY_BILLING_METHOD, data: { sku: sku } }],
+        // Play ignores this total and charges the Play Console price.
+        { total: { label: sku, amount: { currency: 'INR', value: '0' } } }
+      );
       response = await request.show();
     } catch (e) {
-      throw PurchaseError(e && e.name === 'AbortError' ? 'cancelled' : 'show_failed', e && e.message);
+      // AbortError = the buyer closed Google Play's sheet, or Play closed it itself (it shows its
+      // own reason there). Anything else means the sheet never opened; keep the browser's reason.
+      var err = PurchaseError(e && e.name === 'AbortError' ? 'cancelled' : 'show_failed', e && e.message);
+      err.reason = (e && e.name) || 'Error';
+      throw err;
     }
     var details = (response && response.details) || {};
     if (!(details.purchaseToken || details.token)) {

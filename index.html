@@ -640,6 +640,7 @@ body:not(.unlocked) .app{display:none;}
     </div>
     <button class="btn-lime" id="ob-next-btn" onclick="obNext()">Get Started</button>
     <button class="btn-text" id="ob-skip-btn" onclick="obSkip()">Skip intro</button>
+    <button class="btn-text" id="ob-restore-btn" style="font-size:12px;opacity:0.85;" onclick="document.getElementById('restore-file').click()">Restore from a backup file</button>
   </div>
 </div>
 
@@ -1256,11 +1257,11 @@ body:not(.unlocked) .app{display:none;}
       <div class="priv-item"><span class="pi-ico">🎙️</span><div class="pi-info"><div class="pi-name">Voice Processing</div><div class="pi-desc">Processed securely · No audio stored by Sakred Artha</div></div><span class="pi-status ok">✓ Done</span></div>
       <div class="priv-item"><span class="pi-ico">😊</span><div class="pi-info"><div class="pi-name">Mood Data</div><div class="pi-desc">Private — never sold or shared</div></div><span class="pi-status ok">✓ Done</span></div>
       <div class="priv-item"><span class="pi-ico">🗑️</span><div class="pi-info"><div class="pi-name">Delete Account</div><div class="pi-desc">Permanent · 2 taps · Immediate</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;border-color:rgba(255,77,139,0.3);color:var(--pink);" onclick="confirmDeleteAccount()">Delete</button></div>
-      <div class="priv-item"><span class="pi-ico">📋</span><div class="pi-info"><div class="pi-name">Download My Data</div><div class="pi-desc">CSV / JSON export · DPDP right</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;" onclick="exportData()">Export</button></div>
+      <div class="priv-item"><span class="pi-ico">📋</span><div class="pi-info"><div class="pi-name">Download My Data</div><div class="pi-desc">Backup file (JSON) · DPDP right</div></div><button class="btn-ghost" style="font-size:10.5px;padding:5px 11px;" onclick="exportData()">Export</button></div>
 
-      <div class="setting-row" style="margin-top:6px;">
-        <span class="s-ico">☁️</span><div class="s-info"><div class="s-name">Cloud Backup</div><div class="s-desc">Encrypted · Off by default</div></div>
-        <div class="tog" onclick="this.classList.toggle('on')"></div>
+      <div class="setting-row" style="margin-top:6px;" onclick="exportData()">
+        <span class="s-ico">📱</span><div class="s-info"><div class="s-name">Records stay on this phone</div><div class="s-desc">No cloud copy · tap to save a backup file</div></div>
+        <span style="color:var(--text3)">›</span>
       </div>
       <div class="setting-row">
         <span class="s-ico">🔐</span><div class="s-info"><div class="s-name">Biometric Lock</div><div class="s-desc">FaceID / Fingerprint on open</div></div>
@@ -1326,16 +1327,18 @@ body:not(.unlocked) .app{display:none;}
       <div class="setting-row"><span class="s-ico">🤖</span><div class="s-info"><div class="s-name">AI Daily Insights</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
 
       <div class="s-sect-title">☁️ Backup</div>
-      <div class="setting-row">
-        <span class="s-ico">☁️</span>
-        <div class="s-info"><div class="s-name">Cloud Backup</div><div class="s-desc">Encrypted · Off by default</div></div>
-        <div class="tog" onclick="this.classList.toggle('on')"></div>
-      </div>
       <div class="setting-row" onclick="exportData()">
         <span class="s-ico">📤</span>
-        <div class="s-info"><div class="s-name">Export My Data</div><div class="s-desc">JSON / CSV — DPDP right</div></div>
+        <div class="s-info"><div class="s-name">Back Up My Data</div><div class="s-desc" id="backup-desc">Saves a file you can restore later · Last backup: never</div></div>
         <span style="color:var(--text3)">›</span>
       </div>
+      <div class="setting-row" onclick="document.getElementById('restore-file').click()">
+        <span class="s-ico">📥</span>
+        <div class="s-info"><div class="s-name">Restore From Backup</div><div class="s-desc">Replaces the records on this phone with a backup file</div></div>
+        <span style="color:var(--text3)">›</span>
+        <input type="file" id="restore-file" accept=".json,application/json" style="display:none;" onchange="restoreBackup(this)">
+      </div>
+      <div style="font-size:10.5px;color:var(--text3);line-height:1.5;margin:2px 4px 10px;">Your records live only on this phone. Save a backup now and then, and keep the file somewhere safe, like your email or Google Drive.</div>
 
       <div class="s-sect-title">⚠️ Danger Zone</div>
       <div class="setting-row" id="cancel-trial-row" style="display:none;border-color:rgba(255,107,53,0.2);" onclick="cancelTrial()">
@@ -1554,7 +1557,8 @@ body:not(.unlocked) .app{display:none;}
 
 </div><!-- end .app -->
 
-<script src="./billing.js?v=11"></script>
+<script src="./billing.js?v=13"></script>
+<script src="./backup.js?v=13"></script>
 <script>
 // ══════════════════════════════════════════
 // ARTHA v5.0 — INDIA LAUNCH
@@ -2257,6 +2261,9 @@ function getProfile() {
 
 function unlockApp() {
   document.body.classList.add('unlocked');
+  // Ask the browser to keep Artha's records when the phone runs low on space.
+  try { window.ArthaBackup && window.ArthaBackup.keepStorage(); } catch (e) {}
+  try { showBackupDate(); } catch (e) {}
   ['splash-screen','onboard-screen','profile-screen','pin-setup-screen','pin-lock-screen']
     .forEach(id => { try { hide(id); } catch(e) {} });
   showScreen('home');
@@ -2635,22 +2642,50 @@ function showPinChange() {
   document.getElementById('pin-setup-screen').classList.remove('hidden');
 }
 
-// ── DATA EXPORT (DPDP compliance) ──
+// ── BACKUP + RESTORE (DPDP export right; records live only on this phone) ──
 function exportData() {
-  const data = {
-    profile: getProfile(),
-    incomeEntries: JSON.parse(localStorage.getItem('incomeEntries') || '[]'),
-    expenses: JSON.parse(localStorage.getItem('expenses') || '[]'),
-    moods: JSON.parse(localStorage.getItem('moods') || '[]'),
-    rmEntries: JSON.parse(localStorage.getItem('rmEntries') || '[]'),
-    exportedAt: new Date().toISOString(),
-    note: 'Exported from Sakred Artha v5.0 — India\'s Side Hustle OS'
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const backup = window.ArthaBackup.collect(localStorage);
+  const blob = new Blob([JSON.stringify(backup, null, 1)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = 'Sakred_Artha_MyData.json'; a.click();
-  URL.revokeObjectURL(url);
+  a.href = url; a.download = 'Sakred_Artha_Backup_' + new Date().toLocaleDateString('en-CA') + '.json'; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  try { localStorage.setItem('ar_last_backup', backup.exportedAt); } catch (e) {}
+  showBackupDate();
+  if (typeof proToast === 'function') proToast('Backup saved. Keep the file somewhere safe.');
+}
+
+function showBackupDate() {
+  const el = document.getElementById('backup-desc');
+  if (!el) return;
+  let last = null;
+  try { last = localStorage.getItem('ar_last_backup'); } catch (e) {}
+  const when = last ? new Date(last).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'never';
+  el.textContent = 'Saves a file you can restore later · Last backup: ' + when;
+}
+
+async function restoreBackup(input) {
+  const file = input && input.files && input.files[0];
+  if (input) input.value = '';
+  if (!file) return;
+  let text = '';
+  try { text = await file.text(); } catch (e) { alert('Could not read that file.'); return; }
+  const r = window.ArthaBackup.parse(text);
+  if (!r.ok) { alert(r.reason); return; }
+  const c = r.counts || {};
+  const parts = [];
+  const n = (k, one, many) => { if (c[k] != null) parts.push(c[k] + ' ' + (c[k] === 1 ? one : many)); };
+  n('incomeEntries', 'income entry', 'income entries');
+  n('expenses', 'expense', 'expenses');
+  n('ar_goals', 'goal', 'goals');
+  n('ar_invoices', 'invoice', 'invoices');
+  const from = r.exportedAt ? ' from ' + new Date(r.exportedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+  const ok = confirm('Restore the backup' + from + '?' + (parts.length ? '\n\nIt has ' + parts.join(', ') + '.' : '') +
+    '\n\nThis replaces the records on this phone. Your PIN and Pro plan stay as they are.');
+  if (!ok) return;
+  try { window.ArthaBackup.apply(localStorage, r.entries); }
+  catch (e) { alert('Could not save the backup on this phone. Free up some space and try again.'); return; }
+  location.reload();
 }
 
 // ── CANCEL TRIAL ──
